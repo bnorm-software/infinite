@@ -1,0 +1,5 @@
+# Dependency management files
+target/
+
+# IDE files
+*.iml
