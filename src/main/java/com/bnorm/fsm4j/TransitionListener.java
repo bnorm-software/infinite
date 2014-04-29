@@ -18,5 +18,5 @@ public interface TransitionListener<S extends State, E extends Event> {
      * @param event the event that caused the transition.
      * @param transition the state transition that took place.
      */
-    void stateTransition(E event, Transition<S> transition);
+    void stateTransition(E event, Transition<? extends S> transition);
 }
