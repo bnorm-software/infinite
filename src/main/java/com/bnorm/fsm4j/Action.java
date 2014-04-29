@@ -22,5 +22,5 @@ public interface Action<S extends State, E extends Event> {
      * @param event the event causing the transition.
      * @param transition the exact transition taking place.
      */
-    void perform(S state, E event, Transition<S> transition);
+    void perform(S state, E event, Transition<? extends S> transition);
 }
