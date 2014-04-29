@@ -5,6 +5,8 @@ package com.bnorm.fsm4j;
  * either entered or exited.
  *
  * @author Brian Norman
+ * @version 1.0
+ * @since 1.0
  */
 @FunctionalInterface
 public interface Action<S extends State, E extends Event> {
