@@ -14,7 +14,7 @@ class TransitionBase<S extends State> implements Transition<S> {
     private final S source;
 
     /** The destination state of the transition. */
-    private S destination;
+    private final S destination;
 
     /**
      * Constructs a new transition from the specified source and destination states.
