@@ -20,10 +20,10 @@ class InternalStateBase<S extends State, E extends Event> implements InternalSta
     private final S state;
 
     /** The optional parent state. */
-    private Optional<InternalState<? super S, ? super E>> parent;
+    private Optional<InternalState<S, E>> parent;
 
     /** The children of the state. */
-    private final Set<InternalState<? super S, ? super E>> children;
+    private final Set<InternalState<S, E>> children;
 
     /** The entrance actions of the state. */
     private final Set<Action<? super S, ? super E>> entranceActions;
@@ -50,22 +50,22 @@ class InternalStateBase<S extends State, E extends Event> implements InternalSta
     }
 
     @Override
-    public void setParentState(InternalState<? super S, ? super E> parent) {
+    public void setParentState(InternalState<S, E> parent) {
         this.parent = Optional.ofNullable(parent);
     }
 
     @Override
-    public Optional<InternalState<? super S, ? super E>> getParentState() {
+    public Optional<InternalState<S, E>> getParentState() {
         return parent;
     }
 
     @Override
-    public Set<InternalState<? super S, ? super E>> getChildrenStates() {
+    public Set<InternalState<S, E>> getChildrenStates() {
         return Collections.unmodifiableSet(children);
     }
 
     @Override
-    public void addChild(InternalState<? super S, ? super E> state) {
+    public void addChild(InternalState<S, E> state) {
         children.add(state);
     }
 

@@ -27,14 +27,14 @@ public interface InternalState<S extends State, E extends Event> {
      *
      * @param parent the parent state.
      */
-    void setParentState(InternalState<? super S, ? super E> parent);
+    void setParentState(InternalState<S, E> parent);
 
     /**
      * Returns the parent state of the state as an internal state.
      *
      * @return the parent state.
      */
-    Optional<InternalState<? super S, ? super E>> getParentState();
+    Optional<InternalState<S, E>> getParentState();
 
     /**
      * Returns if the specified state is a parent of the internal state.  This is a recursive method and will check up
@@ -46,7 +46,7 @@ public interface InternalState<S extends State, E extends Event> {
      */
     default boolean isParent(S state) {
         if (getParentState().isPresent()) {
-            InternalState<? super S, ? super E> parent = getParentState().get();
+            InternalState<S, E> parent = getParentState().get();
             return parent.getState().equals(state) || parent.isParent(state);
         } else {
             return false;
@@ -58,14 +58,14 @@ public interface InternalState<S extends State, E extends Event> {
      *
      * @return all child states.
      */
-    Set<InternalState<? super S, ? super E>> getChildrenStates();
+    Set<InternalState<S, E>> getChildrenStates();
 
     /**
      * Adds the specified internal state as a child state of the internal state.
      *
      * @param state the new child state.
      */
-    void addChild(InternalState<? super S, ? super E> state);
+    void addChild(InternalState<S, E> state);
 
     /**
      * Returns if the specified state is a child of the internal state.  This is a recursive method and will check down
@@ -101,7 +101,7 @@ public interface InternalState<S extends State, E extends Event> {
      * @param event the event that caused the transition.
      * @param transition the resulting state transition.
      */
-    default void enter(E event, Transition<? extends S> transition) {
+    default void enter(E event, Transition<S> transition) {
         if (transition.isReentrant()) {
             getEntranceActions().stream().forEach(a -> a.perform(getState(), event, transition));
         } else if (!isChild(transition.getSource()) && !getState().equals(transition.getSource())) {
@@ -132,7 +132,7 @@ public interface InternalState<S extends State, E extends Event> {
      * @param event the event that caused the transition.
      * @param transition the resulting state transition.
      */
-    default void exit(E event, Transition<? extends S> transition) {
+    default void exit(E event, Transition<S> transition) {
         if (transition.isReentrant()) {
             getExitActions().stream().forEach(a -> a.perform(getState(), event, transition));
         } else if (!isChild(transition.getDestination()) && !getState().equals(transition.getDestination())) {

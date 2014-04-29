@@ -72,7 +72,7 @@ public interface StateMachine<S extends State, E extends Event> {
                                                                .filter(t -> t.getSource().equals(getState()))
                                                                .collect(Collectors.toList());
         if (transitions.isEmpty()) {
-            final Optional<InternalState<? super S, ? super E>> parent = getInternalState(getState()).getParentState();
+            final Optional<InternalState<S, E>> parent = getInternalState(getState()).getParentState();
             parent.ifPresent(p -> transitions.addAll(
                     getTransitions(event).stream().filter(t -> t.getSource().equals(p)).collect(Collectors.toList())));
         }
