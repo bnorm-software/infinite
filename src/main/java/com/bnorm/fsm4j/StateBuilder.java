@@ -31,7 +31,10 @@ public interface StateBuilder<S extends State, E extends Event> {
      * @param action the new entry action.
      * @return the current state builder for chaining.
      */
-    StateBuilder<S, E> onEntry(Action<S, E> action);
+    default StateBuilder<S, E> onEntry(Action<S, E> action) {
+        getInternalState().addEntranceAction(action);
+        return this;
+    }
 
     /**
      * Adds the specified action as an exit action to the internal state.
@@ -39,7 +42,10 @@ public interface StateBuilder<S extends State, E extends Event> {
      * @param action the new exit action.
      * @return the current state builder for chaining.
      */
-    StateBuilder<S, E> onExit(Action<S, E> action);
+    default StateBuilder<S, E> onExit(Action<S, E> action) {
+        getInternalState().addExitAction(action);
+        return this;
+    }
 
     /**
      * Adds the specified transition as a possible transition given the specified event.
