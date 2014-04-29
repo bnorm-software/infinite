@@ -6,6 +6,9 @@ import java.util.Set;
 /**
  * A factory interface for state builders.
  *
+ * @param <S> the class type of the states.
+ * @param <E> the class type of the events.
+ * @param <B> the class type of the state builder.
  * @author Brian Norman
  * @version 1.0
  * @since 1.0

@@ -4,6 +4,8 @@ package com.bnorm.fsm4j;
  * Functional interface that represents an action that should be performed.  Actions are performed when a state is
  * either entered or exited.
  *
+ * @param <S> the class type of the states.
+ * @param <E> the class type of the events.
  * @author Brian Norman
  * @version 1.0
  * @since 1.0

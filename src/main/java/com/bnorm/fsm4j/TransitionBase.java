@@ -3,6 +3,7 @@ package com.bnorm.fsm4j;
 /**
  * The base implementation of a transition.
  *
+ * @param <S> the class type of the states.
  * @author Brian Norman
  * @version 1.0
  * @since 1.0

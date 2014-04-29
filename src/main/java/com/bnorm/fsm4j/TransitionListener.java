@@ -3,6 +3,8 @@ package com.bnorm.fsm4j;
 /**
  * A functional interface that is used to represent a listener for state transition events.
  *
+ * @param <S> the class type of the states.
+ * @param <E> the class type of the events.
  * @author Brian Norman
  * @version 1.0
  * @since 1.0

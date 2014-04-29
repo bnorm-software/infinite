@@ -7,6 +7,8 @@ import java.util.Set;
  * Represents the internal state of a state machine.  This interface contains the parent-child relationship between
  * states and also the entrance and exit actions.
  *
+ * @param <S> the class type of the states.
+ * @param <E> the class type of the events.
  * @author Brian Norman
  * @version 1.0
  * @since 1.0
