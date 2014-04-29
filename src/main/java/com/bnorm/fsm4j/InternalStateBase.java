@@ -20,16 +20,16 @@ class InternalStateBase<S extends State, E extends Event> implements InternalSta
     private final S state;
 
     /** The optional parent state. */
-    private Optional<InternalState<S, E>> parent;
+    private Optional<InternalState<? super S, ? super E>> parent;
 
     /** The children of the state. */
-    private final Set<InternalState<S, E>> children;
+    private final Set<InternalState<? super S, ? super E>> children;
 
     /** The entrance actions of the state. */
-    private final Set<Action<S, E>> entranceActions;
+    private final Set<Action<? super S, ? super E>> entranceActions;
 
     /** The exit actions of the state. */
-    private final Set<Action<S, E>> exitActions;
+    private final Set<Action<? super S, ? super E>> exitActions;
 
     /**
      * Constructs a new internal state form the specified state.
@@ -50,42 +50,42 @@ class InternalStateBase<S extends State, E extends Event> implements InternalSta
     }
 
     @Override
-    public void setParentState(InternalState<S, E> parent) {
+    public void setParentState(InternalState<? super S, ? super E> parent) {
         this.parent = Optional.ofNullable(parent);
     }
 
     @Override
-    public Optional<InternalState<S, E>> getParentState() {
+    public Optional<InternalState<? super S, ? super E>> getParentState() {
         return parent;
     }
 
     @Override
-    public Set<InternalState<S, E>> getChildrenStates() {
+    public Set<InternalState<? super S, ? super E>> getChildrenStates() {
         return Collections.unmodifiableSet(children);
     }
 
     @Override
-    public void addChild(InternalState<S, E> state) {
+    public void addChild(InternalState<? super S, ? super E> state) {
         children.add(state);
     }
 
     @Override
-    public Set<Action<S, E>> getEntranceActions() {
+    public Set<Action<? super S, ? super E>> getEntranceActions() {
         return Collections.unmodifiableSet(entranceActions);
     }
 
     @Override
-    public void addEntranceAction(Action<S, E> action) {
+    public void addEntranceAction(Action<? super S, ? super E> action) {
         entranceActions.add(action);
     }
 
     @Override
-    public Set<Action<S, E>> getExitActions() {
+    public Set<Action<? super S, ? super E>> getExitActions() {
         return Collections.unmodifiableSet(exitActions);
     }
 
     @Override
-    public void addExitAction(Action<S, E> action) {
+    public void addExitAction(Action<? super S, ? super E> action) {
         exitActions.add(action);
     }
 }
