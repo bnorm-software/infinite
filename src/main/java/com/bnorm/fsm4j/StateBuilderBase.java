@@ -66,7 +66,8 @@ class StateBuilderBase<S extends State, E extends Event> implements StateBuilder
     @Override
     public StateBuilderBase<S, E> handle(E event, Transition<S> transition) {
         if (!transition.getSource().equals(getInternalState().getState())) {
-            throw new RuntimeException("Illegal transition source");
+            throw new StateMachineException("Illegal transition source.  Should be [" + getInternalState().getState()
+                                                    + "] Is [" + transition.getSource() + "]");
         }
         Set<Transition<S>> handlers = transitions.get(event);
         if (handlers == null) {
