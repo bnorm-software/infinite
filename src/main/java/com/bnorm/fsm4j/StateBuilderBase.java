@@ -13,7 +13,7 @@ import java.util.Set;
  * @version 1.0
  * @since 1.0
  */
-class StateBuilderBase<S extends State, E extends Event> implements StateBuilder<S, E> {
+public class StateBuilderBase<S extends State, E extends Event> implements StateBuilder<S, E> {
 
     /** The state machine state to internal state map. */
     private final Map<S, InternalState<S, E>> states;
@@ -31,7 +31,7 @@ class StateBuilderBase<S extends State, E extends Event> implements StateBuilder
      * @param transitions the transitions of the state machine.
      * @param state the internal state being built.
      */
-    public StateBuilderBase(Map<S, InternalState<S, E>> states, Map<E, Set<Transition<S>>> transitions,
+    protected StateBuilderBase(Map<S, InternalState<S, E>> states, Map<E, Set<Transition<S>>> transitions,
                             InternalState<S, E> state) {
         this.states = states;
         this.transitions = transitions;

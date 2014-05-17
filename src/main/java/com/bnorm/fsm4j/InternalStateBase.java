@@ -14,7 +14,7 @@ import java.util.Set;
  * @version 1.0
  * @since 1.0
  */
-class InternalStateBase<S extends State, E extends Event> implements InternalState<S, E> {
+public class InternalStateBase<S extends State, E extends Event> implements InternalState<S, E> {
 
     /** The wrapped state. */
     private final S state;
@@ -36,7 +36,7 @@ class InternalStateBase<S extends State, E extends Event> implements InternalSta
      *
      * @param state the state to wrap.
      */
-    InternalStateBase(S state) {
+    protected InternalStateBase(S state) {
         this.state = state;
         this.parent = Optional.empty();
         this.children = new HashSet<>();
