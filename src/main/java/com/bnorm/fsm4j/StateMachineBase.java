@@ -13,7 +13,7 @@ import java.util.Set;
  * @version 1.0
  * @since 1.0
  */
-class StateMachineBase<S extends State, E extends Event> implements StateMachine<S, E> {
+public class StateMachineBase<S extends State, E extends Event> implements StateMachine<S, E> {
 
     /** The state machine transition listeners. */
     private final Set<TransitionListener<S, E>> listeners;
@@ -34,7 +34,7 @@ class StateMachineBase<S extends State, E extends Event> implements StateMachine
      * @param transitions the transitions of the state machine.
      * @param starting the starting state of the state machine.
      */
-    StateMachineBase(Map<S, InternalState<S, E>> states, Map<E, Set<Transition<S>>> transitions, S starting) {
+    protected StateMachineBase(Map<S, InternalState<S, E>> states, Map<E, Set<Transition<S>>> transitions, S starting) {
         this.listeners = new HashSet<>();
         this.states = states;
         this.transitions = transitions;

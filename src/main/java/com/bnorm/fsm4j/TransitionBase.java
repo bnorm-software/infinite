@@ -8,7 +8,7 @@ package com.bnorm.fsm4j;
  * @version 1.0
  * @since 1.0
  */
-class TransitionBase<S extends State> implements Transition<S> {
+public class TransitionBase<S extends State> implements Transition<S> {
 
     /** The source state of the transition. */
     private final S source;
@@ -22,7 +22,7 @@ class TransitionBase<S extends State> implements Transition<S> {
      * @param source the source state of the transition.
      * @param destination the destination state of the transition.
      */
-    TransitionBase(S source, S destination) {
+    protected TransitionBase(S source, S destination) {
         this.source = source;
         this.destination = destination;
     }
