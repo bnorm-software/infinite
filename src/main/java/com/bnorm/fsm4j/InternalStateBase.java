@@ -1,7 +1,7 @@
 package com.bnorm.fsm4j;
 
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -39,9 +39,9 @@ public class InternalStateBase<S extends State, E extends Event> implements Inte
     protected InternalStateBase(S state) {
         this.state = state;
         this.parent = Optional.empty();
-        this.children = new HashSet<>();
-        this.entranceActions = new HashSet<>();
-        this.exitActions = new HashSet<>();
+        this.children = new LinkedHashSet<>();
+        this.entranceActions = new LinkedHashSet<>();
+        this.exitActions = new LinkedHashSet<>();
     }
 
     @Override

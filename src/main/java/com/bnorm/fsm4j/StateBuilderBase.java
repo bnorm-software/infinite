@@ -1,6 +1,6 @@
 package com.bnorm.fsm4j;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -32,7 +32,7 @@ public class StateBuilderBase<S extends State, E extends Event> implements State
      * @param state the internal state being built.
      */
     protected StateBuilderBase(Map<S, InternalState<S, E>> states, Map<E, Set<Transition<S>>> transitions,
-                            InternalState<S, E> state) {
+                               InternalState<S, E> state) {
         this.states = states;
         this.transitions = transitions;
         this.state = state;
@@ -66,14 +66,10 @@ public class StateBuilderBase<S extends State, E extends Event> implements State
     @Override
     public StateBuilderBase<S, E> handle(E event, Transition<S> transition) {
         if (!transition.getSource().equals(getInternalState().getState())) {
-            throw new StateMachineException("Illegal transition source.  Should be [" + getInternalState().getState()
-                                                    + "] Is [" + transition.getSource() + "]");
+            throw new StateMachineException(
+                    "Illegal transition source.  Should be [" + getInternalState().getState() + "] Is [" + transition.getSource() + "]");
         }
-        Set<Transition<S>> handlers = transitions.get(event);
-        if (handlers == null) {
-            handlers = new HashSet<>();
-            transitions.put(event, handlers);
-        }
+        Set<Transition<S>> handlers = transitions.computeIfAbsent(event, e -> new LinkedHashSet<>());
         handlers.add(transition);
         return this;
     }

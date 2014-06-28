@@ -1,6 +1,7 @@
 package com.bnorm.fsm4j;
 
-import java.util.HashSet;
+import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -35,7 +36,7 @@ public class StateMachineBase<S extends State, E extends Event> implements State
      * @param starting the starting state of the state machine.
      */
     protected StateMachineBase(Map<S, InternalState<S, E>> states, Map<E, Set<Transition<S>>> transitions, S starting) {
-        this.listeners = new HashSet<>();
+        this.listeners = new LinkedHashSet<>();
         this.states = states;
         this.transitions = transitions;
         setState(starting);
@@ -58,7 +59,7 @@ public class StateMachineBase<S extends State, E extends Event> implements State
 
     @Override
     public Set<Transition<S>> getTransitions(E event) {
-        return transitions.computeIfAbsent(event, e -> new HashSet<>());
+        return transitions.getOrDefault(event, Collections.emptySet());
     }
 
     @Override
