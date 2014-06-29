@@ -76,7 +76,7 @@ public interface StateMachine<S extends State, E extends Event> {
         if (possible.isEmpty()) {
             final Optional<InternalState<S, E>> parent = getInternalState(getState()).getParentState();
             parent.ifPresent(p -> possible.addAll(transitions.stream()
-                                                             .filter(t -> t.getSource().equals(p))
+                                                             .filter(t -> t.getSource().equals(p.getState()))
                                                              .filter(Transition::allowed)
                                                              .collect(Collectors.toList())));
         }
