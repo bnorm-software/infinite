@@ -1,5 +1,7 @@
 package com.bnorm.fsm4j;
 
+import java.util.function.BooleanSupplier;
+
 /**
  * Represents a builder of a specific state.  The interface provides methods that add behavior to the state machine.
  *
@@ -74,4 +76,25 @@ public interface StateBuilder<S extends State, E extends Event> {
      * @return the current state builder for chaining.
      */
     StateBuilder<S, E> handle(E event, S destination);
+
+    /**
+     * Adds a reentrant transition as a possible transition given the specified event and the specified boolean supplier
+     * conditional.
+     *
+     * @param event the event that will cause the reentrant transition.
+     * @param conditional the conditional nature of the transition.
+     * @return the current state builder for chaining.
+     */
+    StateBuilderBase<S, E> handle(E event, BooleanSupplier conditional);
+
+    /**
+     * Adds a transition to the specified state as a possible transition given the specified event and the specified
+     * boolean supplier conditional.
+     *
+     * @param event the event that will cause the transition.
+     * @param destination the destination of the transition.
+     * @param conditional the conditional nature of the transition.
+     * @return the current state builder for chaining.
+     */
+    StateBuilderBase<S, E> handle(E event, S destination, BooleanSupplier conditional);
 }

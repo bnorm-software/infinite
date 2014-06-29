@@ -3,6 +3,7 @@ package com.bnorm.fsm4j;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BooleanSupplier;
 
 /**
  * The base implementation of a state builder.
@@ -82,5 +83,16 @@ public class StateBuilderBase<S extends State, E extends Event> implements State
     @Override
     public StateBuilderBase<S, E> handle(E event, S destination) {
         return handle(event, new TransitionBase<>(getInternalState().getState(), destination));
+    }
+
+    @Override
+    public StateBuilderBase<S, E> handle(E event, BooleanSupplier conditional) {
+        return handle(event,
+                      new TransitionBase<>(getInternalState().getState(), getInternalState().getState(), conditional));
+    }
+
+    @Override
+    public StateBuilderBase<S, E> handle(E event, S destination, BooleanSupplier conditional) {
+        return handle(event, new TransitionBase<>(getInternalState().getState(), destination, conditional));
     }
 }

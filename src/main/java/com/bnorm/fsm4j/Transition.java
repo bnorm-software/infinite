@@ -33,4 +33,14 @@ public interface Transition<S extends State> {
     default boolean isReentrant() {
         return getSource().equals(getDestination());
     }
+
+    /**
+     * If the transition is allowed.  This value could change given circumstances outside of the state machine so it is
+     * checked every time this is a possible transition.
+     *
+     * @return if the transition is currently allowed.
+     */
+    default boolean allowed() {
+        return true;
+    }
 }
