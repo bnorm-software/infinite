@@ -85,7 +85,7 @@ public interface StateBuilder<S extends State, E extends Event> {
      * @param conditional the conditional nature of the transition.
      * @return the current state builder for chaining.
      */
-    StateBuilderBase<S, E> handle(E event, BooleanSupplier conditional);
+    StateBuilder<S, E> handle(E event, BooleanSupplier conditional);
 
     /**
      * Adds a transition to the specified state as a possible transition given the specified event and the specified
@@ -96,5 +96,5 @@ public interface StateBuilder<S extends State, E extends Event> {
      * @param conditional the conditional nature of the transition.
      * @return the current state builder for chaining.
      */
-    StateBuilderBase<S, E> handle(E event, S destination, BooleanSupplier conditional);
+    StateBuilder<S, E> handle(E event, S destination, BooleanSupplier conditional);
 }
