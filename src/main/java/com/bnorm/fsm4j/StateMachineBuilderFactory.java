@@ -5,20 +5,22 @@ package com.bnorm.fsm4j;
  *
  * @param <S> the class type of the states.
  * @param <E> the class type of the events.
+ * @param <C> the class type of the context.
  * @author Brian Norman
  * @version 1.0
  * @since 1.0
  */
-public interface StateMachineBuilderFactory<S extends State, E extends Event> {
+public interface StateMachineBuilderFactory<S extends State, E extends Event, C extends Context> {
 
     /**
      * Creates the default state machine builder factory.  This is the state machine builder base constructor.
      *
      * @param <S> the class type of the states.
      * @param <E> the class type of the events.
+     * @param <C> the class type of the context.
      * @return default state machine builder factory.
      */
-    static <S extends State, E extends Event> StateMachineBuilderFactory<S, E> getDefault() {
+    static <S extends State, E extends Event, C extends Context> StateMachineBuilderFactory<S, E, C> getDefault() {
         return StateMachineBuilderBase::new;
     }
 
@@ -28,10 +30,11 @@ public interface StateMachineBuilderFactory<S extends State, E extends Event> {
      *
      * @param <S> the class type of the states.
      * @param <E> the class type of the events.
+     * @param <C> the class type of the context.
      * @return default state machine builder.
      */
-    static <S extends State, E extends Event> StateMachineBuilder<S, E> create() {
-        return StateMachineBuilderFactory.<S, E>getDefault()
+    static <S extends State, E extends Event, C extends Context> StateMachineBuilder<S, E, C> create() {
+        return StateMachineBuilderFactory.<S, E, C>getDefault()
                                          .create(InternalStateFactory.getDefault(), StateBuilderFactory.getDefault());
     }
 
@@ -42,5 +45,6 @@ public interface StateMachineBuilderFactory<S extends State, E extends Event> {
      * @param configurationFactory the factory used to create state builders.
      * @return a state machine builder.
      */
-    StateMachineBuilder<S, E> create(InternalStateFactory stateFactory, StateBuilderFactory<S, E> configurationFactory);
+    StateMachineBuilder<S, E, C> create(InternalStateFactory stateFactory,
+                                        StateBuilderFactory<S, E, C> configurationFactory);
 }

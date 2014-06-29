@@ -9,11 +9,12 @@ import java.util.Set;
  *
  * @param <S> the class type of the states.
  * @param <E> the class type of the events.
+ * @param <C> the class type of the context.
  * @author Brian Norman
  * @version 1.0
  * @since 1.0
  */
-public interface InternalState<S extends State, E extends Event> {
+public interface InternalState<S extends State, E extends Event, C extends Context> {
 
     /**
      * The real state the internal state represents.
@@ -27,14 +28,14 @@ public interface InternalState<S extends State, E extends Event> {
      *
      * @param parent the parent state.
      */
-    void setParentState(InternalState<S, E> parent);
+    void setParentState(InternalState<S, E, C> parent);
 
     /**
      * Returns the parent state of the state as an internal state.
      *
      * @return the parent state.
      */
-    Optional<InternalState<S, E>> getParentState();
+    Optional<InternalState<S, E, C>> getParentState();
 
     /**
      * Returns if the specified state is a parent of the internal state.  This is a recursive method and will check up
@@ -46,7 +47,7 @@ public interface InternalState<S extends State, E extends Event> {
      */
     default boolean isParent(S state) {
         if (getParentState().isPresent()) {
-            InternalState<S, E> parent = getParentState().get();
+            InternalState<S, E, C> parent = getParentState().get();
             return parent.getState().equals(state) || parent.isParent(state);
         } else {
             return false;
@@ -58,14 +59,14 @@ public interface InternalState<S extends State, E extends Event> {
      *
      * @return all child states.
      */
-    Set<InternalState<S, E>> getChildrenStates();
+    Set<InternalState<S, E, C>> getChildrenStates();
 
     /**
      * Adds the specified internal state as a child state of the internal state.
      *
      * @param state the new child state.
      */
-    void addChild(InternalState<S, E> state);
+    void addChild(InternalState<S, E, C> state);
 
     /**
      * Returns if the specified state is a child of the internal state.  This is a recursive method and will check down
@@ -84,14 +85,14 @@ public interface InternalState<S extends State, E extends Event> {
      *
      * @return all entrance actions.
      */
-    Set<Action<? super S, ? super E>> getEntranceActions();
+    Set<Action<? super S, ? super E, ? super C>> getEntranceActions();
 
     /**
      * Adds the specified action as an entrance action to the internal state.
      *
      * @param action the new entrance action.
      */
-    void addEntranceAction(Action<? super S, ? super E> action);
+    void addEntranceAction(Action<? super S, ? super E, ? super C> action);
 
     /**
      * Performs all the entrance actions on the internal state and any possible parents that have not already been
@@ -100,13 +101,14 @@ public interface InternalState<S extends State, E extends Event> {
      *
      * @param event the event that caused the transition.
      * @param transition the resulting state transition.
+     * @param context the state machine context.
      */
-    default void enter(E event, Transition<S> transition) {
+    default void enter(E event, Transition<S> transition, C context) {
         if (transition.isReentrant()) {
-            getEntranceActions().stream().forEach(a -> a.perform(getState(), event, transition));
+            getEntranceActions().stream().forEach(a -> a.perform(getState(), event, transition, context));
         } else if (!isChild(transition.getSource()) && !getState().equals(transition.getSource())) {
-            getParentState().ifPresent(s -> s.enter(event, transition));
-            getEntranceActions().stream().forEach(a -> a.perform(getState(), event, transition));
+            getParentState().ifPresent(s -> s.enter(event, transition, context));
+            getEntranceActions().stream().forEach(a -> a.perform(getState(), event, transition, context));
         }
     }
 
@@ -115,14 +117,14 @@ public interface InternalState<S extends State, E extends Event> {
      *
      * @return all exit actions.
      */
-    Set<Action<? super S, ? super E>> getExitActions();
+    Set<Action<? super S, ? super E, ? super C>> getExitActions();
 
     /**
      * Adds the specified action as an exit action to the internal state.
      *
      * @param action the new exit action.
      */
-    void addExitAction(Action<? super S, ? super E> action);
+    void addExitAction(Action<? super S, ? super E, ? super C> action);
 
     /**
      * Performs all the exit actions on the internal state and any possible parents that have not already been exited.
@@ -131,13 +133,14 @@ public interface InternalState<S extends State, E extends Event> {
      *
      * @param event the event that caused the transition.
      * @param transition the resulting state transition.
+     * @param context the state machine context.
      */
-    default void exit(E event, Transition<S> transition) {
+    default void exit(E event, Transition<S> transition, C context) {
         if (transition.isReentrant()) {
-            getExitActions().stream().forEach(a -> a.perform(getState(), event, transition));
+            getExitActions().stream().forEach(a -> a.perform(getState(), event, transition, context));
         } else if (!isChild(transition.getDestination()) && !getState().equals(transition.getDestination())) {
-            getExitActions().stream().forEach(a -> a.perform(getState(), event, transition));
-            getParentState().ifPresent(s -> s.exit(event, transition));
+            getExitActions().stream().forEach(a -> a.perform(getState(), event, transition, context));
+            getParentState().ifPresent(s -> s.exit(event, transition, context));
         }
     }
 }

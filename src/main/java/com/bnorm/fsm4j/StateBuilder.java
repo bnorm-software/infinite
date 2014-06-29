@@ -7,18 +7,19 @@ import java.util.function.BooleanSupplier;
  *
  * @param <S> the class type of the states.
  * @param <E> the class type of the events.
+ * @param <C> the class type of the context.
  * @author Brian Norman
  * @version 1.0
  * @since 1.0
  */
-public interface StateBuilder<S extends State, E extends Event> {
+public interface StateBuilder<S extends State, E extends Event, C extends Context> {
 
     /**
      * Returns the internal state that is being constructed.
      *
      * @return the internal state being built.
      */
-    InternalState<S, E> getInternalState();
+    InternalState<S, E, C> getInternalState();
 
     /**
      * Sets the the parent of the internal state to be the specified state.  The parent state must already be partially
@@ -27,7 +28,7 @@ public interface StateBuilder<S extends State, E extends Event> {
      * @param state the parent state.
      * @return the current state builder for chaining.
      */
-    StateBuilder<S, E> childOf(S state);
+    StateBuilder<S, E, C> childOf(S state);
 
     /**
      * Adds the specified action as an entry action to the internal state.
@@ -35,7 +36,7 @@ public interface StateBuilder<S extends State, E extends Event> {
      * @param action the new entry action.
      * @return the current state builder for chaining.
      */
-    default StateBuilder<S, E> onEntry(Action<S, E> action) {
+    default StateBuilder<S, E, C> onEntry(Action<S, E, C> action) {
         getInternalState().addEntranceAction(action);
         return this;
     }
@@ -46,7 +47,7 @@ public interface StateBuilder<S extends State, E extends Event> {
      * @param action the new exit action.
      * @return the current state builder for chaining.
      */
-    default StateBuilder<S, E> onExit(Action<S, E> action) {
+    default StateBuilder<S, E, C> onExit(Action<S, E, C> action) {
         getInternalState().addExitAction(action);
         return this;
     }
@@ -58,7 +59,7 @@ public interface StateBuilder<S extends State, E extends Event> {
      * @param transition the transition that will result because of the event.
      * @return the current state builder for chaining.
      */
-    StateBuilder<S, E> handle(E event, Transition<S> transition);
+    StateBuilder<S, E, C> handle(E event, Transition<S> transition);
 
     /**
      * Adds a reentrant transition as a possible transition given the specified event.
@@ -66,7 +67,7 @@ public interface StateBuilder<S extends State, E extends Event> {
      * @param event the event that will cause the reentrant transition.
      * @return the current state builder for chaining.
      */
-    StateBuilder<S, E> handle(E event);
+    StateBuilder<S, E, C> handle(E event);
 
     /**
      * Adds a transition to the specified state as a possible transition given the specified event.
@@ -75,7 +76,7 @@ public interface StateBuilder<S extends State, E extends Event> {
      * @param destination the destination of the transition.
      * @return the current state builder for chaining.
      */
-    StateBuilder<S, E> handle(E event, S destination);
+    StateBuilder<S, E, C> handle(E event, S destination);
 
     /**
      * Adds a reentrant transition as a possible transition given the specified event and the specified boolean supplier
@@ -85,7 +86,7 @@ public interface StateBuilder<S extends State, E extends Event> {
      * @param conditional the conditional nature of the transition.
      * @return the current state builder for chaining.
      */
-    StateBuilderBase<S, E> handle(E event, BooleanSupplier conditional);
+    StateBuilderBase<S, E, C> handle(E event, BooleanSupplier conditional);
 
     /**
      * Adds a transition to the specified state as a possible transition given the specified event and the specified
@@ -96,5 +97,5 @@ public interface StateBuilder<S extends State, E extends Event> {
      * @param conditional the conditional nature of the transition.
      * @return the current state builder for chaining.
      */
-    StateBuilderBase<S, E> handle(E event, S destination, BooleanSupplier conditional);
+    StateBuilderBase<S, E, C> handle(E event, S destination, BooleanSupplier conditional);
 }

@@ -10,17 +10,18 @@ import java.util.Set;
  *
  * @param <S> the class type of the states.
  * @param <E> the class type of the events.
+ * @param <C> the class type of the context.
  * @author Brian Norman
  * @version 1.0
  * @since 1.0
  */
-public class StateMachineBase<S extends State, E extends Event> implements StateMachine<S, E> {
+public class StateMachineBase<S extends State, E extends Event, C extends Context> implements StateMachine<S, E, C> {
 
     /** The state machine transition listeners. */
     private final Set<TransitionListener<S, E>> listeners;
 
     /** The state to internal state map. */
-    private final Map<S, InternalState<S, E>> states;
+    private final Map<S, InternalState<S, E, C>> states;
 
     /** The event to transition map. */
     private final Map<E, Set<Transition<S>>> transitions;
@@ -28,18 +29,24 @@ public class StateMachineBase<S extends State, E extends Event> implements State
     /** The current state of the state machine. */
     private S state;
 
+    /** The context of the state machine. */
+    private final C context;
+
     /**
      * Constructs a new state machine from the specified state map, transition map, and starting state.
      *
      * @param states the states of the state machine.
      * @param transitions the transitions of the state machine.
      * @param starting the starting state of the state machine.
+     * @param context the state machine context.
      */
-    protected StateMachineBase(Map<S, InternalState<S, E>> states, Map<E, Set<Transition<S>>> transitions, S starting) {
+    protected StateMachineBase(Map<S, InternalState<S, E, C>> states, Map<E, Set<Transition<S>>> transitions,
+                               S starting, C context) {
         this.listeners = new LinkedHashSet<>();
         this.states = states;
         this.transitions = transitions;
         setState(starting);
+        this.context = context;
     }
 
     @Override
@@ -53,7 +60,12 @@ public class StateMachineBase<S extends State, E extends Event> implements State
     }
 
     @Override
-    public InternalState<S, E> getInternalState(S state) {
+    public C getContext() {
+        return context;
+    }
+
+    @Override
+    public InternalState<S, E, C> getInternalState(S state) {
         return states.get(state);
     }
 
