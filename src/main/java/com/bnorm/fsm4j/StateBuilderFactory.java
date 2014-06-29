@@ -29,11 +29,12 @@ public interface StateBuilderFactory<S extends State, E extends Event, C extends
     /**
      * Creates a new state builder from the specified state map, transition map, and internal state being built.
      *
+     * @param transitionFactory the factory used to create transitions.
      * @param states the states of the state machine.
      * @param transitions the transitions of the state machine.
      * @param state the internal state being built.
      * @return a new state builder.
      */
-    StateBuilder<S, E, C> create(Map<S, InternalState<S, E, C>> states, Map<E, Set<Transition<S>>> transitions,
-                                 InternalState<S, E, C> state);
+    StateBuilder<S, E, C> create(TransitionFactory<S> transitionFactory, Map<S, InternalState<S, E, C>> states,
+                                 Map<E, Set<Transition<S>>> transitions, InternalState<S, E, C> state);
 }

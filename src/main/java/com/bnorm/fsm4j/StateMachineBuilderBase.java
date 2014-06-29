@@ -20,6 +20,12 @@ public class StateMachineBuilderBase<S extends State, E extends Event, C extends
     /** The state machine builder internal state factory. */
     private final InternalStateFactory stateFactory;
 
+    /** The state transition factory. */
+    private final TransitionFactory<S> transitionFactory;
+
+    /** The state machine builder state machine factory. */
+    private final StateMachineFactory<S, E, C> stateMachineFactory;
+
     /** The state machine builder state builder factory. */
     private final StateBuilderFactory<S, E, C> configurationFactory;
 
@@ -33,13 +39,18 @@ public class StateMachineBuilderBase<S extends State, E extends Event, C extends
     /**
      * Constructs a new state machine builder from the specified state builder factory and internal state factory.
      *
-     * @param stateFactory the factory used to create internal states.
-     * @param configurationFactory the factory used to create state builders.
+     * @param internalStateFactory the factory used to create internal states.
+     * @param transitionFactory the factory used to create transitions.
+     * @param stateMachineFactory the factory used to create the state machine.
+     * @param stateBuilderFactory the factory used to create state builders.
      */
-    protected StateMachineBuilderBase(InternalStateFactory stateFactory,
-                                      StateBuilderFactory<S, E, C> configurationFactory) {
-        this.stateFactory = stateFactory;
-        this.configurationFactory = configurationFactory;
+    protected StateMachineBuilderBase(InternalStateFactory internalStateFactory, TransitionFactory<S> transitionFactory,
+                                      StateMachineFactory<S, E, C> stateMachineFactory,
+                                      StateBuilderFactory<S, E, C> stateBuilderFactory) {
+        this.stateFactory = internalStateFactory;
+        this.transitionFactory = transitionFactory;
+        this.stateMachineFactory = stateMachineFactory;
+        this.configurationFactory = stateBuilderFactory;
         this.states = new LinkedHashMap<>();
         this.transitions = new LinkedHashMap<>();
     }
@@ -47,11 +58,11 @@ public class StateMachineBuilderBase<S extends State, E extends Event, C extends
     @Override
     public StateBuilder<S, E, C> configure(S state) {
         InternalState<S, E, C> internal = states.computeIfAbsent(state, stateFactory::create);
-        return configurationFactory.create(states, transitions, internal);
+        return configurationFactory.create(transitionFactory, states, transitions, internal);
     }
 
     @Override
     public StateMachine<S, E, C> build(S starting, C context) {
-        return new StateMachineBase<>(states, transitions, starting, context);
+        return stateMachineFactory.create(states, transitions, starting, context);
     }
 }
