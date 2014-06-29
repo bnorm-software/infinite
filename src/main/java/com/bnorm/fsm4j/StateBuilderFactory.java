@@ -21,7 +21,7 @@ public interface StateBuilderFactory<S extends State, E extends Event> {
      * @param <E> the class type of the events.
      * @return default state builder factory.
      */
-    static <S extends State, E extends Event> StateBuilderFactory<S, E> createDefault() {
+    static <S extends State, E extends Event> StateBuilderFactory<S, E> getDefault() {
         return StateBuilderBase::new;
     }
 

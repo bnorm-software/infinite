@@ -14,7 +14,7 @@ public interface InternalStateFactory {
      *
      * @return default internal state factory.
      */
-    static InternalStateFactory createDefault() {
+    static InternalStateFactory getDefault() {
         return InternalStateBase::new;
     }
 
