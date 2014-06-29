@@ -9,19 +9,17 @@ import java.util.Set;
  *
  * @param <S> the class type of the states.
  * @param <E> the class type of the events.
- * @param <B> the class type of the state builder.
  * @author Brian Norman
  * @version 1.0
  * @since 1.0
  */
-public class StateMachineBuilderBase<S extends State, E extends Event, B extends StateBuilder<S, E>>
-        implements StateMachineBuilder<S, E, B> {
+public class StateMachineBuilderBase<S extends State, E extends Event> implements StateMachineBuilder<S, E> {
 
     /** The state machine builder internal state factory. */
     private final InternalStateFactory stateFactory;
 
     /** The state machine builder state builder factory. */
-    private final StateBuilderFactory<S, E, B> configurationFactory;
+    private final StateBuilderFactory<S, E> configurationFactory;
 
     /** The state to internal state map. */
     private final Map<S, InternalState<S, E>> states;
@@ -37,7 +35,7 @@ public class StateMachineBuilderBase<S extends State, E extends Event, B extends
      * @param configurationFactory the factory used to create state builders.
      */
     protected StateMachineBuilderBase(InternalStateFactory stateFactory,
-                                      StateBuilderFactory<S, E, B> configurationFactory) {
+                                      StateBuilderFactory<S, E> configurationFactory) {
         this.stateFactory = stateFactory;
         this.configurationFactory = configurationFactory;
         this.states = new LinkedHashMap<>();
@@ -45,7 +43,7 @@ public class StateMachineBuilderBase<S extends State, E extends Event, B extends
     }
 
     @Override
-    public B configure(S state) {
+    public StateBuilder<S, E> configure(S state) {
         InternalState<S, E> internal = states.computeIfAbsent(state, stateFactory::create);
         return configurationFactory.create(states, transitions, internal);
     }
