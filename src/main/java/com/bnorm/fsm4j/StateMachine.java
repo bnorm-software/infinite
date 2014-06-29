@@ -68,22 +68,26 @@ public interface StateMachine<S extends State, E extends Event> {
      * @return the resulting transition.
      */
     default Optional<Transition<S>> fire(E event) {
-        List<Transition<S>> transitions = getTransitions(event).stream()
-                                                               .filter(t -> t.getSource().equals(getState()))
-                                                               .collect(Collectors.toList());
-        if (transitions.isEmpty()) {
+        final Set<Transition<S>> transitions = getTransitions(event);
+        List<Transition<S>> possible = transitions.stream()
+                                                  .filter(t -> t.getSource().equals(getState()))
+                                                  .filter(Transition::allowed)
+                                                  .collect(Collectors.toList());
+        if (possible.isEmpty()) {
             final Optional<InternalState<S, E>> parent = getInternalState(getState()).getParentState();
-            parent.ifPresent(p -> transitions.addAll(
-                    getTransitions(event).stream().filter(t -> t.getSource().equals(p)).collect(Collectors.toList())));
+            parent.ifPresent(p -> possible.addAll(transitions.stream()
+                                                             .filter(t -> t.getSource().equals(p))
+                                                             .filter(Transition::allowed)
+                                                             .collect(Collectors.toList())));
         }
 
-        if (transitions.isEmpty()) {
+        if (possible.isEmpty()) {
             return Optional.empty();
-        } else if (transitions.size() > 1) {
+        } else if (possible.size() > 1) {
             throw new StateMachineException("Too many possible transitions");
         }
 
-        Transition<S> transition = transitions.get(0);
+        Transition<S> transition = possible.get(0);
         if (getInternalState(transition.getDestination()) == null) {
             throw new StateMachineException("No internal state found for destination state in state machine");
         }
