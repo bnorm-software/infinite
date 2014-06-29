@@ -12,6 +12,17 @@ package com.bnorm.fsm4j;
 public interface StateMachineBuilderFactory<S extends State, E extends Event> {
 
     /**
+     * Creates the default state machine builder factory.  This is the state machine builder base constructor.
+     *
+     * @param <S> the class type of the states.
+     * @param <E> the class type of the events.
+     * @return default state machine builder factory.
+     */
+    static <S extends State, E extends Event> StateMachineBuilderFactory<S, E> getDefault() {
+        return StateMachineBuilderBase::new;
+    }
+
+    /**
      * Creates the default state machine builder.  This is a combination of the default state builder factory and
      * internal state factory.
      *
@@ -19,8 +30,9 @@ public interface StateMachineBuilderFactory<S extends State, E extends Event> {
      * @param <E> the class type of the events.
      * @return default state machine builder.
      */
-    static <S extends State, E extends Event> StateMachineBuilderFactory<S, E> getDefault() {
-        return StateMachineBuilderBase::new;
+    static <S extends State, E extends Event> StateMachineBuilder<S, E> create() {
+        return StateMachineBuilderFactory.<S, E>getDefault()
+                                         .create(InternalStateFactory.getDefault(), StateBuilderFactory.getDefault());
     }
 
     /**
