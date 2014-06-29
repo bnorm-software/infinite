@@ -10,11 +10,12 @@ import java.util.stream.Collectors;
  *
  * @param <S> the class type of the states.
  * @param <E> the class type of the events.
+ * @param <C> the class type of the context.
  * @author Brian Norman
  * @version 1.0
  * @since 1.0
  */
-public interface StateMachine<S extends State, E extends Event> {
+public interface StateMachine<S extends State, E extends Event, C extends Context> {
 
     /**
      * Sets the current state of the state machine to the specified state.  This will skip any entrance or exit
@@ -32,12 +33,19 @@ public interface StateMachine<S extends State, E extends Event> {
     S getState();
 
     /**
+     * Returns the context of the state machine.
+     *
+     * @return the context.
+     */
+    C getContext();
+
+    /**
      * Returns the internal state from the state machine corresponding to the specified state.
      *
      * @param state the state to find the internal state.
      * @return the corresponding internal state.
      */
-    InternalState<S, E> getInternalState(S state);
+    InternalState<S, E, C> getInternalState(S state);
 
     /**
      * Returns a set of transitions corresponding to the specified event.
@@ -74,7 +82,7 @@ public interface StateMachine<S extends State, E extends Event> {
                                                   .filter(Transition::allowed)
                                                   .collect(Collectors.toList());
         if (possible.isEmpty()) {
-            final Optional<InternalState<S, E>> parent = getInternalState(getState()).getParentState();
+            final Optional<InternalState<S, E, C>> parent = getInternalState(getState()).getParentState();
             parent.ifPresent(p -> possible.addAll(transitions.stream()
                                                              .filter(t -> t.getSource().equals(p.getState()))
                                                              .filter(Transition::allowed)
@@ -92,9 +100,9 @@ public interface StateMachine<S extends State, E extends Event> {
             throw new StateMachineException("No internal state found for destination state in state machine");
         }
 
-        getInternalState(getState()).exit(event, transition);
+        getInternalState(getState()).exit(event, transition, getContext());
         setState(transition.getDestination());
-        getInternalState(getState()).enter(event, transition);
+        getInternalState(getState()).enter(event, transition, getContext());
 
         getTransitionListeners().forEach(l -> l.stateTransition(event, transition));
         return Optional.of(transition);

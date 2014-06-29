@@ -10,26 +10,27 @@ import java.util.Set;
  *
  * @param <S> the class type of the states.
  * @param <E> the class type of the events.
+ * @param <C> the class type of the context.
  * @author Brian Norman
  * @version 1.0
  * @since 1.0
  */
-public class InternalStateBase<S extends State, E extends Event> implements InternalState<S, E> {
+public class InternalStateBase<S extends State, E extends Event, C extends Context> implements InternalState<S, E, C> {
 
     /** The wrapped state. */
     private final S state;
 
     /** The optional parent state. */
-    private Optional<InternalState<S, E>> parent;
+    private Optional<InternalState<S, E, C>> parent;
 
     /** The children of the state. */
-    private final Set<InternalState<S, E>> children;
+    private final Set<InternalState<S, E, C>> children;
 
     /** The entrance actions of the state. */
-    private final Set<Action<? super S, ? super E>> entranceActions;
+    private final Set<Action<? super S, ? super E, ? super C>> entranceActions;
 
     /** The exit actions of the state. */
-    private final Set<Action<? super S, ? super E>> exitActions;
+    private final Set<Action<? super S, ? super E, ? super C>> exitActions;
 
     /**
      * Constructs a new internal state form the specified state.
@@ -50,42 +51,42 @@ public class InternalStateBase<S extends State, E extends Event> implements Inte
     }
 
     @Override
-    public void setParentState(InternalState<S, E> parent) {
+    public void setParentState(InternalState<S, E, C> parent) {
         this.parent = Optional.ofNullable(parent);
     }
 
     @Override
-    public Optional<InternalState<S, E>> getParentState() {
+    public Optional<InternalState<S, E, C>> getParentState() {
         return parent;
     }
 
     @Override
-    public Set<InternalState<S, E>> getChildrenStates() {
+    public Set<InternalState<S, E, C>> getChildrenStates() {
         return Collections.unmodifiableSet(children);
     }
 
     @Override
-    public void addChild(InternalState<S, E> state) {
+    public void addChild(InternalState<S, E, C> state) {
         children.add(state);
     }
 
     @Override
-    public Set<Action<? super S, ? super E>> getEntranceActions() {
+    public Set<Action<? super S, ? super E, ? super C>> getEntranceActions() {
         return Collections.unmodifiableSet(entranceActions);
     }
 
     @Override
-    public void addEntranceAction(Action<? super S, ? super E> action) {
+    public void addEntranceAction(Action<? super S, ? super E, ? super C> action) {
         entranceActions.add(action);
     }
 
     @Override
-    public Set<Action<? super S, ? super E>> getExitActions() {
+    public Set<Action<? super S, ? super E, ? super C>> getExitActions() {
         return Collections.unmodifiableSet(exitActions);
     }
 
     @Override
-    public void addExitAction(Action<? super S, ? super E> action) {
+    public void addExitAction(Action<? super S, ? super E, ? super C> action) {
         exitActions.add(action);
     }
 }

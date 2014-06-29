@@ -8,11 +8,12 @@ package com.bnorm.fsm4j;
  *
  * @param <S> the class type of the states.
  * @param <E> the class type of the events.
+ * @param <C> the class type of the context.
  * @author Brian Norman
  * @version 1.0
  * @since 1.0
  */
-public interface StateMachineBuilder<S extends State, E extends Event> {
+public interface StateMachineBuilder<S extends State, E extends Event, C extends Context> {
 
     /**
      * Returns a state builder that can be used to configure the specified state.
@@ -20,13 +21,14 @@ public interface StateMachineBuilder<S extends State, E extends Event> {
      * @param state the state to configure.
      * @return the state builder for the state.
      */
-    StateBuilder<S, E> configure(S state);
+    StateBuilder<S, E, C> configure(S state);
 
     /**
      * Builds and returns the state machine the state machine builder is constructing.
      *
      * @param starting the starting state of the state machine.
+     * @param context the state machine context.
      * @return the state machine.
      */
-    StateMachine<S, E> build(S starting);
+    StateMachine<S, E, C> build(S starting, C context);
 }
