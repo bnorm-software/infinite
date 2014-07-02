@@ -1,4 +1,11 @@
-package com.bnorm.fsm4j;
+package com.bnorm.fsm4j.builders;
+
+import com.bnorm.fsm4j.Context;
+import com.bnorm.fsm4j.Event;
+import com.bnorm.fsm4j.InternalStateFactory;
+import com.bnorm.fsm4j.State;
+import com.bnorm.fsm4j.StateMachineFactory;
+import com.bnorm.fsm4j.TransitionFactory;
 
 /**
  * A factory interface for state machine builders.

@@ -1,8 +1,18 @@
-package com.bnorm.fsm4j;
+package com.bnorm.fsm4j.builders;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+
+import com.bnorm.fsm4j.Context;
+import com.bnorm.fsm4j.Event;
+import com.bnorm.fsm4j.InternalState;
+import com.bnorm.fsm4j.InternalStateFactory;
+import com.bnorm.fsm4j.State;
+import com.bnorm.fsm4j.StateMachine;
+import com.bnorm.fsm4j.StateMachineFactory;
+import com.bnorm.fsm4j.Transition;
+import com.bnorm.fsm4j.TransitionFactory;
 
 /**
  * The base implementation of a state machine builder.

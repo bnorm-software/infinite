@@ -1,7 +1,14 @@
-package com.bnorm.fsm4j;
+package com.bnorm.fsm4j.builders;
 
 import java.util.Map;
 import java.util.Set;
+
+import com.bnorm.fsm4j.Context;
+import com.bnorm.fsm4j.Event;
+import com.bnorm.fsm4j.InternalState;
+import com.bnorm.fsm4j.State;
+import com.bnorm.fsm4j.Transition;
+import com.bnorm.fsm4j.TransitionFactory;
 
 /**
  * A factory interface for state builders.
