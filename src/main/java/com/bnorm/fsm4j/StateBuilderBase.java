@@ -48,9 +48,15 @@ public class StateBuilderBase<S extends State, E extends Event, C extends Contex
     @Override
     public StateBuilderBase<S, E, C> childOf(S parent) {
         InternalState<S, E, C> internalParent = states.get(parent);
-        internalParent.addChild(getInternalState());
-        getInternalState().setParentState(internalParent);
-        return this;
+        if (internalParent != null) {
+            internalParent.addChild(getInternalState());
+            getInternalState().setParentState(internalParent);
+            return this;
+        } else {
+            throw new StateMachineException(
+                    "Requested parent state [" + parent + "] does not exist in the state machine." +
+                            "  Configure parent states before configuring children states.");
+        }
     }
 
     @Override
