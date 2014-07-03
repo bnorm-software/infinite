@@ -1,9 +1,18 @@
-package com.bnorm.fsm4j;
+package com.bnorm.fsm4j.builders;
 
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BooleanSupplier;
+
+import com.bnorm.fsm4j.Action;
+import com.bnorm.fsm4j.Context;
+import com.bnorm.fsm4j.Event;
+import com.bnorm.fsm4j.InternalState;
+import com.bnorm.fsm4j.State;
+import com.bnorm.fsm4j.StateMachineException;
+import com.bnorm.fsm4j.Transition;
+import com.bnorm.fsm4j.TransitionFactory;
 
 /**
  * The base implementation of a state builder.
@@ -26,18 +35,23 @@ public class StateBuilderBase<S extends State, E extends Event, C extends Contex
     /** The internal state being built. */
     private final InternalState<S, E, C> state;
 
+    /** The state transition factory. */
+    private final TransitionFactory<S> transitionFactory;
+
     /**
      * Constructs a new state builder from the specified state map, transition map, and internal state being built.
      *
+     * @param transitionFactory the factory used to create transitions.
      * @param states the states of the state machine.
      * @param transitions the transitions of the state machine.
      * @param state the internal state being built.
      */
-    protected StateBuilderBase(Map<S, InternalState<S, E, C>> states, Map<E, Set<Transition<S>>> transitions,
-                               InternalState<S, E, C> state) {
+    protected StateBuilderBase(TransitionFactory<S> transitionFactory, Map<S, InternalState<S, E, C>> states,
+                               Map<E, Set<Transition<S>>> transitions, InternalState<S, E, C> state) {
         this.states = states;
         this.transitions = transitions;
         this.state = state;
+        this.transitionFactory = transitionFactory;
     }
 
     @Override
@@ -84,22 +98,22 @@ public class StateBuilderBase<S extends State, E extends Event, C extends Contex
 
     @Override
     public StateBuilderBase<S, E, C> handle(E event) {
-        return handle(event, new TransitionBase<>(getInternalState().getState(), getInternalState().getState()));
+        return handle(event, transitionFactory.create(getInternalState().getState(), getInternalState().getState()));
     }
 
     @Override
     public StateBuilderBase<S, E, C> handle(E event, S destination) {
-        return handle(event, new TransitionBase<>(getInternalState().getState(), destination));
+        return handle(event, transitionFactory.create(getInternalState().getState(), destination));
     }
 
     @Override
     public StateBuilderBase<S, E, C> handle(E event, BooleanSupplier conditional) {
-        return handle(event,
-                      new TransitionBase<>(getInternalState().getState(), getInternalState().getState(), conditional));
+        return handle(event, transitionFactory.create(getInternalState().getState(), getInternalState().getState(),
+                                                      conditional));
     }
 
     @Override
     public StateBuilderBase<S, E, C> handle(E event, S destination, BooleanSupplier conditional) {
-        return handle(event, new TransitionBase<>(getInternalState().getState(), destination, conditional));
+        return handle(event, transitionFactory.create(getInternalState().getState(), destination, conditional));
     }
 }

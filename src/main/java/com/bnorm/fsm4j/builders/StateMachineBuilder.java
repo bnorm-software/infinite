@@ -1,4 +1,9 @@
-package com.bnorm.fsm4j;
+package com.bnorm.fsm4j.builders;
+
+import com.bnorm.fsm4j.Context;
+import com.bnorm.fsm4j.Event;
+import com.bnorm.fsm4j.State;
+import com.bnorm.fsm4j.StateMachine;
 
 /**
  * State machine builder interface.  A state machine builder provides access to configuring each state and also for

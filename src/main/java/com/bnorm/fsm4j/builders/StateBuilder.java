@@ -1,6 +1,13 @@
-package com.bnorm.fsm4j;
+package com.bnorm.fsm4j.builders;
 
 import java.util.function.BooleanSupplier;
+
+import com.bnorm.fsm4j.Action;
+import com.bnorm.fsm4j.Context;
+import com.bnorm.fsm4j.Event;
+import com.bnorm.fsm4j.InternalState;
+import com.bnorm.fsm4j.State;
+import com.bnorm.fsm4j.Transition;
 
 /**
  * Represents a builder of a specific state.  The interface provides methods that add behavior to the state machine.

@@ -51,7 +51,7 @@ public class TransitionBase<S extends State> implements Transition<S> {
      * @param destination the destination state of the transition.
      * @param conditional the conditional nature of the transition.
      */
-    private TransitionBase(S source, S destination, Optional<BooleanSupplier> conditional) {
+    protected TransitionBase(S source, S destination, Optional<BooleanSupplier> conditional) {
         this.source = source;
         this.destination = destination;
         this.conditional = conditional;
