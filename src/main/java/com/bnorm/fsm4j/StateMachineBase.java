@@ -71,12 +71,12 @@ public class StateMachineBase<S extends State, E extends Event, C extends Contex
 
     @Override
     public Set<Transition<S>> getTransitions(E event) {
-        return transitions.getOrDefault(event, Collections.emptySet());
+        return Collections.unmodifiableSet(transitions.getOrDefault(event, Collections.emptySet()));
     }
 
     @Override
     public Set<TransitionListener<S, E>> getTransitionListeners() {
-        return listeners;
+        return Collections.unmodifiableSet(listeners);
     }
 
     @Override
