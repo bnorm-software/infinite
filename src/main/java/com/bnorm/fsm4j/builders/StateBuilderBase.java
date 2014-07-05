@@ -33,17 +33,18 @@ public class StateBuilderBase<S, E, C> implements StateBuilder<S, E, C> {
     private final InternalState<S, E, C> state;
 
     /** The state transition factory. */
-    private final TransitionFactory<S> transitionFactory;
+    private final TransitionFactory transitionFactory;
 
     /**
-     * Constructs a new state builder from the specified state map, transition map, and internal state being built.
+     * Constructs a new state builder from the specified transition factory, state map, transition map, and internal
+     * state being built.
      *
      * @param transitionFactory the factory used to create transitions.
      * @param states the states of the state machine.
      * @param transitions the transitions of the state machine.
      * @param state the internal state being built.
      */
-    protected StateBuilderBase(TransitionFactory<S> transitionFactory, Map<S, InternalState<S, E, C>> states,
+    protected StateBuilderBase(TransitionFactory transitionFactory, Map<S, InternalState<S, E, C>> states,
                                Map<E, Set<Transition<S>>> transitions, InternalState<S, E, C> state) {
         this.states = states;
         this.transitions = transitions;

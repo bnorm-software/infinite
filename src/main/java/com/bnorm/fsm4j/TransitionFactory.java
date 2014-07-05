@@ -4,19 +4,18 @@ import java.util.Optional;
 import java.util.function.BooleanSupplier;
 
 /**
- * @param <S> the class type of the states.
  * @author Brian Norman
  * @version 1.0
  * @since 1.0
  */
-public interface TransitionFactory<S> {
+public interface TransitionFactory {
 
     /**
      * Returns the default internal state factory.  This is the internal state base constructor.
      *
      * @return default internal state factory.
      */
-    static <S> TransitionFactory<S> getDefault() {
+    static TransitionFactory getDefault() {
         return TransitionBase::new;
     }
 
@@ -25,9 +24,10 @@ public interface TransitionFactory<S> {
      *
      * @param source the source state of the transition.
      * @param destination the destination state of the transition.
+     * @param <S> the class type of the states.
      * @return a transition.
      */
-    default TransitionBase<S> create(S source, S destination) {
+    default <S> TransitionBase<S> create(S source, S destination) {
         return create(source, destination, Optional.empty());
     }
 
@@ -37,9 +37,10 @@ public interface TransitionFactory<S> {
      * @param source the source state of the transition.
      * @param destination the destination state of the transition.
      * @param conditional the conditional nature of the transition.
+     * @param <S> the class type of the states.
      * @return a transition.
      */
-    default TransitionBase<S> create(S source, S destination, BooleanSupplier conditional) {
+    default <S> TransitionBase<S> create(S source, S destination, BooleanSupplier conditional) {
         return create(source, destination, Optional.of(conditional));
     }
 
@@ -49,7 +50,8 @@ public interface TransitionFactory<S> {
      * @param source the source state of the transition.
      * @param destination the destination state of the transition.
      * @param conditional the conditional nature of the transition.
+     * @param <S> the class type of the states.
      * @return a transition.
      */
-    TransitionBase<S> create(S source, S destination, Optional<BooleanSupplier> conditional);
+    <S> TransitionBase<S> create(S source, S destination, Optional<BooleanSupplier> conditional);
 }
