@@ -14,7 +14,7 @@ import java.util.Set;
  * @version 1.0
  * @since 1.0
  */
-public interface InternalState<S extends State, E extends Event, C extends Context> {
+public interface InternalState<S, E, C> {
 
     /**
      * The real state the internal state represents.

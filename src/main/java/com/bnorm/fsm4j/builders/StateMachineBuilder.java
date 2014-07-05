@@ -1,8 +1,5 @@
 package com.bnorm.fsm4j.builders;
 
-import com.bnorm.fsm4j.Context;
-import com.bnorm.fsm4j.Event;
-import com.bnorm.fsm4j.State;
 import com.bnorm.fsm4j.StateMachine;
 
 /**
@@ -18,7 +15,7 @@ import com.bnorm.fsm4j.StateMachine;
  * @version 1.0
  * @since 1.0
  */
-public interface StateMachineBuilder<S extends State, E extends Event, C extends Context> {
+public interface StateMachineBuilder<S, E, C> {
 
     /**
      * Returns a state builder that can be used to configure the specified state.

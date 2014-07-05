@@ -9,14 +9,14 @@ import java.util.function.BooleanSupplier;
  * @version 1.0
  * @since 1.0
  */
-public interface TransitionFactory<S extends State> {
+public interface TransitionFactory<S> {
 
     /**
      * Returns the default internal state factory.  This is the internal state base constructor.
      *
      * @return default internal state factory.
      */
-    static <S extends State> TransitionFactory<S> getDefault() {
+    static <S> TransitionFactory<S> getDefault() {
         return TransitionBase::new;
     }
 

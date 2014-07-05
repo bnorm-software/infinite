@@ -13,14 +13,14 @@ import java.util.Set;
  * @version 1.0
  * @since 1.0
  */
-public interface StateMachineFactory<S extends State, E extends Event, C extends Context> {
+public interface StateMachineFactory<S, E, C> {
 
     /**
      * Returns the default internal state factory.  This is the internal state base constructor.
      *
      * @return default internal state factory.
      */
-    static <S extends State, E extends Event, C extends Context> StateMachineFactory<S, E, C> getDefault() {
+    static <S, E, C> StateMachineFactory<S, E, C> getDefault() {
         return StateMachineBase::new;
     }
 

@@ -4,11 +4,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.bnorm.fsm4j.Context;
-import com.bnorm.fsm4j.Event;
 import com.bnorm.fsm4j.InternalState;
 import com.bnorm.fsm4j.InternalStateFactory;
-import com.bnorm.fsm4j.State;
 import com.bnorm.fsm4j.StateMachine;
 import com.bnorm.fsm4j.StateMachineFactory;
 import com.bnorm.fsm4j.Transition;
@@ -24,7 +21,7 @@ import com.bnorm.fsm4j.TransitionFactory;
  * @version 1.0
  * @since 1.0
  */
-public class StateMachineBuilderBase<S extends State, E extends Event, C extends Context>
+public class StateMachineBuilderBase<S, E, C>
         implements StateMachineBuilder<S, E, C> {
 
     /** The state machine builder internal state factory. */

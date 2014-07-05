@@ -12,7 +12,7 @@ package com.bnorm.fsm4j;
  * @since 1.0
  */
 @FunctionalInterface
-public interface Action<S extends State, E extends Event, C extends Context> {
+public interface Action<S, E, C> {
 
     /**
      * Performs a specific action.  The parameters specified are the conditions of the state transition.  Sometimes the

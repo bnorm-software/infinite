@@ -15,7 +15,7 @@ import java.util.Set;
  * @version 1.0
  * @since 1.0
  */
-public class StateMachineBase<S extends State, E extends Event, C extends Context> implements StateMachine<S, E, C> {
+public class StateMachineBase<S, E, C> implements StateMachine<S, E, C> {
 
     /** The state machine transition listeners. */
     private final Set<TransitionListener<S, E>> listeners;

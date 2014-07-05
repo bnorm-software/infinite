@@ -3,10 +3,7 @@ package com.bnorm.fsm4j.builders;
 import java.util.function.BooleanSupplier;
 
 import com.bnorm.fsm4j.Action;
-import com.bnorm.fsm4j.Context;
-import com.bnorm.fsm4j.Event;
 import com.bnorm.fsm4j.InternalState;
-import com.bnorm.fsm4j.State;
 import com.bnorm.fsm4j.Transition;
 
 /**
@@ -19,7 +16,7 @@ import com.bnorm.fsm4j.Transition;
  * @version 1.0
  * @since 1.0
  */
-public interface StateBuilder<S extends State, E extends Event, C extends Context> {
+public interface StateBuilder<S, E, C> {
 
     /**
      * Returns the internal state that is being constructed.
