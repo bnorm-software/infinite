@@ -1,9 +1,6 @@
 package com.bnorm.fsm4j.builders;
 
-import com.bnorm.fsm4j.Context;
-import com.bnorm.fsm4j.Event;
 import com.bnorm.fsm4j.InternalStateFactory;
-import com.bnorm.fsm4j.State;
 import com.bnorm.fsm4j.StateMachineFactory;
 import com.bnorm.fsm4j.TransitionFactory;
 
@@ -17,7 +14,7 @@ import com.bnorm.fsm4j.TransitionFactory;
  * @version 1.0
  * @since 1.0
  */
-public interface StateMachineBuilderFactory<S extends State, E extends Event, C extends Context> {
+public interface StateMachineBuilderFactory<S, E, C> {
 
     /**
      * Creates the default state machine builder factory.  This is the state machine builder base constructor.
@@ -27,7 +24,7 @@ public interface StateMachineBuilderFactory<S extends State, E extends Event, C 
      * @param <C> the class type of the context.
      * @return default state machine builder factory.
      */
-    static <S extends State, E extends Event, C extends Context> StateMachineBuilderFactory<S, E, C> getDefault() {
+    static <S, E, C> StateMachineBuilderFactory<S, E, C> getDefault() {
         return StateMachineBuilderBase::new;
     }
 
@@ -40,7 +37,7 @@ public interface StateMachineBuilderFactory<S extends State, E extends Event, C 
      * @param <C> the class type of the context.
      * @return default state machine builder.
      */
-    static <S extends State, E extends Event, C extends Context> StateMachineBuilder<S, E, C> create() {
+    static <S, E, C> StateMachineBuilder<S, E, C> create() {
         return StateMachineBuilderFactory.<S, E, C>getDefault()
                                          .create(InternalStateFactory.getDefault(), TransitionFactory.getDefault(),
                                                  StateMachineFactory.getDefault(), StateBuilderFactory.getDefault());

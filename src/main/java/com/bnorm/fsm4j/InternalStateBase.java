@@ -15,7 +15,7 @@ import java.util.Set;
  * @version 1.0
  * @since 1.0
  */
-public class InternalStateBase<S extends State, E extends Event, C extends Context> implements InternalState<S, E, C> {
+public class InternalStateBase<S, E, C> implements InternalState<S, E, C> {
 
     /** The wrapped state. */
     private final S state;

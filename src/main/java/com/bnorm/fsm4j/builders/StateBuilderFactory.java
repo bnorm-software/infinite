@@ -3,10 +3,7 @@ package com.bnorm.fsm4j.builders;
 import java.util.Map;
 import java.util.Set;
 
-import com.bnorm.fsm4j.Context;
-import com.bnorm.fsm4j.Event;
 import com.bnorm.fsm4j.InternalState;
-import com.bnorm.fsm4j.State;
 import com.bnorm.fsm4j.Transition;
 import com.bnorm.fsm4j.TransitionFactory;
 
@@ -20,7 +17,7 @@ import com.bnorm.fsm4j.TransitionFactory;
  * @version 1.0
  * @since 1.0
  */
-public interface StateBuilderFactory<S extends State, E extends Event, C extends Context> {
+public interface StateBuilderFactory<S, E, C> {
 
     /**
      * Returns the default state builder factory.  This is the state builder base constructor.
@@ -29,7 +26,7 @@ public interface StateBuilderFactory<S extends State, E extends Event, C extends
      * @param <E> the class type of the events.
      * @return default state builder factory.
      */
-    static <S extends State, E extends Event, C extends Context> StateBuilderFactory<S, E, C> getDefault() {
+    static <S, E, C> StateBuilderFactory<S, E, C> getDefault() {
         return StateBuilderBase::new;
     }
 

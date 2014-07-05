@@ -8,7 +8,7 @@ package com.bnorm.fsm4j;
  * @version 1.0
  * @since 1.0
  */
-public interface Transition<S extends State> {
+public interface Transition<S> {
 
     /**
      * The state the transition originates from.

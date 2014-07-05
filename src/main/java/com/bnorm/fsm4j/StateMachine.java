@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  * @version 1.0
  * @since 1.0
  */
-public interface StateMachine<S extends State, E extends Event, C extends Context> {
+public interface StateMachine<S, E, C> {
 
     /**
      * Sets the current state of the state machine to the specified state.  This will skip any entrance or exit

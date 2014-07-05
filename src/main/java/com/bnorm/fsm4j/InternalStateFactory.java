@@ -27,5 +27,5 @@ public interface InternalStateFactory {
      * @param <C> the class type of the context.
      * @return a new internal state.
      */
-    <S extends State, E extends Event, C extends Context> InternalState<S, E, C> create(S state);
+    <S, E, C> InternalState<S, E, C> create(S state);
 }

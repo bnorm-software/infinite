@@ -10,7 +10,7 @@ package com.bnorm.fsm4j;
  * @since 1.0
  */
 @FunctionalInterface
-public interface TransitionListener<S extends State, E extends Event> {
+public interface TransitionListener<S, E> {
 
     /**
      * When the listener is added to a state machine, this method is called whenever there is a state transition.

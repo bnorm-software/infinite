@@ -11,7 +11,7 @@ import java.util.function.BooleanSupplier;
  * @version 1.0
  * @since 1.0
  */
-public class TransitionBase<S extends State> implements Transition<S> {
+public class TransitionBase<S> implements Transition<S> {
 
     /** The source state of the transition. */
     private final S source;
