@@ -77,7 +77,10 @@ public interface InternalState<S, E, C> {
      * @return if the specified state is a child.
      */
     default boolean isChild(S state) {
-        return getChildrenStates().stream().anyMatch(c -> c.getState().equals(state) || c.isChild(state));
+        // Check all children...
+        return getChildrenStates().stream().anyMatch(c -> c.getState().equals(state))
+                // ... before checking recursion to check children's children.
+                || getChildrenStates().parallelStream().anyMatch(c -> c.isChild(state));
     }
 
     /**
