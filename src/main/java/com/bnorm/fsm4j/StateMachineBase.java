@@ -33,7 +33,7 @@ public class StateMachineBase<S, E, C> implements StateMachine<S, E, C> {
     private final C context;
 
     /**
-     * Constructs a new state machine from the specified state map, transition map, and starting state.
+     * Constructs a new state machine from the specified state map, transition map, starting state, and context.
      *
      * @param states the states of the state machine.
      * @param transitions the transitions of the state machine.

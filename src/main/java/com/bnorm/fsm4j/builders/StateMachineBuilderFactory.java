@@ -7,24 +7,18 @@ import com.bnorm.fsm4j.TransitionFactory;
 /**
  * A factory interface for state machine builders.
  *
- * @param <S> the class type of the states.
- * @param <E> the class type of the events.
- * @param <C> the class type of the context.
  * @author Brian Norman
  * @version 1.0
  * @since 1.0
  */
-public interface StateMachineBuilderFactory<S, E, C> {
+public interface StateMachineBuilderFactory {
 
     /**
      * Creates the default state machine builder factory.  This is the state machine builder base constructor.
      *
-     * @param <S> the class type of the states.
-     * @param <E> the class type of the events.
-     * @param <C> the class type of the context.
      * @return default state machine builder factory.
      */
-    static <S, E, C> StateMachineBuilderFactory<S, E, C> getDefault() {
+    static StateMachineBuilderFactory getDefault() {
         return StateMachineBuilderBase::new;
     }
 
@@ -40,21 +34,21 @@ public interface StateMachineBuilderFactory<S, E, C> {
     static <S, E, C> StateMachineBuilder<S, E, C> create() {
         return StateMachineBuilderFactory.<S, E, C>getDefault()
                                          .create(InternalStateFactory.getDefault(), TransitionFactory.getDefault(),
-                                                 StateMachineFactory.getDefault(), StateBuilderFactory.getDefault());
+                                                 StateBuilderFactory.getDefault(), StateMachineFactory.getDefault());
     }
 
     /**
-     * Creates a state machine builder from the specified internal state factory, transition factory, state machine
-     * factory, and state builder factory.
+     * Creates a state machine builder from the specified internal state factory, transition factory, state builder
+     * factory, and state machine factory.
      *
      * @param internalStateFactory the factory used to create internal states.
      * @param transitionFactory the factory used to create transitions.
-     * @param stateMachineFactory the factory used to create the state machine.
      * @param stateBuilderFactory the factory used to create state builders.
+     * @param stateMachineFactory the factory used to create the state machine.
      * @return a state machine builder.
      */
-    StateMachineBuilder<S, E, C> create(InternalStateFactory internalStateFactory,
-                                        TransitionFactory<S> transitionFactory,
-                                        StateMachineFactory<S, E, C> stateMachineFactory,
-                                        StateBuilderFactory<S, E, C> stateBuilderFactory);
+    <S, E, C> StateMachineBuilder<S, E, C> create(InternalStateFactory internalStateFactory,
+                                                  TransitionFactory transitionFactory,
+                                                  StateBuilderFactory stateBuilderFactory,
+                                                  StateMachineFactory stateMachineFactory);
 }
