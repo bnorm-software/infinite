@@ -60,14 +60,14 @@ public interface StateMachine<S, E, C> {
      *
      * @return all transition listeners.
      */
-    Set<TransitionListener<S, E>> getTransitionListeners();
+    Set<TransitionListener<? super S, ? super E>> getTransitionListeners();
 
     /**
      * Adds the specified transition listener to the state machine.
      *
      * @param listener the new transition listener.
      */
-    void addTransitionListener(TransitionListener<S, E> listener);
+    void addTransitionListener(TransitionListener<? super S, ? super E> listener);
 
     /**
      * Fires the specified event.  This is how states are transitioned.

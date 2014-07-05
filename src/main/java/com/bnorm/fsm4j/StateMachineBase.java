@@ -18,7 +18,7 @@ import java.util.Set;
 public class StateMachineBase<S, E, C> implements StateMachine<S, E, C> {
 
     /** The state machine transition listeners. */
-    private final Set<TransitionListener<S, E>> listeners;
+    private final Set<TransitionListener<? super S, ? super E>> listeners;
 
     /** The state to internal state map. */
     private final Map<S, InternalState<S, E, C>> states;
@@ -75,12 +75,12 @@ public class StateMachineBase<S, E, C> implements StateMachine<S, E, C> {
     }
 
     @Override
-    public Set<TransitionListener<S, E>> getTransitionListeners() {
+    public Set<TransitionListener<? super S, ? super E>> getTransitionListeners() {
         return Collections.unmodifiableSet(listeners);
     }
 
     @Override
-    public void addTransitionListener(TransitionListener<S, E> listener) {
+    public void addTransitionListener(TransitionListener<? super S, ? super E> listener) {
         listeners.add(listener);
     }
 }
