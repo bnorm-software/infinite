@@ -23,11 +23,8 @@ This example will introduce a very basic state machine and how to create it with
 | Current State | Input | Next State | Output                                          |
 | ------------- | ----- | ---------- | ----------------------------------------------- |
 | Locked        | coin  | Unlocked   | Release turnstile so customer can push through  |
-|               | ----- | ---------- | ----------------------------------------------- |
 |               | push  | Locked     | None                                            |
-| ------------- | ----- | ---------- | ----------------------------------------------- |
 | Unlocked      | coin  | Unlocked   | None                                            |
-|               | ----- | ---------- | ----------------------------------------------- |
 |               | push  | Locked     | When customer has pushed through lock turnstile |
 
 ## Turnstile stat machine sample code
@@ -52,20 +49,17 @@ turnstile.fire("push");
 | Current State | Parent State | Input | Next State |
 | ------------- | ------------ | ----- | ---------- |
 | Stopped       | None         | play  | Playing    |
-|               |              | stop  |            |
-|               |              | pause |            |
-| ------------- | ------------ | ----- | ---------- |
-| Active        | None         | play  |            |
+|               |              | stop  | (ignored)  |
+|               |              | pause | (ignored)  |
+| Active        | None         | play  | (ignored)  |
 |               |              | stop  | Stopped    |
-|               |              | pause |            |
-| ------------- | ------------ | ----- | ---------- |
-| Playing       | Active       | play  |            |
-|               |              | stop  |            |
+|               |              | pause | (ignored)  |
+| Playing       | Active       | play  | (ignored)  |
+|               |              | stop  | (ignored)  |
 |               |              | pause | Paused     |
-| ------------- | ------------ | ----- | ---------- |
 | Paused        | Active       | play  | Playing    |
-|               |              | stop  |            |
-|               |              | pause |            |
+|               |              | stop  | (ignored)  |
+|               |              | pause | (ignored)  |
 
 ## Turnstile stat machine sample code
 ```java
