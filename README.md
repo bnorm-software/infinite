@@ -2,7 +2,15 @@
 Infinite is a hierarchical finite state machine for Java.  The library is designed to be lightweight yet full featured.
 
 ## Maven ##
-Infinite is not yet part of Maven Central.
+Infinite can be found in Maven Central thanks to Sonatype OSSRH.
+
+```xml
+<dependency>
+    <groupId>com.bnorm</groupId>
+    <artifactId>infinite</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+</dependency>
+```
 
 ## Examples ##
 
