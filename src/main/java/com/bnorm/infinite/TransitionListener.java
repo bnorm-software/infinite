@@ -1,4 +1,4 @@
-package com.bnorm.fsm4j;
+package com.bnorm.infinite;
 
 /**
  * A functional interface that is used to represent a listener for state transition events.

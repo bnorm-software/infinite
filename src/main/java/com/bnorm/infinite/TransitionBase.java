@@ -1,4 +1,4 @@
-package com.bnorm.fsm4j;
+package com.bnorm.infinite;
 
 /**
  * The base implementation of a transition.

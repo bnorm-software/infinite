@@ -1,8 +1,8 @@
-package com.bnorm.fsm4j.builders;
+package com.bnorm.infinite.builders;
 
-import com.bnorm.fsm4j.InternalStateFactory;
-import com.bnorm.fsm4j.StateMachineFactory;
-import com.bnorm.fsm4j.TransitionFactory;
+import com.bnorm.infinite.InternalStateFactory;
+import com.bnorm.infinite.StateMachineFactory;
+import com.bnorm.infinite.TransitionFactory;
 
 /**
  * A factory interface for state machine builders.

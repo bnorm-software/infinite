@@ -1,8 +1,8 @@
-## FSM4J [![Build Status](https://travis-ci.org/bnorm-software/fsm4j.svg?branch=master)](https://travis-ci.org/bnorm-software/fsm4j) ##
-FSM4J is a hierarchical finite state machine for Java.  The library is designed to be lightweight yet full featured.
+## Infinite [![Build Status](https://travis-ci.org/bnorm-software/infinite.svg?branch=master)](https://travis-ci.org/bnorm-software/infinite) ##
+Infinite is a hierarchical finite state machine for Java.  The library is designed to be lightweight yet full featured.
 
 ## Maven ##
-FSM4J is not yet part of Maven Central.
+Infinite is not yet part of Maven Central.
 
 ## Examples ##
 

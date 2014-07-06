@@ -1,4 +1,4 @@
-package com.bnorm.fsm4j;
+package com.bnorm.infinite;
 
 import java.util.ArrayList;
 import java.util.Arrays;
