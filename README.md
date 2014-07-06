@@ -8,7 +8,17 @@ Infinite can be found in Maven Central thanks to Sonatype OSSRH.
 <dependency>
     <groupId>com.bnorm</groupId>
     <artifactId>infinite</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
+</dependency>
+```
+
+The latest SNAPSHOT can be used with the following dependency.
+
+```xml
+<dependency>
+    <groupId>com.bnorm</groupId>
+    <artifactId>infinite</artifactId>
+    <version>1.0.1-SNAPSHOT</version>
 </dependency>
 ```
 
