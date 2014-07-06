@@ -21,39 +21,39 @@ import com.bnorm.fsm4j.TransitionFactory;
  * @version 1.0
  * @since 1.0
  */
-public class StateMachineBuilderBase<S, E, C>
-        implements StateMachineBuilder<S, E, C> {
+public class StateMachineBuilderBase<S, E, C> implements StateMachineBuilder<S, E, C> {
 
     /** The state machine builder internal state factory. */
     private final InternalStateFactory stateFactory;
 
     /** The state transition factory. */
-    private final TransitionFactory<S> transitionFactory;
+    private final TransitionFactory transitionFactory;
 
     /** The state machine builder state machine factory. */
-    private final StateMachineFactory<S, E, C> stateMachineFactory;
+    private final StateMachineFactory stateMachineFactory;
 
     /** The state machine builder state builder factory. */
-    private final StateBuilderFactory<S, E, C> configurationFactory;
+    private final StateBuilderFactory configurationFactory;
 
     /** The state to internal state map. */
     private final Map<S, InternalState<S, E, C>> states;
 
     /** The event to transition map. */
-    private final Map<E, Set<Transition<S>>> transitions;
+    private final Map<E, Set<Transition<S, C>>> transitions;
 
 
     /**
-     * Constructs a new state machine builder from the specified state builder factory and internal state factory.
+     * Constructs a new state machine builder from the specified internal state factory, transition factory, state
+     * builder factory, and state machine factory.
      *
      * @param internalStateFactory the factory used to create internal states.
      * @param transitionFactory the factory used to create transitions.
-     * @param stateMachineFactory the factory used to create the state machine.
      * @param stateBuilderFactory the factory used to create state builders.
+     * @param stateMachineFactory the factory used to create the state machine.
      */
-    protected StateMachineBuilderBase(InternalStateFactory internalStateFactory, TransitionFactory<S> transitionFactory,
-                                      StateMachineFactory<S, E, C> stateMachineFactory,
-                                      StateBuilderFactory<S, E, C> stateBuilderFactory) {
+    protected StateMachineBuilderBase(InternalStateFactory internalStateFactory, TransitionFactory transitionFactory,
+                                      StateBuilderFactory stateBuilderFactory,
+                                      StateMachineFactory stateMachineFactory) {
         this.stateFactory = internalStateFactory;
         this.transitionFactory = transitionFactory;
         this.stateMachineFactory = stateMachineFactory;

@@ -18,13 +18,13 @@ import java.util.Set;
 public class StateMachineBase<S, E, C> implements StateMachine<S, E, C> {
 
     /** The state machine transition listeners. */
-    private final Set<TransitionListener<? super S, ? super E>> listeners;
+    private final Set<TransitionListener<? super S, ? super E, ? super C>> listeners;
 
     /** The state to internal state map. */
     private final Map<S, InternalState<S, E, C>> states;
 
     /** The event to transition map. */
-    private final Map<E, Set<Transition<S>>> transitions;
+    private final Map<E, Set<Transition<S, C>>> transitions;
 
     /** The current state of the state machine. */
     private S state;
@@ -33,14 +33,14 @@ public class StateMachineBase<S, E, C> implements StateMachine<S, E, C> {
     private final C context;
 
     /**
-     * Constructs a new state machine from the specified state map, transition map, and starting state.
+     * Constructs a new state machine from the specified state map, transition map, starting state, and context.
      *
      * @param states the states of the state machine.
      * @param transitions the transitions of the state machine.
      * @param starting the starting state of the state machine.
      * @param context the state machine context.
      */
-    protected StateMachineBase(Map<S, InternalState<S, E, C>> states, Map<E, Set<Transition<S>>> transitions,
+    protected StateMachineBase(Map<S, InternalState<S, E, C>> states, Map<E, Set<Transition<S, C>>> transitions,
                                S starting, C context) {
         this.listeners = new LinkedHashSet<>();
         this.states = states;
@@ -70,17 +70,17 @@ public class StateMachineBase<S, E, C> implements StateMachine<S, E, C> {
     }
 
     @Override
-    public Set<Transition<S>> getTransitions(E event) {
+    public Set<Transition<S, C>> getTransitions(E event) {
         return Collections.unmodifiableSet(transitions.getOrDefault(event, Collections.emptySet()));
     }
 
     @Override
-    public Set<TransitionListener<? super S, ? super E>> getTransitionListeners() {
+    public Set<TransitionListener<? super S, ? super E, ? super C>> getTransitionListeners() {
         return Collections.unmodifiableSet(listeners);
     }
 
     @Override
-    public void addTransitionListener(TransitionListener<? super S, ? super E> listener) {
+    public void addTransitionListener(TransitionListener<? super S, ? super E, ? super C> listener) {
         listeners.add(listener);
     }
 }

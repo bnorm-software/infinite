@@ -77,7 +77,10 @@ public interface InternalState<S, E, C> {
      * @return if the specified state is a child.
      */
     default boolean isChild(S state) {
-        return getChildrenStates().stream().anyMatch(c -> c.getState().equals(state) || c.isChild(state));
+        // Check all children...
+        return getChildrenStates().stream().anyMatch(c -> c.getState().equals(state))
+                // ... before checking recursion to check children's children.
+                || getChildrenStates().parallelStream().anyMatch(c -> c.isChild(state));
     }
 
     /**
@@ -103,7 +106,7 @@ public interface InternalState<S, E, C> {
      * @param transition the resulting state transition.
      * @param context the state machine context.
      */
-    default void enter(E event, Transition<S> transition, C context) {
+    default void enter(E event, Transition<S, C> transition, C context) {
         if (transition.isReentrant()) {
             getEntranceActions().stream().forEach(a -> a.perform(getState(), event, transition, context));
         } else if (!isChild(transition.getSource()) && !getState().equals(transition.getSource())) {
@@ -135,7 +138,7 @@ public interface InternalState<S, E, C> {
      * @param transition the resulting state transition.
      * @param context the state machine context.
      */
-    default void exit(E event, Transition<S> transition, C context) {
+    default void exit(E event, Transition<S, C> transition, C context) {
         if (transition.isReentrant()) {
             getExitActions().stream().forEach(a -> a.perform(getState(), event, transition, context));
         } else if (!isChild(transition.getDestination()) && !getState().equals(transition.getDestination())) {
