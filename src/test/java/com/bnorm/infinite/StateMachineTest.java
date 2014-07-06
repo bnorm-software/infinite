@@ -1,10 +1,10 @@
-package com.bnorm.fsm4j;
+package com.bnorm.infinite;
 
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.bnorm.fsm4j.builders.StateMachineBuilder;
-import com.bnorm.fsm4j.builders.StateMachineBuilderFactory;
+import com.bnorm.infinite.builders.StateMachineBuilder;
+import com.bnorm.infinite.builders.StateMachineBuilderFactory;
 import org.junit.Assert;
 import org.junit.Test;
 

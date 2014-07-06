@@ -1,6 +1,6 @@
-package com.bnorm.fsm4j.builders;
+package com.bnorm.infinite.builders;
 
-import com.bnorm.fsm4j.StateMachine;
+import com.bnorm.infinite.StateMachine;
 
 /**
  * State machine builder interface.  A state machine builder provides access to configuring each state and also for

@@ -1,4 +1,4 @@
-package com.bnorm.fsm4j;
+package com.bnorm.infinite;
 
 /**
  * Base exception for all state machine related exceptions.

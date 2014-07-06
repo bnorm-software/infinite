@@ -1,15 +1,15 @@
-package com.bnorm.fsm4j.builders;
+package com.bnorm.infinite.builders;
 
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.bnorm.fsm4j.Action;
-import com.bnorm.fsm4j.InternalState;
-import com.bnorm.fsm4j.StateMachineException;
-import com.bnorm.fsm4j.Transition;
-import com.bnorm.fsm4j.TransitionFactory;
-import com.bnorm.fsm4j.TransitionGuard;
+import com.bnorm.infinite.Action;
+import com.bnorm.infinite.InternalState;
+import com.bnorm.infinite.StateMachineException;
+import com.bnorm.infinite.Transition;
+import com.bnorm.infinite.TransitionFactory;
+import com.bnorm.infinite.TransitionGuard;
 
 /**
  * The base implementation of a state builder.

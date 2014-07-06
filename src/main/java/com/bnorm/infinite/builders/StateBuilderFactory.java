@@ -1,11 +1,11 @@
-package com.bnorm.fsm4j.builders;
+package com.bnorm.infinite.builders;
 
 import java.util.Map;
 import java.util.Set;
 
-import com.bnorm.fsm4j.InternalState;
-import com.bnorm.fsm4j.Transition;
-import com.bnorm.fsm4j.TransitionFactory;
+import com.bnorm.infinite.InternalState;
+import com.bnorm.infinite.Transition;
+import com.bnorm.infinite.TransitionFactory;
 
 /**
  * A factory interface for state builders.

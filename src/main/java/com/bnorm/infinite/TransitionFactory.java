@@ -1,4 +1,4 @@
-package com.bnorm.fsm4j;
+package com.bnorm.infinite;
 
 /**
  * @author Brian Norman

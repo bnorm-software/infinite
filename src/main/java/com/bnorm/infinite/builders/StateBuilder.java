@@ -1,9 +1,9 @@
-package com.bnorm.fsm4j.builders;
+package com.bnorm.infinite.builders;
 
-import com.bnorm.fsm4j.Action;
-import com.bnorm.fsm4j.InternalState;
-import com.bnorm.fsm4j.Transition;
-import com.bnorm.fsm4j.TransitionGuard;
+import com.bnorm.infinite.Action;
+import com.bnorm.infinite.InternalState;
+import com.bnorm.infinite.Transition;
+import com.bnorm.infinite.TransitionGuard;
 
 /**
  * Represents a builder of a specific state.  The interface provides methods that add behavior to the state machine.

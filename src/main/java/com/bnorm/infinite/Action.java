@@ -1,4 +1,4 @@
-package com.bnorm.fsm4j;
+package com.bnorm.infinite;
 
 /**
  * Functional interface that represents an action that should be performed.  Actions are performed when a state is
