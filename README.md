@@ -1,25 +1,20 @@
-Build status, hopefully green:
-[![Build Status](https://travis-ci.org/bnorm-software/fsm4j.svg?branch=master)](https://travis-ci.org/bnorm-software/fsm4j)
-
-FSM4J
-=====
+## FSM4J ##
 FSM4J is a hierarchical finite state machine for Java.  The library is designed to be lightweight yet full featured.
 
-Maven
-=====
+Build status: [![Build Status](https://travis-ci.org/bnorm-software/fsm4j.svg?branch=master)](https://travis-ci.org/bnorm-software/fsm4j)
+
+## Maven ##
 FSM4J is not yet part of Maven Central.
 
-Examples
-========
+## Examples ##
 
-## Turnstile
-
+### Turnstile ###
 This example will introduce a very basic state machine and how to create it with just a few lines of code.
 
-### Turnstile state machine graph
+#### Turnstile state machine graph ####
 ![Turnstile State Machine](http://upload.wikimedia.org/wikipedia/commons/9/9e/Turnstile_state_machine_colored.svg)
 
-### Turnstile state machine transition table
+#### Turnstile state machine transition table ####
 | Current State | Input | Next State | Output                                          |
 | ------------- | ----- | ---------- | ----------------------------------------------- |
 | Locked        | coin  | Unlocked   | Release turnstile so customer can push through  |
@@ -27,7 +22,7 @@ This example will introduce a very basic state machine and how to create it with
 | Unlocked      | coin  | Unlocked   | None                                            |
 |               | push  | Locked     | When customer has pushed through lock turnstile |
 
-### Turnstile stat machine sample code
+#### Turnstile state machine sample code ####
 ```java
 // State type is String, event type is String, and there is no context
 StateMachineBuilder<String, String, Void> builder = StateMachineBuilderFactory.create();
@@ -43,25 +38,17 @@ turnstile.fire("coin");
 turnstile.fire("push");
 ```
 
-## DVD Player
+### DVD Player ###
 
-### DVD player state machine transition table
+#### DVD player state machine transition table ####
 | Current State | Parent State | Input | Next State |
 | ------------- | ------------ | ----- | ---------- |
 | Stopped       | None         | play  | Playing    |
-|               |              | stop  | (ignored)  |
-|               |              | pause | (ignored)  |
-| Active        | None         | play  | (ignored)  |
-|               |              | stop  | Stopped    |
-|               |              | pause | (ignored)  |
-| Playing       | Active       | play  | (ignored)  |
-|               |              | stop  | (ignored)  |
-|               |              | pause | Paused     |
+| Active        | None         | stop  | Stopped    |
+| Playing       | Active       | pause | Paused     |
 | Paused        | Active       | play  | Playing    |
-|               |              | stop  | (ignored)  |
-|               |              | pause | (ignored)  |
 
-### Turnstile stat machine sample code
+#### Turnstile state machine sample code ####
 ```java
 StateMachineBuilder<String, String, Void> builder = StateMachineBuilderFactory.create();
 builder.configure("Stopped")
@@ -83,10 +70,9 @@ dvdplayer.fire("pause");
 dvdplayer.fire("stop");
 ```
 
-Features
-========
+## Features ##
 
-## Version 1.0.0
+### Version 1.0.0 ###
 **Initial release**
  - Supports hierarchical state machine designs
  - State machine context
@@ -96,10 +82,9 @@ Features
  - Flexible typing for states, events, and context
  - Easy to use state machine builder classes
 
-Future
-======
+## Future ##
 
-## Version 1.1.0
+### Version 1.1.0 ###
 **Asynchronous release**
  - Thread safe state machine
  - Asynchronous entrance and exit actions
