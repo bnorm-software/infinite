@@ -1,7 +1,5 @@
-## FSM4J ##
+## FSM4J [![Build Status](https://travis-ci.org/bnorm-software/fsm4j.svg?branch=master)](https://travis-ci.org/bnorm-software/fsm4j) ##
 FSM4J is a hierarchical finite state machine for Java.  The library is designed to be lightweight yet full featured.
-
-Build status: [![Build Status](https://travis-ci.org/bnorm-software/fsm4j.svg?branch=master)](https://travis-ci.org/bnorm-software/fsm4j)
 
 ## Maven ##
 FSM4J is not yet part of Maven Central.
@@ -9,20 +7,10 @@ FSM4J is not yet part of Maven Central.
 ## Examples ##
 
 ### Turnstile ###
-This example will introduce a very basic state machine and how to create it with just a few lines of code.
+This example will introduce a very basic state machine and how to create it with just a few lines of code.  This is the
+turnstile example provided on [Wikipedia](http://en.wikipedia.org/wiki/Finite-state_machine#Example:_a_turnstile).  It
+consists of two states, 'Locked' and 'Unlocked', two events, 'coin' and 'push', and has no context.
 
-#### Turnstile state machine graph ####
-![Turnstile State Machine](http://upload.wikimedia.org/wikipedia/commons/9/9e/Turnstile_state_machine_colored.svg)
-
-#### Turnstile state machine transition table ####
-| Current State | Input | Next State | Output                                          |
-| ------------- | ----- | ---------- | ----------------------------------------------- |
-| Locked        | coin  | Unlocked   | Release turnstile so customer can push through  |
-|               | push  | Locked     | None                                            |
-| Unlocked      | coin  | Unlocked   | None                                            |
-|               | push  | Locked     | When customer has pushed through lock turnstile |
-
-#### Turnstile state machine sample code ####
 ```java
 // State type is String, event type is String, and there is no context
 StateMachineBuilder<String, String, Void> builder = StateMachineBuilderFactory.create();
@@ -39,20 +27,15 @@ turnstile.fire("push");
 ```
 
 ### DVD Player ###
+This example shows some of the power in a hierarchical state machine.  There are two main states and two children states
+in this state machine.  The 'Active' state which is the parent of 'Playing' and 'Paused' handles to 'stop' event so it
+doesn't need to be defined for each state.  For this specific example it would probably be easier to have both 'Playing'
+and 'Paused' handle the 'stop' event but that doesn't provide a very good example, now does it?
 
-#### DVD player state machine transition table ####
-| Current State | Parent State | Input | Next State |
-| ------------- | ------------ | ----- | ---------- |
-| Stopped       | None         | play  | Playing    |
-| Active        | None         | stop  | Stopped    |
-| Playing       | Active       | pause | Paused     |
-| Paused        | Active       | play  | Playing    |
-
-#### Turnstile state machine sample code ####
 ```java
 StateMachineBuilder<String, String, Void> builder = StateMachineBuilderFactory.create();
 builder.configure("Stopped")
-       .handle("play", "Playing", (context) -> context.containsDVD());
+       .handle("play", "Playing");
 builder.configure("Active")
        .handle("stop", "Stopped");
 // Playing and Paused are both children of Active
