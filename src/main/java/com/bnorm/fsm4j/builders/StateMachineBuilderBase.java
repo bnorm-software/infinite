@@ -39,7 +39,7 @@ public class StateMachineBuilderBase<S, E, C> implements StateMachineBuilder<S, 
     private final Map<S, InternalState<S, E, C>> states;
 
     /** The event to transition map. */
-    private final Map<E, Set<Transition<S>>> transitions;
+    private final Map<E, Set<Transition<S, C>>> transitions;
 
 
     /**

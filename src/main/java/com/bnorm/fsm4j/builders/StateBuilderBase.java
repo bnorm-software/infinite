@@ -3,13 +3,13 @@ package com.bnorm.fsm4j.builders;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.BooleanSupplier;
 
 import com.bnorm.fsm4j.Action;
 import com.bnorm.fsm4j.InternalState;
 import com.bnorm.fsm4j.StateMachineException;
 import com.bnorm.fsm4j.Transition;
 import com.bnorm.fsm4j.TransitionFactory;
+import com.bnorm.fsm4j.TransitionGuard;
 
 /**
  * The base implementation of a state builder.
@@ -27,7 +27,7 @@ public class StateBuilderBase<S, E, C> implements StateBuilder<S, E, C> {
     private final Map<S, InternalState<S, E, C>> states;
 
     /** The state machine event to transition map. */
-    private final Map<E, Set<Transition<S>>> transitions;
+    private final Map<E, Set<Transition<S, C>>> transitions;
 
     /** The internal state being built. */
     private final InternalState<S, E, C> state;
@@ -45,7 +45,7 @@ public class StateBuilderBase<S, E, C> implements StateBuilder<S, E, C> {
      * @param state the internal state being built.
      */
     protected StateBuilderBase(TransitionFactory transitionFactory, Map<S, InternalState<S, E, C>> states,
-                               Map<E, Set<Transition<S>>> transitions, InternalState<S, E, C> state) {
+                               Map<E, Set<Transition<S, C>>> transitions, InternalState<S, E, C> state) {
         this.states = states;
         this.transitions = transitions;
         this.state = state;
@@ -84,12 +84,12 @@ public class StateBuilderBase<S, E, C> implements StateBuilder<S, E, C> {
     }
 
     @Override
-    public StateBuilderBase<S, E, C> handle(E event, Transition<S> transition) {
+    public StateBuilderBase<S, E, C> handle(E event, Transition<S, C> transition) {
         if (!transition.getSource().equals(getInternalState().getState())) {
             throw new StateMachineException(
                     "Illegal transition source.  Should be [" + getInternalState().getState() + "] Is [" + transition.getSource() + "]");
         }
-        Set<Transition<S>> handlers = transitions.computeIfAbsent(event, e -> new LinkedHashSet<>());
+        Set<Transition<S, C>> handlers = transitions.computeIfAbsent(event, e -> new LinkedHashSet<>());
         handlers.add(transition);
         return this;
     }
@@ -105,13 +105,13 @@ public class StateBuilderBase<S, E, C> implements StateBuilder<S, E, C> {
     }
 
     @Override
-    public StateBuilderBase<S, E, C> handle(E event, BooleanSupplier conditional) {
+    public StateBuilderBase<S, E, C> handle(E event, TransitionGuard<C> guard) {
         return handle(event, transitionFactory.create(getInternalState().getState(), getInternalState().getState(),
-                                                      conditional));
+                                                      guard));
     }
 
     @Override
-    public StateBuilderBase<S, E, C> handle(E event, S destination, BooleanSupplier conditional) {
-        return handle(event, transitionFactory.create(getInternalState().getState(), destination, conditional));
+    public StateBuilderBase<S, E, C> handle(E event, S destination, TransitionGuard<C> guard) {
+        return handle(event, transitionFactory.create(getInternalState().getState(), destination, guard));
     }
 }

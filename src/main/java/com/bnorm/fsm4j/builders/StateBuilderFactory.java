@@ -39,5 +39,5 @@ public interface StateBuilderFactory {
      * @return a new state builder.
      */
     <S, E, C> StateBuilder<S, E, C> create(TransitionFactory transitionFactory, Map<S, InternalState<S, E, C>> states,
-                                           Map<E, Set<Transition<S>>> transitions, InternalState<S, E, C> state);
+                                           Map<E, Set<Transition<S, C>>> transitions, InternalState<S, E, C> state);
 }

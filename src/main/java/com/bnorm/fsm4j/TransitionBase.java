@@ -1,17 +1,15 @@
 package com.bnorm.fsm4j;
 
-import java.util.Optional;
-import java.util.function.BooleanSupplier;
-
 /**
  * The base implementation of a transition.
  *
  * @param <S> the class type of the states.
+ * @param <C> the class type of the context.
  * @author Brian Norman
  * @version 1.0
  * @since 1.0
  */
-public class TransitionBase<S> implements Transition<S> {
+public class TransitionBase<S, C> implements Transition<S, C> {
 
     /** The source state of the transition. */
     private final S source;
@@ -20,41 +18,19 @@ public class TransitionBase<S> implements Transition<S> {
     private final S destination;
 
     /** The conditional nature of the transition. */
-    private final Optional<BooleanSupplier> conditional;
+    private final TransitionGuard<C> guard;
 
     /**
-     * Constructs a new transition from the specified source and destination states.
+     * Constructs a new transition from the specified source and destination states and the transition guard.
      *
      * @param source the source state of the transition.
      * @param destination the destination state of the transition.
+     * @param guard the guard for the transition.
      */
-    protected TransitionBase(S source, S destination) {
-        this(source, destination, Optional.empty());
-    }
-
-    /**
-     * Constructs a new transition from the specified source and destination states and the conditional supplier.
-     *
-     * @param source the source state of the transition.
-     * @param destination the destination state of the transition.
-     * @param conditional the conditional nature of the transition.
-     */
-    protected TransitionBase(S source, S destination, BooleanSupplier conditional) {
-        this(source, destination, Optional.of(conditional));
-    }
-
-    /**
-     * Constructs a new transition from the specified source and destination states and the optional conditional
-     * supplier.
-     *
-     * @param source the source state of the transition.
-     * @param destination the destination state of the transition.
-     * @param conditional the conditional nature of the transition.
-     */
-    protected TransitionBase(S source, S destination, Optional<BooleanSupplier> conditional) {
+    protected TransitionBase(S source, S destination, TransitionGuard<C> guard) {
         this.source = source;
         this.destination = destination;
-        this.conditional = conditional;
+        this.guard = guard;
     }
 
     @Override
@@ -68,8 +44,8 @@ public class TransitionBase<S> implements Transition<S> {
     }
 
     @Override
-    public boolean allowed() {
-        return !conditional.isPresent() || conditional.get().getAsBoolean();
+    public TransitionGuard<C> getGuard() {
+        return guard;
     }
 
     @Override

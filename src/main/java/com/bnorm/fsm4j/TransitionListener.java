@@ -20,5 +20,5 @@ public interface TransitionListener<S, E, C> {
      * @param transition the state transition that took place.
      * @param context the state machine context.
      */
-    void stateTransition(E event, Transition<? extends S> transition, C context);
+    void stateTransition(E event, Transition<? extends S, ? extends C> transition, C context);
 }

@@ -1,10 +1,9 @@
 package com.bnorm.fsm4j.builders;
 
-import java.util.function.BooleanSupplier;
-
 import com.bnorm.fsm4j.Action;
 import com.bnorm.fsm4j.InternalState;
 import com.bnorm.fsm4j.Transition;
+import com.bnorm.fsm4j.TransitionGuard;
 
 /**
  * Represents a builder of a specific state.  The interface provides methods that add behavior to the state machine.
@@ -63,7 +62,7 @@ public interface StateBuilder<S, E, C> {
      * @param transition the transition that will result because of the event.
      * @return the current state builder for chaining.
      */
-    StateBuilder<S, E, C> handle(E event, Transition<S> transition);
+    StateBuilder<S, E, C> handle(E event, Transition<S, C> transition);
 
     /**
      * Adds a reentrant transition as a possible transition given the specified event.
@@ -87,10 +86,10 @@ public interface StateBuilder<S, E, C> {
      * conditional.
      *
      * @param event the event that will cause the reentrant transition.
-     * @param conditional the conditional nature of the transition.
+     * @param guard the guard for the transition.
      * @return the current state builder for chaining.
      */
-    StateBuilder<S, E, C> handle(E event, BooleanSupplier conditional);
+    StateBuilder<S, E, C> handle(E event, TransitionGuard<C> guard);
 
     /**
      * Adds a transition to the specified state as a possible transition given the specified event and the specified
@@ -98,8 +97,8 @@ public interface StateBuilder<S, E, C> {
      *
      * @param event the event that will cause the transition.
      * @param destination the destination of the transition.
-     * @param conditional the conditional nature of the transition.
+     * @param guard the guard for the transition.
      * @return the current state builder for chaining.
      */
-    StateBuilder<S, E, C> handle(E event, S destination, BooleanSupplier conditional);
+    StateBuilder<S, E, C> handle(E event, S destination, TransitionGuard<C> guard);
 }

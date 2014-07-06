@@ -4,11 +4,12 @@ package com.bnorm.fsm4j;
  * Simple interface that represents a transition between states.
  *
  * @param <S> the class type of the states.
+ * @param <C> the class type of the context.
  * @author Brian Norman
  * @version 1.0
  * @since 1.0
  */
-public interface Transition<S> {
+public interface Transition<S, C> {
 
     /**
      * The state the transition originates from.
@@ -35,12 +36,12 @@ public interface Transition<S> {
     }
 
     /**
-     * If the transition is allowed.  This value could change given circumstances outside of the state machine so it is
-     * checked every time this is a possible transition.
+     * Returns the guard for the transition.  If the transition is not guarded, a transition guard that always allows
+     * the transition should be returned.
      *
-     * @return if the transition is currently allowed.
+     * @return the transition guard.
      */
-    default boolean allowed() {
-        return true;
+    default TransitionGuard<C> getGuard() {
+        return TransitionGuard.none();
     }
 }

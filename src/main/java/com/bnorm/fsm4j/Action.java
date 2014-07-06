@@ -24,5 +24,5 @@ public interface Action<S, E, C> {
      * @param transition the exact transition taking place.
      * @param context the state machine context.
      */
-    void perform(S state, E event, Transition<? extends S> transition, C context);
+    void perform(S state, E event, Transition<? extends S, ? extends C> transition, C context);
 }
