@@ -1,5 +1,6 @@
 package com.bnorm.fsm4j;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -76,17 +77,19 @@ public interface StateMachine<S, E, C> {
      * @return the resulting transition.
      */
     default Optional<Transition<S, C>> fire(E event) {
+        List<Transition<S, C>> possible = Collections.emptyList();
+
+        // To build the possible transition list, we will start with the current internal state and see if it
+        // handles the specified event.  If it does not, we iterate one level up the parent chain and repeat.
+        Optional<InternalState<S, E, C>> optional = Optional.of(getInternalState(getState()));
         final Set<Transition<S, C>> transitions = getTransitions(event);
-        List<Transition<S, C>> possible = transitions.stream()
-                                                     .filter(t -> t.getSource().equals(getState()))
-                                                     .filter(t -> t.getGuard().allowed(getContext()))
-                                                     .collect(Collectors.toList());
-        if (possible.isEmpty()) {
-            final Optional<InternalState<S, E, C>> parent = getInternalState(getState()).getParentState();
-            parent.ifPresent(p -> possible.addAll(transitions.stream()
-                                                             .filter(t -> t.getSource().equals(p.getState()))
-                                                             .filter(t -> t.getGuard().allowed(getContext()))
-                                                             .collect(Collectors.toList())));
+        while (possible.isEmpty() && optional.isPresent()) {
+            final InternalState<S, E, C> state = optional.get();
+            possible = transitions.stream()
+                                  .filter(t -> t.getSource().equals(state.getState()))
+                                  .filter(t -> t.getGuard().allowed(getContext()))
+                                  .collect(Collectors.toList());
+            optional = state.getParentState();
         }
 
         if (possible.isEmpty()) {
