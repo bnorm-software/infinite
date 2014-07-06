@@ -60,14 +60,14 @@ public interface StateMachine<S, E, C> {
      *
      * @return all transition listeners.
      */
-    Set<TransitionListener<? super S, ? super E>> getTransitionListeners();
+    Set<TransitionListener<? super S, ? super E, ? super C>> getTransitionListeners();
 
     /**
      * Adds the specified transition listener to the state machine.
      *
      * @param listener the new transition listener.
      */
-    void addTransitionListener(TransitionListener<? super S, ? super E> listener);
+    void addTransitionListener(TransitionListener<? super S, ? super E, ? super C> listener);
 
     /**
      * Fires the specified event.  This is how states are transitioned.
@@ -104,7 +104,7 @@ public interface StateMachine<S, E, C> {
         setState(transition.getDestination());
         getInternalState(getState()).enter(event, transition, getContext());
 
-        getTransitionListeners().forEach(l -> l.stateTransition(event, transition));
+        getTransitionListeners().forEach(l -> l.stateTransition(event, transition, getContext()));
         return Optional.of(transition);
     }
 }
