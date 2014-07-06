@@ -28,9 +28,9 @@ turnstile.fire("push");
 
 ### DVD Player ###
 This example shows some of the power in a hierarchical state machine.  There are two main states and two children states
-in this state machine.  The 'Active' state which is the parent of 'Playing' and 'Paused' handles to 'stop' event so it
-doesn't need to be defined for each state.  For this specific example it would probably be easier to have both 'Playing'
-and 'Paused' handle the 'stop' event but that doesn't provide a very good example, now does it?
+in this state machine.  The 'Active' state, which is the parent of 'Playing' and 'Paused', handles the 'stop' event so
+it doesn't need to be handled for each state.  For this specific example it would probably be easier to have both
+'Playing' and 'Paused' handle the 'stop' event but that doesn't provide a very good example, now does it?
 
 ```java
 StateMachineBuilder<String, String, Void> builder = StateMachineBuilderFactory.create();
@@ -47,7 +47,9 @@ builder.configure("Paused")
        .handle("play", "Playing");
 StateMachine<String, String, Void> dvdplayer = builder.build("Stopped", null);
 // Add a transition listener to print out each event and transition
-dvdplayer.addTransitionListener((event, transition, context) -> System.out.println(event + " generated " + transition));
+dvdplayer.addTransitionListener((event, transition, context) -> {
+    System.out.println(event + " generated " + transition);
+});
 dvdplayer.fire("play");
 dvdplayer.fire("pause");
 dvdplayer.fire("stop");
