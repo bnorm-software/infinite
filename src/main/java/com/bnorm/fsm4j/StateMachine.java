@@ -53,7 +53,7 @@ public interface StateMachine<S, E, C> {
      * @param event the event to find the set of transitions.
      * @return the corresponding set of transitions.
      */
-    Set<Transition<S>> getTransitions(E event);
+    Set<Transition<S, C>> getTransitions(E event);
 
     /**
      * Returns all the transition listeners for the state machine.
@@ -75,17 +75,17 @@ public interface StateMachine<S, E, C> {
      * @param event the event fired.
      * @return the resulting transition.
      */
-    default Optional<Transition<S>> fire(E event) {
-        final Set<Transition<S>> transitions = getTransitions(event);
-        List<Transition<S>> possible = transitions.stream()
-                                                  .filter(t -> t.getSource().equals(getState()))
-                                                  .filter(Transition::allowed)
-                                                  .collect(Collectors.toList());
+    default Optional<Transition<S, C>> fire(E event) {
+        final Set<Transition<S, C>> transitions = getTransitions(event);
+        List<Transition<S, C>> possible = transitions.stream()
+                                                     .filter(t -> t.getSource().equals(getState()))
+                                                     .filter(t -> t.getGuard().allowed(getContext()))
+                                                     .collect(Collectors.toList());
         if (possible.isEmpty()) {
             final Optional<InternalState<S, E, C>> parent = getInternalState(getState()).getParentState();
             parent.ifPresent(p -> possible.addAll(transitions.stream()
                                                              .filter(t -> t.getSource().equals(p.getState()))
-                                                             .filter(Transition::allowed)
+                                                             .filter(t -> t.getGuard().allowed(getContext()))
                                                              .collect(Collectors.toList())));
         }
 
@@ -95,7 +95,7 @@ public interface StateMachine<S, E, C> {
             throw new StateMachineException("Too many possible transitions");
         }
 
-        Transition<S> transition = possible.get(0);
+        Transition<S, C> transition = possible.get(0);
         if (getInternalState(transition.getDestination()) == null) {
             throw new StateMachineException("No internal state found for destination state in state machine");
         }

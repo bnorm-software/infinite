@@ -24,7 +24,7 @@ public class StateMachineBase<S, E, C> implements StateMachine<S, E, C> {
     private final Map<S, InternalState<S, E, C>> states;
 
     /** The event to transition map. */
-    private final Map<E, Set<Transition<S>>> transitions;
+    private final Map<E, Set<Transition<S, C>>> transitions;
 
     /** The current state of the state machine. */
     private S state;
@@ -40,7 +40,7 @@ public class StateMachineBase<S, E, C> implements StateMachine<S, E, C> {
      * @param starting the starting state of the state machine.
      * @param context the state machine context.
      */
-    protected StateMachineBase(Map<S, InternalState<S, E, C>> states, Map<E, Set<Transition<S>>> transitions,
+    protected StateMachineBase(Map<S, InternalState<S, E, C>> states, Map<E, Set<Transition<S, C>>> transitions,
                                S starting, C context) {
         this.listeners = new LinkedHashSet<>();
         this.states = states;
@@ -70,7 +70,7 @@ public class StateMachineBase<S, E, C> implements StateMachine<S, E, C> {
     }
 
     @Override
-    public Set<Transition<S>> getTransitions(E event) {
+    public Set<Transition<S, C>> getTransitions(E event) {
         return Collections.unmodifiableSet(transitions.getOrDefault(event, Collections.emptySet()));
     }
 

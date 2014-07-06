@@ -34,5 +34,5 @@ public interface StateMachineFactory {
      * @return a state machine.
      */
     <S, E, C> StateMachine<S, E, C> create(Map<S, InternalState<S, E, C>> states,
-                                           Map<E, Set<Transition<S>>> transitions, S starting, C context);
+                                           Map<E, Set<Transition<S, C>>> transitions, S starting, C context);
 }
