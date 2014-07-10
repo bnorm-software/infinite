@@ -33,7 +33,7 @@ public class StateBuilderBase<S, E, C> implements StateBuilder<S, E, C> {
     private final InternalState<S, E, C> state;
 
     /** The state transition factory. */
-    private final TransitionFactory transitionFactory;
+    private final TransitionFactory<S, C> transitionFactory;
 
     /**
      * Constructs a new state builder from the specified transition factory, state map, transition map, and internal
@@ -44,7 +44,7 @@ public class StateBuilderBase<S, E, C> implements StateBuilder<S, E, C> {
      * @param transitions the transitions of the state machine.
      * @param state the internal state being built.
      */
-    protected StateBuilderBase(TransitionFactory transitionFactory, Map<S, InternalState<S, E, C>> states,
+    protected StateBuilderBase(TransitionFactory<S, C> transitionFactory, Map<S, InternalState<S, E, C>> states,
                                Map<E, Set<Transition<S, C>>> transitions, InternalState<S, E, C> state) {
         this.states = states;
         this.transitions = transitions;
@@ -106,8 +106,8 @@ public class StateBuilderBase<S, E, C> implements StateBuilder<S, E, C> {
 
     @Override
     public StateBuilderBase<S, E, C> handle(E event, TransitionGuard<C> guard) {
-        return handle(event, transitionFactory.create(getInternalState().getState(), getInternalState().getState(),
-                                                      guard));
+        return handle(event,
+                      transitionFactory.create(getInternalState().getState(), getInternalState().getState(), guard));
     }
 
     @Override

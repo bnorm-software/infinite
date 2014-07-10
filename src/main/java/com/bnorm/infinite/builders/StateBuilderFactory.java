@@ -10,18 +10,24 @@ import com.bnorm.infinite.TransitionFactory;
 /**
  * A factory interface for state builders.
  *
+ * @param <S> the class type of the states.
+ * @param <E> the class type of the events.
+ * @param <C> the class type of the context.
  * @author Brian Norman
  * @version 1.0
  * @since 1.0
  */
-public interface StateBuilderFactory {
+public interface StateBuilderFactory<S, E, C> {
 
     /**
      * Returns the default state builder factory.  This is the state builder base constructor.
      *
+     * @param <S> the class type of the states.
+     * @param <E> the class type of the events.
+     * @param <C> the class type of the context.
      * @return default state builder factory.
      */
-    static StateBuilderFactory getDefault() {
+    static <S, E, C> StateBuilderFactory<S, E, C> getDefault() {
         return StateBuilderBase::new;
     }
 
@@ -33,11 +39,8 @@ public interface StateBuilderFactory {
      * @param states the states of the state machine.
      * @param transitions the transitions of the state machine.
      * @param state the internal state being built.
-     * @param <S> the class type of the states.
-     * @param <E> the class type of the events.
-     * @param <C> the class type of the context.
      * @return a new state builder.
      */
-    <S, E, C> StateBuilder<S, E, C> create(TransitionFactory transitionFactory, Map<S, InternalState<S, E, C>> states,
-                                           Map<E, Set<Transition<S, C>>> transitions, InternalState<S, E, C> state);
+    StateBuilder<S, E, C> create(TransitionFactory transitionFactory, Map<S, InternalState<S, E, C>> states,
+                                 Map<E, Set<Transition<S, C>>> transitions, InternalState<S, E, C> state);
 }
