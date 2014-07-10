@@ -5,8 +5,8 @@ package com.bnorm.infinite;
  *
  * @param <C> the class type of the context.
  * @author Brian Norman
- * @version 1.0
- * @since 1.0
+ * @version 1.0.0
+ * @since 1.0.0
  */
 @FunctionalInterface
 public interface TransitionGuard<C> {
