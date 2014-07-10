@@ -9,7 +9,7 @@ Infinite can be found in Maven Central thanks to Sonatype OSSRH.
 <dependency>
     <groupId>com.bnorm</groupId>
     <artifactId>infinite</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 ```
 
@@ -19,7 +19,7 @@ The latest SNAPSHOT can be used with the following dependency.
 <dependency>
     <groupId>com.bnorm</groupId>
     <artifactId>infinite</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.2-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -74,7 +74,7 @@ dvdplayer.fire("pause");
 dvdplayer.fire("stop");
 ```
 
-## Features ##
+## Releases ##
 
 ### Version 1.0.0 ###
 **Initial release**
@@ -85,6 +85,10 @@ dvdplayer.fire("stop");
  - State machine transition listeners
  - Flexible typing for states, events, and context
  - Easy to use state machine builder classes
+
+### Version 1.0.1 ###
+**First use case bug**
+ - (#45) Factories not defining type at class level does not allow custom type factories
 
 ## Future ##
 
