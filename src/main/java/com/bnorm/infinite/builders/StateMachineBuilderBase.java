@@ -18,22 +18,22 @@ import com.bnorm.infinite.TransitionFactory;
  * @param <E> the class type of the events.
  * @param <C> the class type of the context.
  * @author Brian Norman
- * @version 1.0.0
+ * @version 1.0.1
  * @since 1.0.0
  */
 public class StateMachineBuilderBase<S, E, C> implements StateMachineBuilder<S, E, C> {
 
     /** The state machine builder internal state factory. */
-    private final InternalStateFactory stateFactory;
+    private final InternalStateFactory<S, E, C> stateFactory;
 
     /** The state transition factory. */
-    private final TransitionFactory transitionFactory;
+    private final TransitionFactory<S, C> transitionFactory;
 
     /** The state machine builder state machine factory. */
-    private final StateMachineFactory stateMachineFactory;
+    private final StateMachineFactory<S, E, C> stateMachineFactory;
 
     /** The state machine builder state builder factory. */
-    private final StateBuilderFactory configurationFactory;
+    private final StateBuilderFactory<S, E, C> configurationFactory;
 
     /** The state to internal state map. */
     private final Map<S, InternalState<S, E, C>> states;
@@ -51,9 +51,10 @@ public class StateMachineBuilderBase<S, E, C> implements StateMachineBuilder<S, 
      * @param stateBuilderFactory the factory used to create state builders.
      * @param stateMachineFactory the factory used to create the state machine.
      */
-    protected StateMachineBuilderBase(InternalStateFactory internalStateFactory, TransitionFactory transitionFactory,
-                                      StateBuilderFactory stateBuilderFactory,
-                                      StateMachineFactory stateMachineFactory) {
+    protected StateMachineBuilderBase(InternalStateFactory<S, E, C> internalStateFactory,
+                                      TransitionFactory<S, C> transitionFactory,
+                                      StateBuilderFactory<S, E, C> stateBuilderFactory,
+                                      StateMachineFactory<S, E, C> stateMachineFactory) {
         this.stateFactory = internalStateFactory;
         this.transitionFactory = transitionFactory;
         this.stateMachineFactory = stateMachineFactory;

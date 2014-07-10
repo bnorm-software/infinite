@@ -1,18 +1,24 @@
 package com.bnorm.infinite;
 
 /**
+ * A factory interface for transitions.
+ *
+ * @param <S> the class type of the states.
+ * @param <C> the class type of the context.
  * @author Brian Norman
- * @version 1.0.0
+ * @version 1.0.1
  * @since 1.0.0
  */
-public interface TransitionFactory {
+public interface TransitionFactory<S, C> {
 
     /**
      * Returns the default internal state factory.  This is the internal state base constructor.
      *
+     * @param <S> the class type of the states.
+     * @param <C> the class type of the context.
      * @return default internal state factory.
      */
-    static TransitionFactory getDefault() {
+    static <S, C> TransitionFactory<S, C> getDefault() {
         return TransitionBase::new;
     }
 
@@ -21,11 +27,9 @@ public interface TransitionFactory {
      *
      * @param source the source state of the transition.
      * @param destination the destination state of the transition.
-     * @param <S> the class type of the states.
-     * @param <C> the class type of the context.
      * @return a transition.
      */
-    default <S, C> TransitionBase<S, C> create(S source, S destination) {
+    default Transition<S, C> create(S source, S destination) {
         return create(source, destination, TransitionGuard.none());
     }
 
@@ -35,9 +39,7 @@ public interface TransitionFactory {
      * @param source the source state of the transition.
      * @param destination the destination state of the transition.
      * @param guard the guard for the transition.
-     * @param <S> the class type of the states.
-     * @param <C> the class type of the context.
      * @return a transition.
      */
-    <S, C> TransitionBase<S, C> create(S source, S destination, TransitionGuard<C> guard);
+    Transition<S, C> create(S source, S destination, TransitionGuard<C> guard);
 }
