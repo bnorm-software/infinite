@@ -1,5 +1,6 @@
-## Infinite [![Build Status](https://travis-ci.org/bnorm-software/infinite.svg?branch=master)](https://travis-ci.org/bnorm-software/infinite) ##
-Infinite is a hierarchical finite state machine for Java.  The library is designed to be lightweight yet full featured.
+## Infinite [![Build Status](https://travis-ci.org/bnorm-software/infinite.svg?branch=master)](https://travis-ci.org/bnorm-software/infinite) [![Coverage Status](https://coveralls.io/repos/bnorm-software/infinite/badge.png?branch=master)](https://coveralls.io/r/bnorm-software/infinite?branch=master) ##
+
+Infinite is a quantum hierarchical finite state machine for Java.  The library is designed to be lightweight yet full featured.
 
 ## Maven ##
 Infinite can be found in Maven Central thanks to Sonatype OSSRH.
