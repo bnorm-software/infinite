@@ -18,7 +18,7 @@ import com.bnorm.infinite.TransitionGuard;
  * @param <E> the class type of the events.
  * @param <C> the class type of the context.
  * @author Brian Norman
- * @version 1.0.0
+ * @version 1.0.1
  * @since 1.0.0
  */
 public class StateBuilderBase<S, E, C> implements StateBuilder<S, E, C> {

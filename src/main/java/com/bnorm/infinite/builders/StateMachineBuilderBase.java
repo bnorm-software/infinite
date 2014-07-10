@@ -18,7 +18,7 @@ import com.bnorm.infinite.TransitionFactory;
  * @param <E> the class type of the events.
  * @param <C> the class type of the context.
  * @author Brian Norman
- * @version 1.0.0
+ * @version 1.0.1
  * @since 1.0.0
  */
 public class StateMachineBuilderBase<S, E, C> implements StateMachineBuilder<S, E, C> {

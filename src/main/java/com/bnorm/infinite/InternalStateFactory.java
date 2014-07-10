@@ -7,7 +7,7 @@ package com.bnorm.infinite;
  * @param <E> the class type of the events.
  * @param <C> the class type of the context.
  * @author Brian Norman
- * @version 1.0.0
+ * @version 1.0.1
  * @since 1.0.0
  */
 public interface InternalStateFactory<S, E, C> {
