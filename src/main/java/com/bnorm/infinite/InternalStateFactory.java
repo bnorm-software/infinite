@@ -4,8 +4,8 @@ package com.bnorm.infinite;
  * A factory interface for internal states.
  *
  * @author Brian Norman
- * @version 1.0
- * @since 1.0
+ * @version 1.0.0
+ * @since 1.0.0
  */
 public interface InternalStateFactory {
 

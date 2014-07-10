@@ -7,8 +7,8 @@ import java.util.Set;
  * A factory interface for state machines.
  *
  * @author Brian Norman
- * @version 1.0
- * @since 1.0
+ * @version 1.0.0
+ * @since 1.0.0
  */
 public interface StateMachineFactory {
 
