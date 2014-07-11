@@ -9,7 +9,7 @@ Infinite can be found in Maven Central thanks to Sonatype OSSRH.
 <dependency>
     <groupId>com.bnorm</groupId>
     <artifactId>infinite</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
 </dependency>
 ```
 
@@ -19,7 +19,7 @@ The latest SNAPSHOT can be used with the following dependency.
 <dependency>
     <groupId>com.bnorm</groupId>
     <artifactId>infinite</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.1.0-SNAPSHOT</version>
 </dependency>
 ```
 
