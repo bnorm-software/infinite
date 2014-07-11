@@ -41,6 +41,6 @@ public interface StateBuilderFactory<S, E, C> {
      * @param state the internal state being built.
      * @return a new state builder.
      */
-    StateBuilder<S, E, C> create(TransitionFactory transitionFactory, Map<S, InternalState<S, E, C>> states,
+    StateBuilder<S, E, C> create(TransitionFactory<S, C> transitionFactory, Map<S, InternalState<S, E, C>> states,
                                  Map<E, Set<Transition<S, C>>> transitions, InternalState<S, E, C> state);
 }
