@@ -28,9 +28,9 @@ public interface StateMachineBuilder<S, E, C> {
     /**
      * Builds and returns the state machine the state machine builder is constructing.
      *
-     * @param starting the starting state of the state machine.
      * @param context the state machine context.
+     * @param starting the starting state of the state machine.
      * @return the state machine.
      */
-    StateMachine<S, E, C> build(S starting, C context);
+    StateMachine<S, E, C> build(C context, S starting);
 }

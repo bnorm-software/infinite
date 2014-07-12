@@ -1,5 +1,7 @@
 package com.bnorm.infinite.builders;
 
+import java.util.function.Supplier;
+
 import com.bnorm.infinite.Action;
 import com.bnorm.infinite.InternalState;
 import com.bnorm.infinite.Transition;
@@ -73,7 +75,7 @@ public interface StateBuilder<S, E, C> {
     StateBuilder<S, E, C> handle(E event);
 
     /**
-     * Adds a transition to the specified state as a possible transition given the specified event.
+     * Adds a transition to the specified state as a possible transition given the specified event and destination.
      *
      * @param event the event that will cause the transition.
      * @param destination the destination of the transition.
@@ -82,8 +84,17 @@ public interface StateBuilder<S, E, C> {
     StateBuilder<S, E, C> handle(E event, S destination);
 
     /**
-     * Adds a reentrant transition as a possible transition given the specified event and the specified boolean supplier
-     * conditional.
+     * Adds a transition to the specified state as a possible transition given the specified event and destination
+     * supplier.
+     *
+     * @param event the event that will cause the transition.
+     * @param destination the destination supplier of the transition.
+     * @return the current state builder for chaining.
+     */
+    StateBuilder<S, E, C> handle(E event, Supplier<S> destination);
+
+    /**
+     * Adds a reentrant transition as a possible transition given the specified event and transition guard.
      *
      * @param event the event that will cause the reentrant transition.
      * @param guard the guard for the transition.
@@ -92,8 +103,8 @@ public interface StateBuilder<S, E, C> {
     StateBuilder<S, E, C> handle(E event, TransitionGuard<C> guard);
 
     /**
-     * Adds a transition to the specified state as a possible transition given the specified event and the specified
-     * boolean supplier conditional.
+     * Adds a transition to the specified state as a possible transition given the specified event, destination, and the
+     * transition guard.
      *
      * @param event the event that will cause the transition.
      * @param destination the destination of the transition.
@@ -101,4 +112,15 @@ public interface StateBuilder<S, E, C> {
      * @return the current state builder for chaining.
      */
     StateBuilder<S, E, C> handle(E event, S destination, TransitionGuard<C> guard);
+
+    /**
+     * Adds a transition to the specified state as a possible transition given the specified event, destination
+     * supplier, and transition guard.
+     *
+     * @param event the event that will cause the transition.
+     * @param destination the destination supplier of the transition.
+     * @param guard the guard for the transition.
+     * @return the current state builder for chaining.
+     */
+    StateBuilder<S, E, C> handle(E event, Supplier<S> destination, TransitionGuard<C> guard);
 }

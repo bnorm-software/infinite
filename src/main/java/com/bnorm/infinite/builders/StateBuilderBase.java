@@ -3,6 +3,7 @@ package com.bnorm.infinite.builders;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Supplier;
 
 import com.bnorm.infinite.Action;
 import com.bnorm.infinite.InternalState;
@@ -105,6 +106,11 @@ public class StateBuilderBase<S, E, C> implements StateBuilder<S, E, C> {
     }
 
     @Override
+    public StateBuilder<S, E, C> handle(E event, Supplier<S> destination) {
+        return handle(event, transitionFactory.create(getInternalState().getState(), destination));
+    }
+
+    @Override
     public StateBuilderBase<S, E, C> handle(E event, TransitionGuard<C> guard) {
         return handle(event,
                       transitionFactory.create(getInternalState().getState(), getInternalState().getState(), guard));
@@ -112,6 +118,11 @@ public class StateBuilderBase<S, E, C> implements StateBuilder<S, E, C> {
 
     @Override
     public StateBuilderBase<S, E, C> handle(E event, S destination, TransitionGuard<C> guard) {
+        return handle(event, transitionFactory.create(getInternalState().getState(), destination, guard));
+    }
+
+    @Override
+    public StateBuilder<S, E, C> handle(E event, Supplier<S> destination, TransitionGuard<C> guard) {
         return handle(event, transitionFactory.create(getInternalState().getState(), destination, guard));
     }
 }

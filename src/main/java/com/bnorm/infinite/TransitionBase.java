@@ -1,5 +1,7 @@
 package com.bnorm.infinite;
 
+import java.util.function.Supplier;
+
 /**
  * The base implementation of a transition.
  *
@@ -14,8 +16,8 @@ public class TransitionBase<S, C> implements Transition<S, C> {
     /** The source state of the transition. */
     private final S source;
 
-    /** The destination state of the transition. */
-    private final S destination;
+    /** The destination state supplier of the transition. */
+    private final Supplier<S> destination;
 
     /** The conditional nature of the transition. */
     private final TransitionGuard<C> guard;
@@ -24,10 +26,10 @@ public class TransitionBase<S, C> implements Transition<S, C> {
      * Constructs a new transition from the specified source and destination states and the transition guard.
      *
      * @param source the source state of the transition.
-     * @param destination the destination state of the transition.
+     * @param destination the destination state supplier of the transition.
      * @param guard the guard for the transition.
      */
-    protected TransitionBase(S source, S destination, TransitionGuard<C> guard) {
+    protected TransitionBase(S source, Supplier<S> destination, TransitionGuard<C> guard) {
         this.source = source;
         this.destination = destination;
         this.guard = guard;
@@ -40,7 +42,7 @@ public class TransitionBase<S, C> implements Transition<S, C> {
 
     @Override
     public S getDestination() {
-        return destination;
+        return destination.get();
     }
 
     @Override
@@ -50,6 +52,6 @@ public class TransitionBase<S, C> implements Transition<S, C> {
 
     @Override
     public String toString() {
-        return "TransitionBase[" + source + "->" + destination + "]";
+        return "TransitionBase[" + getSource() + "->" + getDestination() + "]";
     }
 }
