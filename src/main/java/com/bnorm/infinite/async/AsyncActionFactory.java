@@ -31,7 +31,7 @@ public interface AsyncActionFactory<S, E, C> {
         return new AsyncActionFactory<S, E, C>() {
             /** The backing executor. */
             private final ExecutorService executor = Executors.newCachedThreadPool(
-                    new ActionThreadFactory("AsyncAction"));
+                    new NamedThreadFactory("AsyncAction"));
 
             @Override
             public ExecutorService getExecutor() {
