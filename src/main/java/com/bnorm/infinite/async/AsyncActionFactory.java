@@ -1,6 +1,6 @@
 package com.bnorm.infinite.async;
 
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.bnorm.infinite.Action;
@@ -30,10 +30,11 @@ public interface AsyncActionFactory<S, E, C> {
     static <S, E, C> AsyncActionFactory<S, E, C> getDefault() {
         return new AsyncActionFactory<S, E, C>() {
             /** The backing executor. */
-            private final Executor executor = Executors.newCachedThreadPool(new ActionThreadFactory("AsyncAction"));
+            private final ExecutorService executor = Executors.newCachedThreadPool(
+                    new ActionThreadFactory("AsyncAction"));
 
             @Override
-            public Executor getExecutor() {
+            public ExecutorService getExecutor() {
                 return executor;
             }
         };
@@ -51,16 +52,16 @@ public interface AsyncActionFactory<S, E, C> {
         return new Action<S, E, C>() {
             @Override
             public void perform(S state, E event, Transition<? extends S, ? extends C> transition, C context) {
-                getExecutor().execute(() -> action.perform(state, event, transition, context));
+                getExecutor().submit(() -> action.perform(state, event, transition, context));
             }
         };
     }
 
     /**
-     * Returns the executor that backs this async action factory.  This is the executor used to perform all asynchronous
-     * actions.
+     * Returns the executor service that backs this async action factory.  This is the executor used to perform all
+     * asynchronous actions.
      *
      * @return the asynchronous action executor.
      */
-    Executor getExecutor();
+    ExecutorService getExecutor();
 }
