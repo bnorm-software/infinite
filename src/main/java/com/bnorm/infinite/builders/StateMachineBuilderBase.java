@@ -70,7 +70,7 @@ public class StateMachineBuilderBase<S, E, C> implements StateMachineBuilder<S, 
     }
 
     @Override
-    public StateMachine<S, E, C> build(S starting, C context) {
-        return stateMachineFactory.create(states, transitions, starting, context);
+    public StateMachine<S, E, C> build(C context, S starting) {
+        return stateMachineFactory.create(transitionFactory, states, transitions, context, starting);
     }
 }
