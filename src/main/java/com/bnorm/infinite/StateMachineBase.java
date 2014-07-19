@@ -44,11 +44,11 @@ public class StateMachineBase<S, E, C> implements StateMachine<S, E, C> {
      * @param transitionFactory the factory used to create transitions.
      * @param states the states of the state machine.
      * @param transitions the transitions of the state machine.
-     * @param context the state machine context.
      * @param starting the starting state of the state machine.
+     * @param context the state machine context.
      */
     protected StateMachineBase(TransitionFactory<S, C> transitionFactory, Map<S, InternalState<S, E, C>> states,
-                               Map<E, Set<Transition<S, C>>> transitions, C context, S starting) {
+                               Map<E, Set<Transition<S, C>>> transitions, S starting, C context) {
         this.transitionFactory = transitionFactory;
         this.states = states;
         this.transitions = transitions;

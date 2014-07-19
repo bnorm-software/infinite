@@ -27,17 +27,17 @@ public class StateMachineTest {
         builder.configure("State1").handle("event1", "State2");
         builder.configure("State2").handle("event2", "State1");
 
-        machine = builder.build(null, "State1");
+        machine = builder.build("State1", null);
 
         Assert.assertEquals("State1", machine.getState());
         Assert.assertNotEquals("State2", machine.getState());
 
-        machine = builder.build(null, "State2");
+        machine = builder.build("State2", null);
 
         Assert.assertNotEquals("State1", machine.getState());
         Assert.assertEquals("State2", machine.getState());
 
-        machine = builder.build(null, "Fake");
+        machine = builder.build("Fake", null);
 
         Assert.assertNotEquals("State1", machine.getState());
         Assert.assertNotEquals("State2", machine.getState());
@@ -57,7 +57,7 @@ public class StateMachineTest {
                .handle("event2", "State1")
                .onEntry((state, event, transition, context) -> Assert.assertEquals("Context", context))
                .onExit((state, event, transition, context) -> Assert.assertEquals("Context", context));
-        StateMachine<String, String, String> machine = builder.build("Context", "State1");
+        StateMachine<String, String, String> machine = builder.build("State1", "Context");
         machine.addTransitionListener((event, transition, context) -> Assert.assertEquals("Context", context));
 
         Assert.assertEquals("Context", machine.getContext());
@@ -88,7 +88,7 @@ public class StateMachineTest {
         StateMachineBuilder<String, String, Void> turnstileBuilder = StateMachineBuilderFactory.create();
         turnstileBuilder.configure("Locked").handle("coin", "Unlocked");
         turnstileBuilder.configure("Unlocked").handle("push", "Locked");
-        StateMachine<String, String, Void> turnstile = turnstileBuilder.build(null, "Locked");
+        StateMachine<String, String, Void> turnstile = turnstileBuilder.build("Locked", null);
         Optional<Transition<String, Void>> turnstileTransition;
 
         turnstileTransition = turnstile.fire("coin");
@@ -117,7 +117,7 @@ public class StateMachineTest {
         dvdplayerBuilder.configure("Active").handle("stop", "Stopped");
         dvdplayerBuilder.configure("Playing").childOf("Active").handle("pause", "Paused");
         dvdplayerBuilder.configure("Paused").childOf("Active").handle("play", "Playing");
-        StateMachine<String, String, AtomicBoolean> dvdplayer = dvdplayerBuilder.build(containsDVD, "Stopped");
+        StateMachine<String, String, AtomicBoolean> dvdplayer = dvdplayerBuilder.build("Stopped", containsDVD);
         Optional<Transition<String, AtomicBoolean>> dvdplayerTransition;
 
         dvdplayerTransition = dvdplayer.fire("play");
