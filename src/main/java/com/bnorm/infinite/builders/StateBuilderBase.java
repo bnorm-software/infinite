@@ -2,6 +2,7 @@ package com.bnorm.infinite.builders;
 
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -86,7 +87,7 @@ public class StateBuilderBase<S, E, C> implements StateBuilder<S, E, C> {
 
     @Override
     public StateBuilderBase<S, E, C> handle(E event, Transition<S, C> transition) {
-        if (!transition.getSource().equals(getInternalState().getState())) {
+        if (!Objects.equals(transition.getSource(), getInternalState().getState())) {
             throw new StateMachineException(
                     "Illegal transition source.  Should be [" + getInternalState().getState() + "] Is [" + transition.getSource() + "]");
         }

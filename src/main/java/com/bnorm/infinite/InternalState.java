@@ -1,5 +1,6 @@
 package com.bnorm.infinite;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -48,7 +49,7 @@ public interface InternalState<S, E, C> {
     default boolean isParent(S state) {
         if (getParentState().isPresent()) {
             InternalState<S, E, C> parent = getParentState().get();
-            return parent.getState().equals(state) || parent.isParent(state);
+            return Objects.equals(parent.getState(), state) || parent.isParent(state);
         } else {
             return false;
         }
@@ -78,7 +79,7 @@ public interface InternalState<S, E, C> {
      */
     default boolean isChild(S state) {
         // Check all children...
-        return getChildrenStates().stream().anyMatch(c -> c.getState().equals(state))
+        return getChildrenStates().stream().anyMatch(c -> Objects.equals(c.getState(), state))
                 // ... before checking recursion to check children's children.
                 || getChildrenStates().parallelStream().anyMatch(c -> c.isChild(state));
     }
@@ -109,7 +110,7 @@ public interface InternalState<S, E, C> {
     default void enter(E event, Transition<S, C> transition, C context) {
         if (transition.isReentrant()) {
             getEntranceActions().stream().forEach(a -> a.perform(getState(), event, transition, context));
-        } else if (!isChild(transition.getSource()) && !getState().equals(transition.getSource())) {
+        } else if (!isChild(transition.getSource()) && !Objects.equals(getState(), transition.getSource())) {
             getParentState().ifPresent(s -> s.enter(event, transition, context));
             getEntranceActions().stream().forEach(a -> a.perform(getState(), event, transition, context));
         }
@@ -141,7 +142,7 @@ public interface InternalState<S, E, C> {
     default void exit(E event, Transition<S, C> transition, C context) {
         if (transition.isReentrant()) {
             getExitActions().stream().forEach(a -> a.perform(getState(), event, transition, context));
-        } else if (!isChild(transition.getDestination()) && !getState().equals(transition.getDestination())) {
+        } else if (!isChild(transition.getDestination()) && !Objects.equals(getState(), transition.getDestination())) {
             getExitActions().stream().forEach(a -> a.perform(getState(), event, transition, context));
             getParentState().ifPresent(s -> s.exit(event, transition, context));
         }
