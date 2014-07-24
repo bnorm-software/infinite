@@ -1,5 +1,7 @@
 package com.bnorm.infinite;
 
+import java.util.Objects;
+
 /**
  * Simple interface that represents a transition between states.
  *
@@ -32,7 +34,7 @@ public interface Transition<S, C> {
      * @return if the source state is equal to the destination state.
      */
     default boolean isReentrant() {
-        return getSource().equals(getDestination());
+        return Objects.equals(getSource(), getDestination());
     }
 
     /**

@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -83,7 +84,7 @@ public class StateMachineBase<S, E, C> implements StateMachine<S, E, C> {
         while (possible.isEmpty() && optional.isPresent()) {
             final InternalState<S, E, C> state = optional.get();
             possible = eventTransitions.stream()
-                                       .filter(t -> t.getSource().equals(state.getState()))
+                                       .filter(t -> Objects.equals(t.getSource(), state.getState()))
                                        .filter(t -> t.getGuard().allowed(getContext()))
                                        .collect(Collectors.toList());
             optional = state.getParentState();
