@@ -10,15 +10,16 @@ package com.bnorm.infinite;
  * @version 1.0.0
  * @since 1.0.0
  */
-@FunctionalInterface
 public interface TransitionListener<S, E, C> {
 
     /**
-     * When the listener is added to a state machine, this method is called whenever there is a state transition.
+     * When the listener is added to a state machine, this method is called during all the different stages of a state
+     * transition.
      *
+     * @param stage the state transition stage.
      * @param event the event that caused the transition.
      * @param transition the state transition that took place.
      * @param context the state machine context.
      */
-    void stateTransition(E event, Transition<? extends S, ? extends C> transition, C context);
+    void stateTransition(TransitionStage stage, E event, Transition<? extends S, ? extends C> transition, C context);
 }

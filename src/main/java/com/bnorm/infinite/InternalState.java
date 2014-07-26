@@ -147,4 +147,39 @@ public interface InternalState<S, E, C> {
             getParentState().ifPresent(s -> s.exit(event, transition, context));
         }
     }
+
+
+    // =========================== //
+    // **** Static Utilities ***** //
+    // =========================== //
+
+    /**
+     * Returns the first common ancestor of the two specified internal statues.  If one of the internal states is the
+     * parent of the other, that internal state is returned.
+     *
+     * @param state1 the first state to find the common ancestor.
+     * @param state2 the second state to find the common ancestor.
+     * @param <S> the class type of the states.
+     * @param <E> the class type of the events.
+     * @param <C> the class type of the context.
+     * @return the first common ancestor.
+     */
+    static <S, E, C> Optional<InternalState<S, E, C>> getCommonAncestor(InternalState<S, E, C> state1,
+                                                                        InternalState<S, E, C> state2) {
+        InternalState<S, E, C> commonParent = null;
+        if (state1.isParent(state2.getState())) {
+            commonParent = state2;
+        } else if (state2.isParent(state1.getState())) {
+            commonParent = state1;
+        } else if (state2.getParentState().isPresent()) {
+            InternalState<S, E, C> parentOfNext = state2.getParentState().get();
+            while (!state1.isParent(parentOfNext.getState()) && parentOfNext.getParentState().isPresent()) {
+                parentOfNext = parentOfNext.getParentState().get();
+            }
+            if (state1.isParent(parentOfNext.getState())) {
+                commonParent = parentOfNext;
+            }
+        }
+        return Optional.ofNullable(commonParent);
+    }
 }

@@ -102,11 +102,17 @@ public class StateMachineBase<S, E, C> implements StateMachine<S, E, C> {
             throw new StateMachineException("No internal state found for destination state in state machine");
         }
 
+        Optional<InternalState<S, E, C>> commonAncestor = InternalState.getCommonAncestor(states.get(state), states.get(
+                transition.getDestination()));
+
+        listeners.forEach(l -> l.stateTransition(TransitionStage.Before, event, transition, context));
         states.get(state).exit(event, transition, context);
+        state = commonAncestor.isPresent() ? commonAncestor.get().getState() : null;
+        listeners.forEach(l -> l.stateTransition(TransitionStage.Between, event, transition, context));
         state = transition.getDestination();
         states.get(state).enter(event, transition, context);
+        listeners.forEach(l -> l.stateTransition(TransitionStage.After, event, transition, context));
 
-        listeners.forEach(l -> l.stateTransition(event, transition, context));
         return Optional.of(transition);
     }
 }
