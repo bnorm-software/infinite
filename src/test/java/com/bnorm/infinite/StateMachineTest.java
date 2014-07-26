@@ -58,7 +58,7 @@ public class StateMachineTest {
                .onEntry((state, event, transition, context) -> Assert.assertEquals("Context", context))
                .onExit((state, event, transition, context) -> Assert.assertEquals("Context", context));
         StateMachine<String, String, String> machine = builder.build("State1", "Context");
-        machine.addTransitionListener((event, transition, context) -> Assert.assertEquals("Context", context));
+        machine.addTransitionListener((stage, event, transition, context) -> Assert.assertEquals("Context", context));
 
         Assert.assertEquals("Context", machine.getContext());
 
