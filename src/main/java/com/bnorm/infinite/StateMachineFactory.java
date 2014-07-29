@@ -1,8 +1,5 @@
 package com.bnorm.infinite;
 
-import java.util.Map;
-import java.util.Set;
-
 /**
  * A factory interface for state machines.
  *
@@ -28,15 +25,12 @@ public interface StateMachineFactory<S, E, C> {
     }
 
     /**
-     * Creates a state machine from the specified state map, transition map, starting state, and context.
+     * Creates a state machine from the specified state machine structure, starting state, and context.
      *
-     * @param transitionFactory the factory used to create transitions.
-     * @param states the states of the state machine.
-     * @param transitions the transitions of the state machine.
+     * @param structure the state machine structure.
      * @param starting the starting state of the state machine.
      * @param context the state machine context.
      * @return a state machine.
      */
-    StateMachine<S, E, C> create(TransitionFactory<S, C> transitionFactory, Map<S, InternalState<S, E, C>> states,
-                                 Map<E, Set<Transition<S, C>>> transitions, S starting, C context);
+    StateMachine<S, E, C> create(StateMachineStructure<S, E, C> structure, S starting, C context);
 }

@@ -5,7 +5,6 @@ import java.util.function.Supplier;
 import com.bnorm.infinite.Action;
 import com.bnorm.infinite.Transition;
 import com.bnorm.infinite.TransitionGuard;
-import com.bnorm.infinite.async.AsyncActionFactory;
 
 /**
  * Represents a builder of a specific state for an asynchronous state machine.  The interface provides methods that add
@@ -20,21 +19,11 @@ import com.bnorm.infinite.async.AsyncActionFactory;
  */
 public interface AsyncStateBuilder<S, E, C> extends StateBuilder<S, E, C> {
 
-    /**
-     * Returns the factory used to create asynchronous actions.
-     *
-     * @return the asynchronous action factory.
-     */
-    AsyncActionFactory<S, E, C> getAsyncActionFactory();
-
     @Override
     AsyncStateBuilder<S, E, C> childOf(S state);
 
     @Override
-    default AsyncStateBuilder<S, E, C> onEntry(Action<S, E, C> action) {
-        StateBuilder.super.onEntry(action);
-        return this;
-    }
+    AsyncStateBuilder<S, E, C> onEntry(Action<S, E, C> action);
 
     /**
      * Adds the specified action as an asynchronous entry action to the internal state.
@@ -42,15 +31,10 @@ public interface AsyncStateBuilder<S, E, C> extends StateBuilder<S, E, C> {
      * @param action the new asynchronous entry action.
      * @return the current asynchronous state builder for chaining.
      */
-    default AsyncStateBuilder<S, E, C> onAsyncEntry(Action<S, E, C> action) {
-        return onEntry(getAsyncActionFactory().create(action));
-    }
+    AsyncStateBuilder<S, E, C> onAsyncEntry(Action<S, E, C> action);
 
     @Override
-    default AsyncStateBuilder<S, E, C> onExit(Action<S, E, C> action) {
-        StateBuilder.super.onExit(action);
-        return this;
-    }
+    AsyncStateBuilder<S, E, C> onExit(Action<S, E, C> action);
 
     /**
      * Adds the specified action as an asynchronous exit action to the internal state.
@@ -58,9 +42,7 @@ public interface AsyncStateBuilder<S, E, C> extends StateBuilder<S, E, C> {
      * @param action the new asynchronous exit action.
      * @return the current asynchronous state builder for chaining.
      */
-    default AsyncStateBuilder<S, E, C> onAsyncExit(Action<S, E, C> action) {
-        return onExit(getAsyncActionFactory().create(action));
-    }
+    AsyncStateBuilder<S, E, C> onAsyncExit(Action<S, E, C> action);
 
     @Override
     AsyncStateBuilder<S, E, C> handle(E event, Transition<S, C> transition);

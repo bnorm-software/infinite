@@ -1,8 +1,6 @@
 package com.bnorm.infinite.async;
 
-import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -11,11 +9,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReentrantLock;
 
-import com.bnorm.infinite.InternalState;
 import com.bnorm.infinite.StateMachineBase;
 import com.bnorm.infinite.StateMachineException;
+import com.bnorm.infinite.StateMachineStructure;
 import com.bnorm.infinite.Transition;
-import com.bnorm.infinite.TransitionFactory;
 
 /**
  * The base implementation of an asynchronous state machine.
@@ -42,18 +39,14 @@ public class AsyncStateMachineBase<S, E, C> extends StateMachineBase<S, E, C> im
     private final AtomicBoolean running;
 
     /**
-     * Constructs a new state machine from the specified transition factory, state map, transition map, starting state,
-     * and context.
+     * Constructs a new state machine from the specified state machine structure, starting state, and context.
      *
-     * @param transitionFactory the factory used to create transitions.
-     * @param states the states of the state machine.
-     * @param transitions the transitions of the state machine.
+     * @param structure the state machine structure.
      * @param starting the starting state of the state machine.
      * @param context the state machine context.
      */
-    public AsyncStateMachineBase(TransitionFactory<S, C> transitionFactory, Map<S, InternalState<S, E, C>> states,
-                                 Map<E, Set<Transition<S, C>>> transitions, S starting, C context) {
-        super(transitionFactory, states, transitions, starting, context);
+    public AsyncStateMachineBase(StateMachineStructure<S, E, C> structure, S starting, C context) {
+        super(structure, starting, context);
         this.stateMachineLock = new ReentrantLock();
         this.eventQueue = new PriorityBlockingQueue<>();
         this.priority = new AtomicLong(Long.MIN_VALUE + 1);

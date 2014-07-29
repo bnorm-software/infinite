@@ -1,12 +1,7 @@
 package com.bnorm.infinite.async;
 
-import java.util.Map;
-import java.util.Set;
-
-import com.bnorm.infinite.InternalState;
 import com.bnorm.infinite.StateMachineFactory;
-import com.bnorm.infinite.Transition;
-import com.bnorm.infinite.TransitionFactory;
+import com.bnorm.infinite.StateMachineStructure;
 
 /**
  * A factory interface for asynchronous state machines.
@@ -18,7 +13,7 @@ import com.bnorm.infinite.TransitionFactory;
  * @version 1.1.0
  * @since 1.1.0
  */
-public interface AsyncStateMachineFactory<S, E, C> {
+public interface AsyncStateMachineFactory<S, E, C> extends StateMachineFactory<S, E, C> {
 
     /**
      * Returns the default asynchronous state machine factory.  This is the asynchronous state machine base
@@ -33,17 +28,15 @@ public interface AsyncStateMachineFactory<S, E, C> {
         return AsyncStateMachineBase::new;
     }
 
+
     /**
-     * Creates an asynchronous state machine from the specified transition factory, state map, transition map, starting
-     * state, and context.
+     * Creates an asynchronous state machine from the specified state machine structure, starting state, and context.
      *
-     * @param transitionFactory the factory used to create transitions.
-     * @param states the states of the state machine.
-     * @param transitions the transitions of the state machine.
+     * @param structure the state machine structure.
      * @param starting the starting state of the state machine.
      * @param context the state machine context.
      * @return a state machine.
      */
-    AsyncStateMachine<S, E, C> create(TransitionFactory<S, C> transitionFactory, Map<S, InternalState<S, E, C>> states,
-                                      Map<E, Set<Transition<S, C>>> transitions, S starting, C context);
+    @Override
+    AsyncStateMachine<S, E, C> create(StateMachineStructure<S, E, C> structure, S starting, C context);
 }

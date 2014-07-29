@@ -1,11 +1,6 @@
 package com.bnorm.infinite.builders;
 
-import java.util.Map;
-import java.util.Set;
-
-import com.bnorm.infinite.InternalState;
-import com.bnorm.infinite.Transition;
-import com.bnorm.infinite.TransitionFactory;
+import com.bnorm.infinite.StateMachineStructure;
 
 /**
  * A factory interface for state builders.
@@ -32,15 +27,11 @@ public interface StateBuilderFactory<S, E, C> {
     }
 
     /**
-     * Creates a new state builder from the specified transition factory, state map, transition map, and internal state
-     * being built.
+     * Creates a new state builder from the specified state machine structure and the state being built.
      *
-     * @param transitionFactory the factory used to create transitions.
-     * @param states the states of the state machine.
-     * @param transitions the transitions of the state machine.
-     * @param state the internal state being built.
+     * @param structure the state machine structure.
+     * @param state the state being built.
      * @return a new state builder.
      */
-    StateBuilder<S, E, C> create(TransitionFactory<S, C> transitionFactory, Map<S, InternalState<S, E, C>> states,
-                                 Map<E, Set<Transition<S, C>>> transitions, InternalState<S, E, C> state);
+    StateBuilder<S, E, C> create(StateMachineStructure<S, E, C> structure, S state);
 }

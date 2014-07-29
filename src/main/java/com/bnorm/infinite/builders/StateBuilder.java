@@ -3,7 +3,6 @@ package com.bnorm.infinite.builders;
 import java.util.function.Supplier;
 
 import com.bnorm.infinite.Action;
-import com.bnorm.infinite.InternalState;
 import com.bnorm.infinite.Transition;
 import com.bnorm.infinite.TransitionGuard;
 
@@ -20,13 +19,6 @@ import com.bnorm.infinite.TransitionGuard;
 public interface StateBuilder<S, E, C> {
 
     /**
-     * Returns the internal state that is being constructed.
-     *
-     * @return the internal state being built.
-     */
-    InternalState<S, E, C> getInternalState();
-
-    /**
      * Sets the the parent of the internal state to be the specified state.  The parent state must already be partially
      * built by another state builder before it can be set as the parent of another state.
      *
@@ -41,10 +33,7 @@ public interface StateBuilder<S, E, C> {
      * @param action the new entry action.
      * @return the current state builder for chaining.
      */
-    default StateBuilder<S, E, C> onEntry(Action<S, E, C> action) {
-        getInternalState().addEntranceAction(action);
-        return this;
-    }
+    StateBuilder<S, E, C> onEntry(Action<S, E, C> action);
 
     /**
      * Adds the specified action as an exit action to the internal state.
@@ -52,10 +41,7 @@ public interface StateBuilder<S, E, C> {
      * @param action the new exit action.
      * @return the current state builder for chaining.
      */
-    default StateBuilder<S, E, C> onExit(Action<S, E, C> action) {
-        getInternalState().addExitAction(action);
-        return this;
-    }
+    StateBuilder<S, E, C> onExit(Action<S, E, C> action);
 
     /**
      * Adds the specified transition as a possible transition given the specified event.
