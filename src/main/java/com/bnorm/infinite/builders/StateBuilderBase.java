@@ -1,16 +1,13 @@
 package com.bnorm.infinite.builders;
 
-import java.util.LinkedHashSet;
-import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.function.Supplier;
 
 import com.bnorm.infinite.Action;
 import com.bnorm.infinite.InternalState;
 import com.bnorm.infinite.StateMachineException;
+import com.bnorm.infinite.StateMachineStructure;
 import com.bnorm.infinite.Transition;
-import com.bnorm.infinite.TransitionFactory;
 import com.bnorm.infinite.TransitionGuard;
 
 /**
@@ -25,105 +22,81 @@ import com.bnorm.infinite.TransitionGuard;
  */
 public class StateBuilderBase<S, E, C> implements StateBuilder<S, E, C> {
 
-    /** The state machine state to internal state map. */
-    private final Map<S, InternalState<S, E, C>> states;
+    /** The state machine structure. */
+    private final StateMachineStructure<S, E, C> structure;
 
-    /** The state machine event to transition map. */
-    private final Map<E, Set<Transition<S, C>>> transitions;
-
-    /** The internal state being built. */
-    private final InternalState<S, E, C> state;
-
-    /** The state transition factory. */
-    private final TransitionFactory<S, C> transitionFactory;
+    /** The state being built. */
+    private final S state;
 
     /**
-     * Constructs a new state builder from the specified transition factory, state map, transition map, and internal
-     * state being built.
+     * Constructs a new state builder from the specified state machine structure and the state being built.
      *
-     * @param transitionFactory the factory used to create transitions.
-     * @param states the states of the state machine.
-     * @param transitions the transitions of the state machine.
-     * @param state the internal state being built.
+     * @param structure the state machine structure
+     * @param state the state being built.
      */
-    protected StateBuilderBase(TransitionFactory<S, C> transitionFactory, Map<S, InternalState<S, E, C>> states,
-                               Map<E, Set<Transition<S, C>>> transitions, InternalState<S, E, C> state) {
-        this.states = states;
-        this.transitions = transitions;
+    protected StateBuilderBase(StateMachineStructure<S, E, C> structure, S state) {
+        this.structure = structure;
         this.state = state;
-        this.transitionFactory = transitionFactory;
-    }
-
-    @Override
-    public InternalState<S, E, C> getInternalState() {
-        return state;
     }
 
     @Override
     public StateBuilderBase<S, E, C> childOf(S parent) {
-        InternalState<S, E, C> internalParent = states.get(parent);
-        if (internalParent != null) {
-            internalParent.addChild(getInternalState());
-            getInternalState().setParentState(internalParent);
-            return this;
-        } else {
-            throw new StateMachineException(
-                    "Requested parent state [" + parent + "] does not exist in the state machine." +
-                            "  Configure parent states before configuring children states.");
-        }
+        final InternalState<S, E, C> internalState = structure.getState(state);
+        final InternalState<S, E, C> internalParent = structure.getState(parent);
+        internalParent.addChild(internalState);
+        internalState.setParentState(internalParent);
+        return this;
     }
 
     @Override
     public StateBuilderBase<S, E, C> onEntry(Action<S, E, C> action) {
-        StateBuilder.super.onEntry(action);
+        structure.getState(state).addEntranceAction(action);
         return this;
     }
 
     @Override
     public StateBuilderBase<S, E, C> onExit(Action<S, E, C> action) {
-        StateBuilder.super.onExit(action);
+        structure.getState(state).addExitAction(action);
         return this;
     }
 
     @Override
     public StateBuilderBase<S, E, C> handle(E event, Transition<S, C> transition) {
-        if (!Objects.equals(transition.getSource(), getInternalState().getState())) {
+        if (!Objects.equals(transition.getSource(), state)) {
             throw new StateMachineException(
-                    "Illegal transition source.  Should be [" + getInternalState().getState() + "] Is [" + transition.getSource() + "]");
+                    "Illegal transition source.  Should be [" + state + "] Is [" + transition.getSource() + "]");
         }
-        Set<Transition<S, C>> handlers = transitions.computeIfAbsent(event, e -> new LinkedHashSet<>());
-        handlers.add(transition);
+        structure.addTransition(event, transition);
         return this;
     }
 
     @Override
     public StateBuilderBase<S, E, C> handle(E event) {
-        return handle(event, transitionFactory.create(getInternalState().getState(), getInternalState().getState()));
+        return handle(event, structure.getTransitionFactory().create(state, state));
     }
 
     @Override
     public StateBuilderBase<S, E, C> handle(E event, S destination) {
-        return handle(event, transitionFactory.create(getInternalState().getState(), destination));
+        return handle(event, structure.getTransitionFactory().create(state, destination));
     }
 
     @Override
     public StateBuilder<S, E, C> handle(E event, Supplier<S> destination) {
-        return handle(event, transitionFactory.create(getInternalState().getState(), destination));
+        return handle(event, structure.getTransitionFactory().create(state, destination));
     }
 
     @Override
     public StateBuilderBase<S, E, C> handle(E event, TransitionGuard<C> guard) {
-        return handle(event,
-                      transitionFactory.create(getInternalState().getState(), getInternalState().getState(), guard));
+        return handle(event, structure.getTransitionFactory().create(state, state, guard));
     }
 
     @Override
     public StateBuilderBase<S, E, C> handle(E event, S destination, TransitionGuard<C> guard) {
-        return handle(event, transitionFactory.create(getInternalState().getState(), destination, guard));
+        return handle(event, structure.getTransitionFactory().create(state, destination, guard));
     }
 
     @Override
     public StateBuilder<S, E, C> handle(E event, Supplier<S> destination, TransitionGuard<C> guard) {
-        return handle(event, transitionFactory.create(getInternalState().getState(), destination, guard));
+        return handle(event, structure.getTransitionFactory().create(state, destination, guard));
     }
 }

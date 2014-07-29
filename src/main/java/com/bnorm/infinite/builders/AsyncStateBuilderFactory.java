@@ -1,11 +1,6 @@
 package com.bnorm.infinite.builders;
 
-import java.util.Map;
-import java.util.Set;
-
-import com.bnorm.infinite.InternalState;
-import com.bnorm.infinite.Transition;
-import com.bnorm.infinite.TransitionFactory;
+import com.bnorm.infinite.StateMachineStructure;
 import com.bnorm.infinite.async.AsyncActionFactory;
 
 /**
@@ -18,7 +13,7 @@ import com.bnorm.infinite.async.AsyncActionFactory;
  * @version 1.1.0
  * @since 1.1.0
  */
-public interface AsyncStateBuilderFactory<S, E, C> {
+public interface AsyncStateBuilderFactory<S, E, C> extends StateBuilderFactory<S, E, C> {
 
     /**
      * Returns the default asynchronous state builder factory.  This is the state builder base constructor.
@@ -33,19 +28,20 @@ public interface AsyncStateBuilderFactory<S, E, C> {
     }
 
 
+    @Override
+    default AsyncStateBuilder<S, E, C> create(StateMachineStructure<S, E, C> structure, S state) {
+        return create(structure, state, AsyncActionFactory.getDefault());
+    }
+
     /**
-     * Creates a new state builder from the specified transition factory, asynchronous action factory, state map,
-     * transition map, and internal state being built.
+     * Creates a new state builder from the specified state machine structure, the state being built, and asynchronous
+     * action factory.
      *
-     * @param transitionFactory the factory used to create transitions.
+     * @param structure the state machine structure.
+     * @param state the state being built.
      * @param asyncActionFactory the factory used to create asynchronous actions.
-     * @param states the states of the state machine.
-     * @param transitions the transitions of the state machine.
-     * @param state the internal state being built.
      * @return a new state builder.
      */
-    AsyncStateBuilder<S, E, C> create(TransitionFactory<S, C> transitionFactory,
-                                      AsyncActionFactory<S, E, C> asyncActionFactory,
-                                      Map<S, InternalState<S, E, C>> states, Map<E, Set<Transition<S, C>>> transitions,
-                                      InternalState<S, E, C> state);
+    AsyncStateBuilder<S, E, C> create(StateMachineStructure<S, E, C> structure, S state,
+                                      AsyncActionFactory<S, E, C> asyncActionFactory);
 }

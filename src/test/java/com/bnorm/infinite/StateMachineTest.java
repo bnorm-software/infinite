@@ -22,7 +22,7 @@ public class StateMachineTest {
      */
     @Test
     public void testState() {
-        StateMachineBuilder<String, String, Void> builder = StateMachineBuilderFactory.create();
+        StateMachineBuilder<String, String, Void> builder = StateMachineBuilderFactory.createDefault();
         StateMachine<String, String, Void> machine;
         builder.configure("State1").handle("event1", "State2");
         builder.configure("State2").handle("event2", "State1");
@@ -48,7 +48,7 @@ public class StateMachineTest {
      */
     @Test
     public void testContext() {
-        StateMachineBuilder<String, String, String> builder = StateMachineBuilderFactory.create();
+        StateMachineBuilder<String, String, String> builder = StateMachineBuilderFactory.createDefault();
         builder.configure("State1")
                .handle("event1", "State2")
                .onEntry((state, event, transition, context) -> Assert.assertEquals("Context", context))
@@ -85,7 +85,7 @@ public class StateMachineTest {
     @Test
     public void testFire() {
         // Turnstile state machine
-        StateMachineBuilder<String, String, Void> turnstileBuilder = StateMachineBuilderFactory.create();
+        StateMachineBuilder<String, String, Void> turnstileBuilder = StateMachineBuilderFactory.createDefault();
         turnstileBuilder.configure("Locked").handle("coin", "Unlocked");
         turnstileBuilder.configure("Unlocked").handle("push", "Locked");
         StateMachine<String, String, Void> turnstile = turnstileBuilder.build("Locked", null);
@@ -112,7 +112,7 @@ public class StateMachineTest {
 
         // DVD Player state machine
         AtomicBoolean containsDVD = new AtomicBoolean(false);
-        StateMachineBuilder<String, String, AtomicBoolean> dvdplayerBuilder = StateMachineBuilderFactory.create();
+        StateMachineBuilder<String, String, AtomicBoolean> dvdplayerBuilder = StateMachineBuilderFactory.createDefault();
         dvdplayerBuilder.configure("Stopped").handle("play", "Playing", AtomicBoolean::get);
         dvdplayerBuilder.configure("Active").handle("stop", "Stopped");
         dvdplayerBuilder.configure("Playing").childOf("Active").handle("pause", "Paused");

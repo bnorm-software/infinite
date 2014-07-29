@@ -1,13 +1,12 @@
 package com.bnorm.infinite.async;
 
-import java.util.Collections;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.bnorm.infinite.StateMachineStructureFactory;
 import com.bnorm.infinite.Transition;
-import com.bnorm.infinite.TransitionFactory;
 import com.bnorm.infinite.TransitionGuard;
 import com.bnorm.infinite.builders.AsyncStateMachineBuilder;
 import com.bnorm.infinite.builders.AsyncStateMachineBuilderFactory;
@@ -31,9 +30,8 @@ public class AsyncStateMachineTest {
      */
     @Test
     public void testRunning() throws InterruptedException {
-        AsyncStateMachine<?, ?, ?> stateMachine = new AsyncStateMachineBase<>(TransitionFactory.getDefault(),
-                                                                              Collections.emptyMap(),
-                                                                              Collections.emptyMap(), null, null);
+        AsyncStateMachine<?, ?, ?> stateMachine = new AsyncStateMachineBase<>(
+                StateMachineStructureFactory.createDefault(), null, null);
 
         Assert.assertFalse(stateMachine.isRunning());
 
@@ -70,7 +68,7 @@ public class AsyncStateMachineTest {
     @Test
     public void testSubmit() throws ExecutionException, InterruptedException {
         // Turnstile state machine
-        AsyncStateMachineBuilder<String, String, Void> turnstileBuilder = AsyncStateMachineBuilderFactory.create();
+        AsyncStateMachineBuilder<String, String, Void> turnstileBuilder = AsyncStateMachineBuilderFactory.createDefault();
         turnstileBuilder.configure("Locked").handle("coin", "Unlocked");
         turnstileBuilder.configure("Unlocked").handle("push", "Locked");
         AsyncStateMachine<String, String, Void> turnstile = turnstileBuilder.build("Locked", null);
@@ -108,7 +106,7 @@ public class AsyncStateMachineTest {
 
         // DVD Player state machine
         AtomicBoolean containsDVD = new AtomicBoolean(false);
-        AsyncStateMachineBuilder<String, String, AtomicBoolean> dvdplayerBuilder = AsyncStateMachineBuilderFactory.create();
+        AsyncStateMachineBuilder<String, String, AtomicBoolean> dvdplayerBuilder = AsyncStateMachineBuilderFactory.createDefault();
         dvdplayerBuilder.configure("Stopped").handle("play", "Playing", AtomicBoolean::get);
         dvdplayerBuilder.configure("Active").handle("stop", "Stopped");
         dvdplayerBuilder.configure("Playing").childOf("Active").handle("pause", "Paused");

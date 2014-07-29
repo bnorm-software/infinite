@@ -1,15 +1,8 @@
 package com.bnorm.infinite.builders;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
-
-import com.bnorm.infinite.InternalState;
-import com.bnorm.infinite.InternalStateFactory;
 import com.bnorm.infinite.StateMachine;
 import com.bnorm.infinite.StateMachineFactory;
-import com.bnorm.infinite.Transition;
-import com.bnorm.infinite.TransitionFactory;
+import com.bnorm.infinite.StateMachineStructure;
 
 /**
  * The base implementation of a state machine builder.
@@ -23,54 +16,39 @@ import com.bnorm.infinite.TransitionFactory;
  */
 public class StateMachineBuilderBase<S, E, C> implements StateMachineBuilder<S, E, C> {
 
-    /** The state machine builder internal state factory. */
-    private final InternalStateFactory<S, E, C> stateFactory;
-
-    /** The state transition factory. */
-    private final TransitionFactory<S, C> transitionFactory;
+    /** The state machine structure. */
+    private final StateMachineStructure<S, E, C> structure;
 
     /** The state machine builder state machine factory. */
     private final StateMachineFactory<S, E, C> stateMachineFactory;
 
     /** The state machine builder state builder factory. */
-    private final StateBuilderFactory<S, E, C> configurationFactory;
-
-    /** The state to internal state map. */
-    private final Map<S, InternalState<S, E, C>> states;
-
-    /** The event to transition map. */
-    private final Map<E, Set<Transition<S, C>>> transitions;
+    private final StateBuilderFactory<S, E, C> stateBuilderFactory;
 
 
     /**
-     * Constructs a new state machine builder from the specified internal state factory, transition factory, state
-     * builder factory, and state machine factory.
+     * Constructs a new state machine builder from the specified state machine structure, state machine factory, and
+     * state builder factory.
      *
-     * @param internalStateFactory the factory used to create internal states.
-     * @param transitionFactory the factory used to create transitions.
-     * @param stateBuilderFactory the factory used to create state builders.
+     * @param structure the state machine structure.
      * @param stateMachineFactory the factory used to create the state machine.
+     * @param stateBuilderFactory the factory used to create state builders.
      */
-    protected StateMachineBuilderBase(InternalStateFactory<S, E, C> internalStateFactory,
-                                      TransitionFactory<S, C> transitionFactory,
-                                      StateBuilderFactory<S, E, C> stateBuilderFactory,
-                                      StateMachineFactory<S, E, C> stateMachineFactory) {
-        this.stateFactory = internalStateFactory;
-        this.transitionFactory = transitionFactory;
+    protected StateMachineBuilderBase(StateMachineStructure<S, E, C> structure,
+                                      StateMachineFactory<S, E, C> stateMachineFactory,
+                                      StateBuilderFactory<S, E, C> stateBuilderFactory) {
+        this.structure = structure;
         this.stateMachineFactory = stateMachineFactory;
-        this.configurationFactory = stateBuilderFactory;
-        this.states = new LinkedHashMap<>();
-        this.transitions = new LinkedHashMap<>();
+        this.stateBuilderFactory = stateBuilderFactory;
     }
 
     @Override
     public StateBuilder<S, E, C> configure(S state) {
-        InternalState<S, E, C> internal = states.computeIfAbsent(state, stateFactory::create);
-        return configurationFactory.create(transitionFactory, states, transitions, internal);
+        return stateBuilderFactory.create(structure, state);
     }
 
     @Override
     public StateMachine<S, E, C> build(S starting, C context) {
-        return stateMachineFactory.create(transitionFactory, states, transitions, starting, context);
+        return stateMachineFactory.create(structure, starting, context);
     }
 }

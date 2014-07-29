@@ -1,13 +1,10 @@
 package com.bnorm.infinite.builders;
 
-import java.util.Map;
-import java.util.Set;
 import java.util.function.Supplier;
 
 import com.bnorm.infinite.Action;
-import com.bnorm.infinite.InternalState;
+import com.bnorm.infinite.StateMachineStructure;
 import com.bnorm.infinite.Transition;
-import com.bnorm.infinite.TransitionFactory;
 import com.bnorm.infinite.TransitionGuard;
 import com.bnorm.infinite.async.AsyncActionFactory;
 
@@ -27,26 +24,17 @@ public class AsyncStateBuilderBase<S, E, C> extends StateBuilderBase<S, E, C> im
     private final AsyncActionFactory<S, E, C> asyncActionFactory;
 
     /**
-     * Constructs a new state builder from the specified transition factory, asynchronous action factory, state map,
-     * transition map, and internal state being built.
+     * Constructs a new state builder from the specified state machine structure, asynchronous action factory, and state
+     * being built.
      *
-     * @param transitionFactory the factory used to create transitions.
+     * @param structure the state machine structure.
+     * @param state the state being built.
      * @param asyncActionFactory the factory used to create asynchronous actions.
-     * @param states the states of the state machine.
-     * @param transitions the transitions of the state machine.
-     * @param state the internal state being built.
      */
-    protected AsyncStateBuilderBase(TransitionFactory<S, C> transitionFactory,
-                                    AsyncActionFactory<S, E, C> asyncActionFactory,
-                                    Map<S, InternalState<S, E, C>> states, Map<E, Set<Transition<S, C>>> transitions,
-                                    InternalState<S, E, C> state) {
-        super(transitionFactory, states, transitions, state);
+    protected AsyncStateBuilderBase(StateMachineStructure<S, E, C> structure, S state,
+                                    AsyncActionFactory<S, E, C> asyncActionFactory) {
+        super(structure, state);
         this.asyncActionFactory = asyncActionFactory;
-    }
-
-    @Override
-    public AsyncActionFactory<S, E, C> getAsyncActionFactory() {
-        return asyncActionFactory;
     }
 
     @Override
@@ -62,20 +50,19 @@ public class AsyncStateBuilderBase<S, E, C> extends StateBuilderBase<S, E, C> im
     }
 
     @Override
+    public AsyncStateBuilderBase<S, E, C> onAsyncEntry(Action<S, E, C> action) {
+        return onEntry(asyncActionFactory.create(action));
+    }
+
+    @Override
     public AsyncStateBuilderBase<S, E, C> onExit(Action<S, E, C> action) {
         super.onExit(action);
         return this;
     }
 
     @Override
-    public AsyncStateBuilderBase<S, E, C> onAsyncEntry(Action<S, E, C> action) {
-        AsyncStateBuilder.super.onAsyncEntry(action);
-        return this;
-    }
-
-    @Override
     public AsyncStateBuilderBase<S, E, C> onAsyncExit(Action<S, E, C> action) {
-        AsyncStateBuilder.super.onAsyncExit(action);
+        onExit(asyncActionFactory.create(action));
         return this;
     }
 
