@@ -32,7 +32,7 @@ consists of two states, 'Locked' and 'Unlocked', two events, 'coin' and 'push', 
 
 ```java
 // State type is String, event type is String, and there is no context
-StateMachineBuilder<String, String, Void> builder = StateMachineBuilderFactory.create();
+StateMachineBuilder<String, String, Void> builder = StateMachineBuilderFactory.createDefault();
 // Push events are not handled and will simply be ignored
 builder.configure("Locked")
        .handle("coin", "Unlocked");
@@ -52,7 +52,7 @@ it doesn't need to be handled for each state.  For this specific example it woul
 'Playing' and 'Paused' handle the 'stop' event but that doesn't provide a very good example, now does it?
 
 ```java
-StateMachineBuilder<String, String, Void> builder = StateMachineBuilderFactory.create();
+StateMachineBuilder<String, String, Void> builder = StateMachineBuilderFactory.createDefault();
 builder.configure("Stopped")
        .handle("play", "Playing");
 builder.configure("Active")
@@ -66,7 +66,7 @@ builder.configure("Paused")
        .handle("play", "Playing");
 StateMachine<String, String, Void> dvdplayer = builder.build("Stopped", null);
 // Add a transition listener to print out each event and transition
-dvdplayer.addTransitionListener((event, transition, context) -> {
+dvdplayer.addTransitionListener((stage, event, transition, context) -> {
     System.out.println(event + " generated " + transition);
 });
 dvdplayer.fire("play");
@@ -86,7 +86,7 @@ dvdplayer.fire("stop");
  - Flexible typing for states, events, and context
  - Easy to use state machine builder classes
 
-### Version 1.0.1 ###
+### Version 1.0.1/2 ###
 **First use case bug**
  - (#45) Factories not defining type at class level does not allow custom type factories
 
