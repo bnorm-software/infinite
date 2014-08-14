@@ -14,8 +14,7 @@ import org.junit.Test;
  * JUnit tests for {@link InternalState}
  *
  * @author Brian Norman
- * @version 1.0
- * @since 1.0
+ * @since 1.0.0
  */
 public class InternalStateTest {
 

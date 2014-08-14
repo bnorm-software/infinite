@@ -4,7 +4,6 @@ package com.bnorm.infinite;
  * Base exception for all state machine related exceptions.
  *
  * @author Brian Norman
- * @version 1.0.0
  * @since 1.0.0
  */
 public class StateMachineException extends RuntimeException {

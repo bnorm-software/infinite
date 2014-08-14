@@ -15,7 +15,6 @@ import java.util.concurrent.TimeoutException;
  * @param <E> the class type of the events.
  * @param <R> the class type of the result of the event.
  * @author Brian Norman
- * @version 1.1.0
  * @since 1.1.0
  */
 public class AsyncEventTask<E, R> implements RunnableFuture<R>, Comparable<AsyncEventTask<E, R>> {

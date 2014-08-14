@@ -31,7 +31,6 @@ import java.util.function.Supplier;
  * @param <E> the class type of the events.
  * @param <T> the class type of the signal value.
  * @author Brian Norman
- * @version 1.1.0
  * @since 1.1.0
  */
 public class Signal<E, T> {

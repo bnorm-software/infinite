@@ -10,7 +10,6 @@ import com.bnorm.infinite.StateMachineStructure;
  * @param <E> the class type of the events.
  * @param <C> the class type of the context.
  * @author Brian Norman
- * @version 1.1.0
  * @since 1.1.0
  */
 public interface AsyncStateMachineFactory<S, E, C> extends StateMachineFactory<S, E, C> {

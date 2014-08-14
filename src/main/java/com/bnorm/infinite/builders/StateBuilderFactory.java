@@ -9,7 +9,6 @@ import com.bnorm.infinite.StateMachineStructure;
  * @param <E> the class type of the events.
  * @param <C> the class type of the context.
  * @author Brian Norman
- * @version 1.0.1
  * @since 1.0.0
  */
 public interface StateBuilderFactory<S, E, C> {

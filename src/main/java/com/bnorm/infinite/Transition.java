@@ -8,7 +8,6 @@ import java.util.Objects;
  * @param <S> the class type of the states.
  * @param <C> the class type of the context.
  * @author Brian Norman
- * @version 1.0.0
  * @since 1.0.0
  */
 public interface Transition<S, C> {

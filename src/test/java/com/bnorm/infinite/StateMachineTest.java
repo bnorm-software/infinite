@@ -12,8 +12,7 @@ import org.junit.Test;
  * JUnit tests for {@link StateMachine}
  *
  * @author Brian Norman
- * @version 1.0
- * @since 1.0
+ * @since 1.0.0
  */
 public class StateMachineTest {
 

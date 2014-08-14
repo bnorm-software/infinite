@@ -17,7 +17,6 @@ import org.junit.Test;
  * JUnit tests for {@link AsyncStateMachine}
  *
  * @author Brian Norman
- * @version 1.1.0
  * @since 1.1.0
  */
 public class AsyncStateMachineTest {

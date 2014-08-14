@@ -14,7 +14,6 @@ import com.bnorm.infinite.TransitionGuard;
  * @param <E> the class type of the events.
  * @param <C> the class type of the context.
  * @author Brian Norman
- * @version 1.1.0
  * @since 1.1.0
  */
 public interface AsyncStateBuilder<S, E, C> extends StateBuilder<S, E, C> {
