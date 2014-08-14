@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
  * @param <E> the class type of the events.
  * @param <C> the class type of the context.
  * @author Brian Norman
- * @version 1.0.0
  * @since 1.0.0
  */
 public class StateMachineBase<S, E, C> implements StateMachine<S, E, C> {
@@ -64,6 +63,9 @@ public class StateMachineBase<S, E, C> implements StateMachine<S, E, C> {
     @Override
     public Optional<Transition<S, C>> fire(E event) {
         final Set<Transition<S, C>> eventTransitions = structure.getTransitions(event);
+        if (eventTransitions.isEmpty()) {
+            return Optional.empty();
+        }
 
         // To build the possible transition list, we will start with the current internal state and see if it
         // handles the specified event.  If it does not, we iterate one level up the parent chain and repeat.

@@ -6,7 +6,6 @@ import java.util.concurrent.ThreadFactory;
  * A factory interface for named threads.
  *
  * @author Brian Norman
- * @version 1.1.0
  * @since 1.1.0
  */
 public class NamedThreadFactory implements ThreadFactory {

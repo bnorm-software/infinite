@@ -18,7 +18,6 @@ import com.bnorm.infinite.Transition;
  * @param <E> the class type of the events.
  * @param <C> the class type of the context.
  * @author Brian Norman
- * @version 1.1.0
  * @since 1.1.0
  */
 public interface AsyncStateMachine<S, E, C> extends StateMachine<S, E, C>, Runnable {

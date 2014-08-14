@@ -21,7 +21,6 @@ import com.bnorm.infinite.Transition;
  * @param <E> the class type of the events.
  * @param <C> the class type of the context.
  * @author Brian Norman
- * @version 1.1.0
  * @since 1.1.0
  */
 public class AsyncStateMachineBase<S, E, C> extends StateMachineBase<S, E, C> implements AsyncStateMachine<S, E, C> {
@@ -76,13 +75,11 @@ public class AsyncStateMachineBase<S, E, C> extends StateMachineBase<S, E, C> im
             while (isRunning()) {
                 try {
                     AsyncEventTask<?, ?> asyncEventTask = eventQueue.take();
-                    if (asyncEventTask != null && asyncEventTask.getEvent() != null) {
-                        asyncEventTask.run();
-                        asyncEventTask.get();
-                    }
+                    asyncEventTask.run();
+                    asyncEventTask.get();
                 } catch (InterruptedException | CancellationException e) {
                     /* There are 3 types of exceptions being caught here:
-                     * 1. Interrupt from BlockQueue#poll(long, TimeUnit)
+                     * 1. Interrupt from BlockQueue#take()
                      *     - This case can be safely ignored because we will loop and wait again.
                      * 2. Interrupt from AsyncEventTask#get()
                      *     - This should be almost impossible unless something really terrible happened.

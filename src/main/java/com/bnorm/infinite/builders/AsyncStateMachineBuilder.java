@@ -12,7 +12,6 @@ import com.bnorm.infinite.async.AsyncStateMachine;
  * @param <E> the class type of the events.
  * @param <C> the class type of the context.
  * @author Brian Norman
- * @version 1.1.0
  * @since 1.1.0
  */
 public interface AsyncStateMachineBuilder<S, E, C> extends StateMachineBuilder<S, E, C> {
