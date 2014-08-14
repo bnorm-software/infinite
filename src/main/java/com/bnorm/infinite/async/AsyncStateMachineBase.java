@@ -75,13 +75,11 @@ public class AsyncStateMachineBase<S, E, C> extends StateMachineBase<S, E, C> im
             while (isRunning()) {
                 try {
                     AsyncEventTask<?, ?> asyncEventTask = eventQueue.take();
-                    if (asyncEventTask != null && asyncEventTask.getEvent() != null) {
-                        asyncEventTask.run();
-                        asyncEventTask.get();
-                    }
+                    asyncEventTask.run();
+                    asyncEventTask.get();
                 } catch (InterruptedException | CancellationException e) {
                     /* There are 3 types of exceptions being caught here:
-                     * 1. Interrupt from BlockQueue#poll(long, TimeUnit)
+                     * 1. Interrupt from BlockQueue#take()
                      *     - This case can be safely ignored because we will loop and wait again.
                      * 2. Interrupt from AsyncEventTask#get()
                      *     - This should be almost impossible unless something really terrible happened.

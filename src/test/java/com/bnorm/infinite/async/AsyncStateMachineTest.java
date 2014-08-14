@@ -3,6 +3,8 @@ package com.bnorm.infinite.async;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.bnorm.infinite.StateMachineStructureFactory;
@@ -36,23 +38,37 @@ public class AsyncStateMachineTest {
 
         Thread thread = new Thread(stateMachine);
         thread.start();
-        Thread.sleep(5);
+        stateMachine.fire(null);
 
         Assert.assertTrue(stateMachine.isRunning());
 
         stateMachine.stop();
-        Thread.sleep(5);
+        try {
+            try {
+                stateMachine.submit(null).get(1, TimeUnit.SECONDS);
+            } catch (ExecutionException ignored) {
+            }
+            Assert.fail();
+        } catch (TimeoutException ignore) {
+        }
 
         Assert.assertFalse(stateMachine.isRunning());
 
         thread = new Thread(stateMachine);
         thread.start();
-        Thread.sleep(5);
+        stateMachine.fire(null);
 
         Assert.assertTrue(stateMachine.isRunning());
 
         stateMachine.stop();
-        Thread.sleep(5);
+        try {
+            try {
+                stateMachine.submit(null).get(1, TimeUnit.SECONDS);
+            } catch (ExecutionException ignored) {
+            }
+            Assert.fail();
+        } catch (TimeoutException ignore) {
+        }
 
         Assert.assertFalse(stateMachine.isRunning());
     }
