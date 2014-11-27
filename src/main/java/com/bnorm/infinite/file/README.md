@@ -84,15 +84,15 @@ State 1 : Parent 1 / entry action / exit action # comments can go at the end of 
    Event 2 -> State 2 / action
    Event 3 -> State 3 [ guard ] # the guard ending ']' is not required but it makes it more readable
    # transition comment
-   Event 4->State 4[guard]/action # all those extra whitespaces are not required and are trimmed before reading
+   Event 4->State 4[guard]/action # extra whitespaces are not required and are trimmed before reading
 
-   Event 5 -> State 5 # this event won't get added to previous state
+   Event 5 -> State 5
 
 State 2 // exit # this is how you would specify only an exit action
     EventReentrant
 State 3 /              / exit # white space is ignored when not part of a state machine object
 
-State 4     /     entry      # only am entrance action
+State 4     /     entry      # only an entrance action
    Event 1        ->     State 1
 
 
