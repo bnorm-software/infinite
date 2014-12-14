@@ -14,6 +14,27 @@ package com.bnorm.infinite;
 public interface Action<S, E, C> {
 
     /**
+     * An action that does absolutely nothing.  Since this action always does nothing, it can be safely cast to any
+     * required state machine types.
+     */
+    static Action<?, ?, ?> NO_ACTION = (state, event, transition, context) -> {
+    };
+
+    /**
+     * Returns the {@link Action#NO_ACTION} action cast to the required parameter types.
+     *
+     * @param <S> the class type of the states.
+     * @param <E> the class type of the events.
+     * @param <C> the class type of the context.
+     * @return a type safe {@link Action#NO_ACTION} action.
+     */
+    static <S, E, C> Action<S, E, C> noAction() {
+        @SuppressWarnings("unchecked")
+        Action<S, E, C> noAction = (Action<S, E, C>) NO_ACTION;
+        return noAction;
+    }
+
+    /**
      * Performs a specific action.  The parameters specified are the conditions of the state transition.  Sometimes the
      * state being entered or existed is not a part of the specific transition - it might be a parent state of the
      * source or destination.
