@@ -2,7 +2,6 @@ package com.bnorm.infinite.file;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Optional;
 import java.util.Scanner;
 
 import com.bnorm.infinite.Action;
@@ -39,7 +38,7 @@ public class FileStateMachineStructure<S, E, C> extends StateMachineStructureBas
      * @throws IOException if there is a problem reading the state machine file.
      */
     public FileStateMachineStructure(InternalStateFactory<S, E, C> internalStateFactory,
-                                     TransitionFactory<S, C> transitionFactory, Path path,
+                                     TransitionFactory<S, E, C> transitionFactory, Path path,
                                      StringStateMachineReader<S, E, C> stateMachineReader) throws IOException {
         super(internalStateFactory, transitionFactory);
 
@@ -166,18 +165,19 @@ public class FileStateMachineStructure<S, E, C> extends StateMachineStructureBas
             transitionGuard = TransitionGuard.none();
         }
 
-        final Optional<Action<S, E, C>> transitionAction;
+        final Action<S, E, C> transitionAction;
         if (line.contains("/")) {
             final String transitionActionString = split[index].trim();
-            transitionAction = Optional.of(
-                    stateMachineReader.readTransitionAction(state, event, destination, transitionActionString));
+            transitionAction = stateMachineReader.readTransitionAction(state, event, destination,
+                                                                       transitionActionString);
             index++;
             LOG.trace("Found transition action [{}]", transitionActionString);
         } else {
-            transitionAction = Optional.empty();
+            transitionAction = Action.noAction();
         }
 
         LOG.trace("Adding state transition.  Event [{}] State [{}]", event, destination);
-        this.addTransition(event, this.getTransitionFactory().create(state, destination, transitionGuard));
+        this.addTransition(event,
+                           this.getTransitionFactory().create(state, destination, transitionGuard, transitionAction));
     }
 }

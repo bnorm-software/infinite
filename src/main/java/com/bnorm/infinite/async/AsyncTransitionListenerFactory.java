@@ -39,7 +39,8 @@ public interface AsyncTransitionListenerFactory<S, E, C> {
                 return new TransitionListener<S, E, C>() {
                     @Override
                     public void stateTransition(TransitionStage stage, E event,
-                                                Transition<? extends S, ? extends C> transition, C context) {
+                                                Transition<? extends S, ? extends E, ? extends C> transition,
+                                                C context) {
                         executor.submit(() -> listener.stateTransition(stage, event, transition, context));
                     }
                 };

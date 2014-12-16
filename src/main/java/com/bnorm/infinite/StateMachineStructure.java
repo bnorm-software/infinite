@@ -38,7 +38,7 @@ public interface StateMachineStructure<S, E, C> {
      *
      * @return the transition factory.
      */
-    TransitionFactory<S, C> getTransitionFactory();
+    TransitionFactory<S, E, C> getTransitionFactory();
 
     /**
      * Returns the transitions associated with the specified event.  This method should never return a {@code null} set
@@ -47,7 +47,7 @@ public interface StateMachineStructure<S, E, C> {
      * @param event the state machine event.
      * @return the associated transitions.
      */
-    Set<Transition<S, C>> getTransitions(E event);
+    Set<Transition<S, E, C>> getTransitions(E event);
 
     /**
      * Adds the specified transition as a possible transition for the specified event.
@@ -55,5 +55,5 @@ public interface StateMachineStructure<S, E, C> {
      * @param event the state machine event.
      * @param transition the event transition.
      */
-    void addTransition(E event, Transition<S, C> transition);
+    void addTransition(E event, Transition<S, E, C> transition);
 }

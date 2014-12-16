@@ -60,7 +60,7 @@ public class StateBuilderBase<S, E, C> implements StateBuilder<S, E, C> {
     }
 
     @Override
-    public StateBuilderBase<S, E, C> handle(E event, Transition<S, C> transition) {
+    public StateBuilderBase<S, E, C> handle(E event, Transition<S, E, C> transition) {
         if (!Objects.equals(transition.getSource(), state)) {
             throw new StateMachineException(
                     "Illegal transition source.  Should be [" + state + "] Is [" + transition.getSource() + "]");
@@ -80,7 +80,7 @@ public class StateBuilderBase<S, E, C> implements StateBuilder<S, E, C> {
     }
 
     @Override
-    public StateBuilder<S, E, C> handle(E event, Supplier<S> destination) {
+    public StateBuilderBase<S, E, C> handle(E event, Supplier<S> destination) {
         return handle(event, structure.getTransitionFactory().create(state, destination));
     }
 
@@ -90,12 +90,38 @@ public class StateBuilderBase<S, E, C> implements StateBuilder<S, E, C> {
     }
 
     @Override
+    public StateBuilderBase<S, E, C> handle(E event, Action<S, E, C> action) {
+        return handle(event, structure.getTransitionFactory().create(state, state, action));
+    }
+
+    @Override
     public StateBuilderBase<S, E, C> handle(E event, S destination, TransitionGuard<C> guard) {
         return handle(event, structure.getTransitionFactory().create(state, destination, guard));
     }
 
     @Override
-    public StateBuilder<S, E, C> handle(E event, Supplier<S> destination, TransitionGuard<C> guard) {
+    public StateBuilderBase<S, E, C> handle(E event, Supplier<S> destination, TransitionGuard<C> guard) {
         return handle(event, structure.getTransitionFactory().create(state, destination, guard));
+    }
+
+    @Override
+    public StateBuilderBase<S, E, C> handle(E event, S destination, Action<S, E, C> action) {
+        return handle(event, structure.getTransitionFactory().create(state, destination, action));
+    }
+
+    @Override
+    public StateBuilderBase<S, E, C> handle(E event, Supplier<S> destination, Action<S, E, C> action) {
+        return handle(event, structure.getTransitionFactory().create(state, destination, action));
+    }
+
+    @Override
+    public StateBuilderBase<S, E, C> handle(E event, S destination, TransitionGuard<C> guard, Action<S, E, C> action) {
+        return handle(event, structure.getTransitionFactory().create(state, destination, guard, action));
+    }
+
+    @Override
+    public StateBuilderBase<S, E, C> handle(E event, Supplier<S> destination, TransitionGuard<C> guard,
+                                            Action<S, E, C> action) {
+        return handle(event, structure.getTransitionFactory().create(state, destination, guard, action));
     }
 }

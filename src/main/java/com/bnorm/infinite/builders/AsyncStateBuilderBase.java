@@ -66,7 +66,7 @@ public class AsyncStateBuilderBase<S, E, C> extends StateBuilderBase<S, E, C> im
     }
 
     @Override
-    public AsyncStateBuilderBase<S, E, C> handle(E event, Transition<S, C> transition) {
+    public AsyncStateBuilderBase<S, E, C> handle(E event, Transition<S, E, C> transition) {
         super.handle(event, transition);
         return this;
     }
@@ -96,6 +96,12 @@ public class AsyncStateBuilderBase<S, E, C> extends StateBuilderBase<S, E, C> im
     }
 
     @Override
+    public AsyncStateBuilderBase<S, E, C> handle(E event, Action<S, E, C> action) {
+        super.handle(event, action);
+        return this;
+    }
+
+    @Override
     public AsyncStateBuilderBase<S, E, C> handle(E event, S destination, TransitionGuard<C> guard) {
         super.handle(event, destination, guard);
         return this;
@@ -104,6 +110,32 @@ public class AsyncStateBuilderBase<S, E, C> extends StateBuilderBase<S, E, C> im
     @Override
     public AsyncStateBuilderBase<S, E, C> handle(E event, Supplier<S> destination, TransitionGuard<C> guard) {
         super.handle(event, destination, guard);
+        return this;
+    }
+
+    @Override
+    public AsyncStateBuilderBase<S, E, C> handle(E event, S destination, Action<S, E, C> action) {
+        super.handle(event, destination, action);
+        return this;
+    }
+
+    @Override
+    public AsyncStateBuilderBase<S, E, C> handle(E event, Supplier<S> destination, Action<S, E, C> action) {
+        super.handle(event, destination, action);
+        return this;
+    }
+
+    @Override
+    public AsyncStateBuilderBase<S, E, C> handle(E event, S destination, TransitionGuard<C> guard,
+                                                 Action<S, E, C> action) {
+        super.handle(event, destination, guard, action);
+        return this;
+    }
+
+    @Override
+    public AsyncStateBuilderBase<S, E, C> handle(E event, Supplier<S> destination, TransitionGuard<C> guard,
+                                                 Action<S, E, C> action) {
+        super.handle(event, destination, guard, action);
         return this;
     }
 }

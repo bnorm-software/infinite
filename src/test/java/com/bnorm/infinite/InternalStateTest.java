@@ -295,7 +295,7 @@ public class InternalStateTest {
 
         Action<String, Void, List<String>> action = (s, e, t, c) -> c.add(s);
         List<String> actions = new ArrayList<>();
-        Transition<String, List<String>> transition;
+        Transition<String, Void, List<String>> transition;
 
         grandparent.addEntranceAction(action);
         parent.addEntranceAction(action);
@@ -321,7 +321,8 @@ public class InternalStateTest {
 
         // Reentrant transitions
 
-        transition = new TransitionBase<>(parent.getState(), parent::getState, TransitionGuard.none());
+        transition = new TransitionBase<>(parent.getState(), parent::getState, TransitionGuard.none(),
+                                          Action.noAction());
 
         actions.clear();
         parent.exit(null, transition, actions);
@@ -333,7 +334,8 @@ public class InternalStateTest {
 
         // Child to parent transitions
 
-        transition = new TransitionBase<>(parent.getState(), grandparent::getState, TransitionGuard.none());
+        transition = new TransitionBase<>(parent.getState(), grandparent::getState, TransitionGuard.none(),
+                                          Action.noAction());
 
         actions.clear();
         parent.exit(null, transition, actions);
@@ -343,7 +345,8 @@ public class InternalStateTest {
         grandparent.enter(null, transition, actions);
         Assert.assertEquals(Collections.<String>emptyList(), actions);
 
-        transition = new TransitionBase<>(grandchild4_1.getState(), grandparent::getState, TransitionGuard.none());
+        transition = new TransitionBase<>(grandchild4_1.getState(), grandparent::getState, TransitionGuard.none(),
+                                          Action.noAction());
 
         actions.clear();
         grandchild4_1.exit(null, transition, actions);
@@ -355,7 +358,8 @@ public class InternalStateTest {
 
         // Parent to child transitions
 
-        transition = new TransitionBase<>(grandparent.getState(), parent::getState, TransitionGuard.none());
+        transition = new TransitionBase<>(grandparent.getState(), parent::getState, TransitionGuard.none(),
+                                          Action.noAction());
 
         actions.clear();
         grandparent.exit(null, transition, actions);
@@ -365,7 +369,8 @@ public class InternalStateTest {
         parent.enter(null, transition, actions);
         Assert.assertEquals(Arrays.asList(parent.getState()), actions);
 
-        transition = new TransitionBase<>(grandparent.getState(), grandchild2_1::getState, TransitionGuard.none());
+        transition = new TransitionBase<>(grandparent.getState(), grandchild2_1::getState, TransitionGuard.none(),
+                                          Action.noAction());
 
         actions.clear();
         grandparent.exit(null, transition, actions);
@@ -377,7 +382,7 @@ public class InternalStateTest {
 
         // Outside to child transitions
 
-        transition = new TransitionBase<>("", grandchild1_1::getState, TransitionGuard.none());
+        transition = new TransitionBase<>("", grandchild1_1::getState, TransitionGuard.none(), Action.noAction());
 
         actions.clear();
         grandparent.exit(null, transition, actions);
@@ -391,7 +396,8 @@ public class InternalStateTest {
 
         // Child to outside transitions
 
-        transition = new TransitionBase<>(grandchild1_1.getState(), () -> "", TransitionGuard.none());
+        transition = new TransitionBase<>(grandchild1_1.getState(), () -> "", TransitionGuard.none(),
+                                          Action.noAction());
 
         actions.clear();
         grandchild1_1.exit(null, transition, actions);

@@ -6,11 +6,12 @@ import java.util.Objects;
  * Simple interface that represents a transition between states.
  *
  * @param <S> the class type of the states.
+ * @param <E> the class type of the events.
  * @param <C> the class type of the context.
  * @author Brian Norman
  * @since 1.0.0
  */
-public interface Transition<S, C> {
+public interface Transition<S, E, C> {
 
     /**
      * The state the transition originates from.
@@ -44,5 +45,15 @@ public interface Transition<S, C> {
      */
     default TransitionGuard<C> getGuard() {
         return TransitionGuard.none();
+    }
+
+    /**
+     * Returns the action to perform during the transition.  If the transition does not of an action, a transition
+     * action that performs no action should be returned.
+     *
+     * @return the transition action.
+     */
+    default Action<S, E, C> getAction() {
+        return Action.noAction();
     }
 }

@@ -42,7 +42,7 @@ public interface AsyncStateMachine<S, E, C> extends StateMachine<S, E, C>, Runna
      * @return the resulting transition.
      */
     @Override
-    Optional<Transition<S, C>> fire(E event);
+    Optional<Transition<S, E, C>> fire(E event);
 
     /**
      * Submits the specified event to the state machine to be processed.  This adds the specified event to the end of
@@ -51,7 +51,7 @@ public interface AsyncStateMachine<S, E, C> extends StateMachine<S, E, C>, Runna
      * @param event the event submitted.
      * @return the future of the resulting transition.
      */
-    Future<Optional<Transition<S, C>>> submit(E event);
+    Future<Optional<Transition<S, E, C>>> submit(E event);
 
     /**
      * Injects the specified event to the state machine for immediate processing.  This adds the specified event at the
@@ -60,5 +60,5 @@ public interface AsyncStateMachine<S, E, C> extends StateMachine<S, E, C>, Runna
      * @param event the event injected.
      * @return the future of the resulting transition.
      */
-    Future<Optional<Transition<S, C>>> inject(E event);
+    Future<Optional<Transition<S, E, C>>> inject(E event);
 }

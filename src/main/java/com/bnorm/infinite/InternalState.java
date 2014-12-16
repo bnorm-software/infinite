@@ -106,7 +106,7 @@ public interface InternalState<S, E, C> {
      * @param transition the resulting state transition.
      * @param context the state machine context.
      */
-    default void enter(E event, Transition<S, C> transition, C context) {
+    default void enter(E event, Transition<? extends S, ? extends E, ? extends C> transition, C context) {
         if (transition.isReentrant()) {
             getEntranceActions().stream().forEach(a -> a.perform(getState(), event, transition, context));
         } else if (!isChild(transition.getSource()) && !Objects.equals(getState(), transition.getSource())) {
@@ -138,7 +138,7 @@ public interface InternalState<S, E, C> {
      * @param transition the resulting state transition.
      * @param context the state machine context.
      */
-    default void exit(E event, Transition<S, C> transition, C context) {
+    default void exit(E event, Transition<? extends S, ? extends E, ? extends C> transition, C context) {
         if (transition.isReentrant()) {
             getExitActions().stream().forEach(a -> a.perform(getState(), event, transition, context));
         } else if (!isChild(transition.getDestination()) && !Objects.equals(getState(), transition.getDestination())) {

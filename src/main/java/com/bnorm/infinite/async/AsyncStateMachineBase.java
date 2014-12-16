@@ -29,7 +29,7 @@ public class AsyncStateMachineBase<S, E, C> extends StateMachineBase<S, E, C> im
     private final ReentrantLock stateMachineLock;
 
     /** The priority blocking event queue used to order submitted events. */
-    private final PriorityBlockingQueue<AsyncEventTask<E, Optional<Transition<S, C>>>> eventQueue;
+    private final PriorityBlockingQueue<AsyncEventTask<E, Optional<Transition<S, E, C>>>> eventQueue;
 
     /** The incrementing priority of the next event. */
     private final AtomicLong priority;
@@ -98,7 +98,7 @@ public class AsyncStateMachineBase<S, E, C> extends StateMachineBase<S, E, C> im
     }
 
     @Override
-    public Optional<Transition<S, C>> fire(E event) {
+    public Optional<Transition<S, E, C>> fire(E event) {
         if (stateMachineLock.isHeldByCurrentThread()) {
             throw new StateMachineException("StateMachine#fire(E) was called from within a synchronous Action or " +
                                                     "synchronous TransitionListener.\n" +
@@ -114,12 +114,12 @@ public class AsyncStateMachineBase<S, E, C> extends StateMachineBase<S, E, C> im
     }
 
     @Override
-    public Future<Optional<Transition<S, C>>> submit(E event) {
+    public Future<Optional<Transition<S, E, C>>> submit(E event) {
         return submit(event, priority.getAndIncrement());
     }
 
     @Override
-    public Future<Optional<Transition<S, C>>> inject(E event) {
+    public Future<Optional<Transition<S, E, C>>> inject(E event) {
         return submit(event, Long.MIN_VALUE);
     }
 
@@ -137,9 +137,9 @@ public class AsyncStateMachineBase<S, E, C> extends StateMachineBase<S, E, C> im
      * @param priority the priority of the submitted event.
      * @return the resulting transition Future.
      */
-    private Future<Optional<Transition<S, C>>> submit(E event, long priority) {
+    private Future<Optional<Transition<S, E, C>>> submit(E event, long priority) {
         synchronized (eventQueue) {
-            final AsyncEventTask<E, Optional<Transition<S, C>>> asyncEventTask;
+            final AsyncEventTask<E, Optional<Transition<S, E, C>>> asyncEventTask;
             asyncEventTask = new AsyncEventTask<>(event, priority, () -> safeFire(event));
             eventQueue.add(asyncEventTask);
             return asyncEventTask;
@@ -153,7 +153,7 @@ public class AsyncStateMachineBase<S, E, C> extends StateMachineBase<S, E, C> im
      * @param event the event fired.
      * @return the resulting transition.
      */
-    private Optional<Transition<S, C>> safeFire(E event) {
+    private Optional<Transition<S, E, C>> safeFire(E event) {
         stateMachineLock.lock();
         try {
             return super.fire(event);

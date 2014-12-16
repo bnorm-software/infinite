@@ -3,9 +3,9 @@ package com.bnorm.infinite;
 /**
  * A factory interface for state machine structures.
  *
- * @param <S>
- * @param <E>
- * @param <C>
+ * @param <S> the class type of the states.
+ * @param <E> the class type of the events.
+ * @param <C> the class type of the context.
  * @author Brian Norman
  * @since 1.1.0
  */
@@ -45,5 +45,5 @@ public interface StateMachineStructureFactory<S, E, C> {
      * @return a new state machine structure.
      */
     StateMachineStructure<S, E, C> create(InternalStateFactory<S, E, C> internalStateFactory,
-                                          TransitionFactory<S, C> transitionFactory);
+                                          TransitionFactory<S, E, C> transitionFactory);
 }

@@ -88,7 +88,7 @@ public class StateMachineTest {
         turnstileBuilder.configure("Locked").handle("coin", "Unlocked");
         turnstileBuilder.configure("Unlocked").handle("push", "Locked");
         StateMachine<String, String, Void> turnstile = turnstileBuilder.build("Locked", null);
-        Optional<Transition<String, Void>> turnstileTransition;
+        Optional<Transition<String, String, Void>> turnstileTransition;
 
         turnstileTransition = turnstile.fire("coin");
         Assert.assertTrue(turnstileTransition.isPresent());
@@ -117,7 +117,7 @@ public class StateMachineTest {
         dvdplayerBuilder.configure("Playing").childOf("Active").handle("pause", "Paused");
         dvdplayerBuilder.configure("Paused").childOf("Active").handle("play", "Playing");
         StateMachine<String, String, AtomicBoolean> dvdplayer = dvdplayerBuilder.build("Stopped", containsDVD);
-        Optional<Transition<String, AtomicBoolean>> dvdplayerTransition;
+        Optional<Transition<String, String, AtomicBoolean>> dvdplayerTransition;
 
         dvdplayerTransition = dvdplayer.fire("play");
         Assert.assertFalse(dvdplayerTransition.isPresent());
