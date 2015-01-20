@@ -88,18 +88,18 @@ public class AsyncStateMachineTest {
         turnstileBuilder.configure("Unlocked").handle("push", "Locked");
         AsyncStateMachine<String, String, Void> turnstile = turnstileBuilder.build("Locked", null);
 
-        Future<Optional<Transition<String, Void>>> futureTurnstileTransition1 = turnstile.submit("coin");
-        Future<Optional<Transition<String, Void>>> futureTurnstileTransition2 = turnstile.submit("coin");
-        Future<Optional<Transition<String, Void>>> futureTurnstileTransition3 = turnstile.submit("push");
-        Future<Optional<Transition<String, Void>>> futureTurnstileTransition4 = turnstile.submit("push");
+        Future<Optional<Transition<String, String, Void>>> futureTurnstileTransition1 = turnstile.submit("coin");
+        Future<Optional<Transition<String, String, Void>>> futureTurnstileTransition2 = turnstile.submit("coin");
+        Future<Optional<Transition<String, String, Void>>> futureTurnstileTransition3 = turnstile.submit("push");
+        Future<Optional<Transition<String, String, Void>>> futureTurnstileTransition4 = turnstile.submit("push");
 
         Thread turnstileThread = new Thread(turnstile);
         turnstileThread.start();
 
-        Optional<Transition<String, Void>> turnstileTransition1 = futureTurnstileTransition1.get();
-        Optional<Transition<String, Void>> turnstileTransition2 = futureTurnstileTransition2.get();
-        Optional<Transition<String, Void>> turnstileTransition3 = futureTurnstileTransition3.get();
-        Optional<Transition<String, Void>> turnstileTransition4 = futureTurnstileTransition4.get();
+        Optional<Transition<String, String, Void>> turnstileTransition1 = futureTurnstileTransition1.get();
+        Optional<Transition<String, String, Void>> turnstileTransition2 = futureTurnstileTransition2.get();
+        Optional<Transition<String, String, Void>> turnstileTransition3 = futureTurnstileTransition3.get();
+        Optional<Transition<String, String, Void>> turnstileTransition4 = futureTurnstileTransition4.get();
 
 
         Assert.assertTrue(turnstileTransition1.isPresent());
@@ -128,30 +128,35 @@ public class AsyncStateMachineTest {
         dvdplayerBuilder.configure("Paused").childOf("Active").handle("play", "Playing");
         AsyncStateMachine<String, String, AtomicBoolean> dvdplayer = dvdplayerBuilder.build("Stopped", containsDVD);
 
-        Future<Optional<Transition<String, AtomicBoolean>>> futureDVDPlayerTransition1 = dvdplayer.submit("play");
-        Future<Optional<Transition<String, AtomicBoolean>>> futureDVDPlayerTransition2 = dvdplayer.submit("pause");
+        Future<Optional<Transition<String, String, AtomicBoolean>>> futureDVDPlayerTransition1 = dvdplayer.submit(
+                "play");
+        Future<Optional<Transition<String, String, AtomicBoolean>>> futureDVDPlayerTransition2 = dvdplayer.submit(
+                "pause");
 
         Thread dvdplayerThread = new Thread(dvdplayer);
         dvdplayerThread.start();
 
-        Optional<Transition<String, AtomicBoolean>> dvdplayerTransition1 = futureDVDPlayerTransition1.get();
-        Optional<Transition<String, AtomicBoolean>> dvdplayerTransition2 = futureDVDPlayerTransition2.get();
+        Optional<Transition<String, String, AtomicBoolean>> dvdplayerTransition1 = futureDVDPlayerTransition1.get();
+        Optional<Transition<String, String, AtomicBoolean>> dvdplayerTransition2 = futureDVDPlayerTransition2.get();
         Assert.assertFalse(dvdplayerTransition1.isPresent());
         Assert.assertFalse(dvdplayerTransition2.isPresent());
 
         dvdplayer.stop();
         containsDVD.set(true);
 
-        Future<Optional<Transition<String, AtomicBoolean>>> futureDVDPlayerTransition3 = dvdplayer.submit("play");
-        Future<Optional<Transition<String, AtomicBoolean>>> futureDVDPlayerTransition4 = dvdplayer.submit("pause");
-        Future<Optional<Transition<String, AtomicBoolean>>> futureDVDPlayerTransition5 = dvdplayer.inject("stop");
+        Future<Optional<Transition<String, String, AtomicBoolean>>> futureDVDPlayerTransition3 = dvdplayer.submit(
+                "play");
+        Future<Optional<Transition<String, String, AtomicBoolean>>> futureDVDPlayerTransition4 = dvdplayer.submit(
+                "pause");
+        Future<Optional<Transition<String, String, AtomicBoolean>>> futureDVDPlayerTransition5 = dvdplayer.inject(
+                "stop");
 
         dvdplayerThread = new Thread(dvdplayer);
         dvdplayerThread.start();
 
-        Optional<Transition<String, AtomicBoolean>> dvdplayerTransition3 = futureDVDPlayerTransition3.get();
-        Optional<Transition<String, AtomicBoolean>> dvdplayerTransition4 = futureDVDPlayerTransition4.get();
-        Optional<Transition<String, AtomicBoolean>> dvdplayerTransition5 = futureDVDPlayerTransition5.get();
+        Optional<Transition<String, String, AtomicBoolean>> dvdplayerTransition3 = futureDVDPlayerTransition3.get();
+        Optional<Transition<String, String, AtomicBoolean>> dvdplayerTransition4 = futureDVDPlayerTransition4.get();
+        Optional<Transition<String, String, AtomicBoolean>> dvdplayerTransition5 = futureDVDPlayerTransition5.get();
         Assert.assertTrue(dvdplayerTransition3.isPresent());
         Assert.assertEquals("Stopped", dvdplayerTransition3.get().getSource());
         Assert.assertEquals("Playing", dvdplayerTransition3.get().getDestination());
@@ -164,20 +169,23 @@ public class AsyncStateMachineTest {
         dvdplayerThread = new Thread(dvdplayer);
         dvdplayerThread.start();
 
-        Future<Optional<Transition<String, AtomicBoolean>>> futureDVDPlayerTransition6 = dvdplayer.submit("play");
-        Optional<Transition<String, AtomicBoolean>> dvdplayerTransition7 = dvdplayer.fire("pause");
+        Future<Optional<Transition<String, String, AtomicBoolean>>> futureDVDPlayerTransition6 = dvdplayer.submit(
+                "play");
+        Optional<Transition<String, String, AtomicBoolean>> dvdplayerTransition7 = dvdplayer.fire("pause");
 
         dvdplayer.stop();
         dvdplayerThread = new Thread(dvdplayer);
 
-        Future<Optional<Transition<String, AtomicBoolean>>> futureDVDPlayerTransition8 = dvdplayer.submit("play");
-        Future<Optional<Transition<String, AtomicBoolean>>> futureDVDPlayerTransition9 = dvdplayer.inject("stop");
+        Future<Optional<Transition<String, String, AtomicBoolean>>> futureDVDPlayerTransition8 = dvdplayer.submit(
+                "play");
+        Future<Optional<Transition<String, String, AtomicBoolean>>> futureDVDPlayerTransition9 = dvdplayer.inject(
+                "stop");
 
         dvdplayerThread.start();
 
-        Optional<Transition<String, AtomicBoolean>> dvdplayerTransition6 = futureDVDPlayerTransition6.get();
-        Optional<Transition<String, AtomicBoolean>> dvdplayerTransition8 = futureDVDPlayerTransition8.get();
-        Optional<Transition<String, AtomicBoolean>> dvdplayerTransition9 = futureDVDPlayerTransition9.get();
+        Optional<Transition<String, String, AtomicBoolean>> dvdplayerTransition6 = futureDVDPlayerTransition6.get();
+        Optional<Transition<String, String, AtomicBoolean>> dvdplayerTransition8 = futureDVDPlayerTransition8.get();
+        Optional<Transition<String, String, AtomicBoolean>> dvdplayerTransition9 = futureDVDPlayerTransition9.get();
 
         Assert.assertTrue(dvdplayerTransition6.isPresent());
         Assert.assertEquals("Paused", dvdplayerTransition6.get().getSource());

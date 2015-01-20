@@ -40,5 +40,5 @@ public interface StateMachine<S, E, C> {
      * @param event the event fired.
      * @return the resulting transition.
      */
-    Optional<Transition<S, C>> fire(E event);
+    Optional<Transition<S, E, C>> fire(E event);
 }

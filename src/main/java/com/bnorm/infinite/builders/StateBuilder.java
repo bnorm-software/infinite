@@ -49,7 +49,7 @@ public interface StateBuilder<S, E, C> {
      * @param transition the transition that will result because of the event.
      * @return the current state builder for chaining.
      */
-    StateBuilder<S, E, C> handle(E event, Transition<S, C> transition);
+    StateBuilder<S, E, C> handle(E event, Transition<S, E, C> transition);
 
     /**
      * Adds a reentrant transition as a possible transition given the specified event.
@@ -88,6 +88,16 @@ public interface StateBuilder<S, E, C> {
     StateBuilder<S, E, C> handle(E event, TransitionGuard<C> guard);
 
     /**
+     * Adds a transition to the specified state as a possible transition given the specified event and transition
+     * action.
+     *
+     * @param event the event that will cause the transition.
+     * @param action the action to perform during the transition.
+     * @return the current state builder for chaining.
+     */
+    StateBuilder<S, E, C> handle(E event, Action<S, E, C> action);
+
+    /**
      * Adds a transition to the specified state as a possible transition given the specified event, destination, and the
      * transition guard.
      *
@@ -108,4 +118,50 @@ public interface StateBuilder<S, E, C> {
      * @return the current state builder for chaining.
      */
     StateBuilder<S, E, C> handle(E event, Supplier<S> destination, TransitionGuard<C> guard);
+
+    /**
+     * Adds a transition to the specified state as a possible transition given the specified event, destination, and
+     * transition action.
+     *
+     * @param event the event that will cause the transition.
+     * @param destination the destination of the transition.
+     * @param action the action to perform during the transition.
+     * @return the current state builder for chaining.
+     */
+    StateBuilder<S, E, C> handle(E event, S destination, Action<S, E, C> action);
+
+    /**
+     * Adds a transition to the specified state as a possible transition given the specified event, destination
+     * supplier, and transition action.
+     *
+     * @param event the event that will cause the transition.
+     * @param destination the destination supplier of the transition.
+     * @param action the action to perform during the transition.
+     * @return the current state builder for chaining.
+     */
+    StateBuilder<S, E, C> handle(E event, Supplier<S> destination, Action<S, E, C> action);
+
+    /**
+     * Adds a transition to the specified state as a possible transition given the specified event, destination,
+     * transition guard, and transition action.
+     *
+     * @param event the event that will cause the transition.
+     * @param destination the destination of the transition.
+     * @param guard the guard for the transition.
+     * @param action the action to perform during the transition.
+     * @return the current state builder for chaining.
+     */
+    StateBuilder<S, E, C> handle(E event, S destination, TransitionGuard<C> guard, Action<S, E, C> action);
+
+    /**
+     * Adds a transition to the specified state as a possible transition given the specified event, destination
+     * supplier, transition guard, and transition action.
+     *
+     * @param event the event that will cause the transition.
+     * @param destination the destination supplier of the transition.
+     * @param guard the guard for the transition.
+     * @param action the action to perform during the transition.
+     * @return the current state builder for chaining.
+     */
+    StateBuilder<S, E, C> handle(E event, Supplier<S> destination, TransitionGuard<C> guard, Action<S, E, C> action);
 }

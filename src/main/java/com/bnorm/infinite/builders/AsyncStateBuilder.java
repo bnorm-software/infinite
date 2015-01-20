@@ -44,7 +44,7 @@ public interface AsyncStateBuilder<S, E, C> extends StateBuilder<S, E, C> {
     AsyncStateBuilder<S, E, C> onAsyncExit(Action<S, E, C> action);
 
     @Override
-    AsyncStateBuilder<S, E, C> handle(E event, Transition<S, C> transition);
+    AsyncStateBuilder<S, E, C> handle(E event, Transition<S, E, C> transition);
 
     @Override
     AsyncStateBuilder<S, E, C> handle(E event);
@@ -59,8 +59,24 @@ public interface AsyncStateBuilder<S, E, C> extends StateBuilder<S, E, C> {
     AsyncStateBuilder<S, E, C> handle(E event, TransitionGuard<C> guard);
 
     @Override
+    AsyncStateBuilder<S, E, C> handle(E event, Action<S, E, C> action);
+
+    @Override
     AsyncStateBuilder<S, E, C> handle(E event, S destination, TransitionGuard<C> guard);
 
     @Override
     AsyncStateBuilder<S, E, C> handle(E event, Supplier<S> destination, TransitionGuard<C> guard);
+
+    @Override
+    AsyncStateBuilder<S, E, C> handle(E event, S destination, Action<S, E, C> action);
+
+    @Override
+    AsyncStateBuilder<S, E, C> handle(E event, Supplier<S> destination, Action<S, E, C> action);
+
+    @Override
+    AsyncStateBuilder<S, E, C> handle(E event, S destination, TransitionGuard<C> guard, Action<S, E, C> action);
+
+    @Override
+    AsyncStateBuilder<S, E, C> handle(E event, Supplier<S> destination, TransitionGuard<C> guard,
+                                      Action<S, E, C> action);
 }

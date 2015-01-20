@@ -39,7 +39,7 @@ public class FileStateMachineStructureFactory<S, E, C> implements StateMachineSt
 
     @Override
     public StateMachineStructure<S, E, C> create(InternalStateFactory<S, E, C> internalStateFactory,
-                                                 TransitionFactory<S, C> transitionFactory) {
+                                                 TransitionFactory<S, E, C> transitionFactory) {
         try {
             return new FileStateMachineStructure<>(internalStateFactory, transitionFactory, path, stateMachineReader);
         } catch (IOException e) {

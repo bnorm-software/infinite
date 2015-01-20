@@ -9,9 +9,9 @@ import java.util.Set;
 /**
  * The base implementation of a state machine structure.
  *
- * @param <S>
- * @param <E>
- * @param <C>
+ * @param <S> the class type of the states.
+ * @param <E> the class type of the events.
+ * @param <C> the class type of the context.
  * @author Brian Norman
  * @since 1.1.0
  */
@@ -21,13 +21,13 @@ public class StateMachineStructureBase<S, E, C> implements StateMachineStructure
     private final InternalStateFactory<S, E, C> internalStateFactory;
 
     /** The state transition factory. */
-    private final TransitionFactory<S, C> transitionFactory;
+    private final TransitionFactory<S, E, C> transitionFactory;
 
     /** The state to internal state map. */
     private final Map<S, InternalState<S, E, C>> states;
 
     /** The event to transition map. */
-    private final Map<E, Set<Transition<S, C>>> transitions;
+    private final Map<E, Set<Transition<S, E, C>>> transitions;
 
     /**
      * Constructs a new state machine structure base from the specified internal state factory and transition factory.
@@ -36,7 +36,7 @@ public class StateMachineStructureBase<S, E, C> implements StateMachineStructure
      * @param transitionFactory the factory used to create transitions.
      */
     protected StateMachineStructureBase(InternalStateFactory<S, E, C> internalStateFactory,
-                                        TransitionFactory<S, C> transitionFactory) {
+                                        TransitionFactory<S, E, C> transitionFactory) {
         this.internalStateFactory = internalStateFactory;
         this.transitionFactory = transitionFactory;
         this.states = Collections.synchronizedMap(new HashMap<>());
@@ -54,17 +54,17 @@ public class StateMachineStructureBase<S, E, C> implements StateMachineStructure
     }
 
     @Override
-    public TransitionFactory<S, C> getTransitionFactory() {
+    public TransitionFactory<S, E, C> getTransitionFactory() {
         return transitionFactory;
     }
 
     @Override
-    public Set<Transition<S, C>> getTransitions(E event) {
+    public Set<Transition<S, E, C>> getTransitions(E event) {
         return Collections.unmodifiableSet(getTransitionsUnsafe(event));
     }
 
     @Override
-    public void addTransition(E event, Transition<S, C> transition) {
+    public void addTransition(E event, Transition<S, E, C> transition) {
         getTransitionsUnsafe(event).add(transition);
     }
 
@@ -74,7 +74,7 @@ public class StateMachineStructureBase<S, E, C> implements StateMachineStructure
      * @param event the state machine event.
      * @return the associated transitions.
      */
-    private Set<Transition<S, C>> getTransitionsUnsafe(E event) {
+    private Set<Transition<S, E, C>> getTransitionsUnsafe(E event) {
         return transitions.computeIfAbsent(event, e -> Collections.synchronizedSet(new HashSet<>()));
     }
 }

@@ -61,15 +61,15 @@ public class StateMachineBase<S, E, C> implements StateMachine<S, E, C> {
     }
 
     @Override
-    public Optional<Transition<S, C>> fire(E event) {
-        final Set<Transition<S, C>> eventTransitions = structure.getTransitions(event);
+    public Optional<Transition<S, E, C>> fire(E event) {
+        final Set<Transition<S, E, C>> eventTransitions = structure.getTransitions(event);
         if (eventTransitions.isEmpty()) {
             return Optional.empty();
         }
 
         // To build the possible transition list, we will start with the current internal state and see if it
         // handles the specified event.  If it does not, we iterate one level up the parent chain and repeat.
-        List<Transition<S, C>> possible = Collections.emptyList();
+        List<Transition<S, E, C>> possible = Collections.emptyList();
         Optional<InternalState<S, E, C>> optional = Optional.of(structure.getState(state));
         while (possible.isEmpty() && optional.isPresent()) {
             final InternalState<S, E, C> state = optional.get();
@@ -87,20 +87,19 @@ public class StateMachineBase<S, E, C> implements StateMachine<S, E, C> {
         }
 
         // Create a snapshot clone of the transition so the destination does not change each time we ask.
-        Transition<S, C> transition = structure.getTransitionFactory().create(possible.get(0));
-        if (structure.getState(transition.getDestination()) == null) {
-            throw new StateMachineException("No internal state found for destination state in state machine");
-        }
+        Transition<S, E, C> transition = structure.getTransitionFactory().create(possible.get(0));
+        final S destination = transition.getDestination();
 
         Optional<InternalState<S, E, C>> commonAncestor;
-        commonAncestor = InternalState.getCommonAncestor(structure.getState(state),
-                                                         structure.getState(transition.getDestination()));
+        commonAncestor = InternalState.getCommonAncestor(structure.getState(state), structure.getState(destination));
+        final S commonAncestorState = commonAncestor.isPresent() ? commonAncestor.get().getState() : null;
 
         listeners.forEach(l -> l.stateTransition(TransitionStage.Before, event, transition, context));
         structure.getState(state).exit(event, transition, context);
-        state = commonAncestor.isPresent() ? commonAncestor.get().getState() : null;
+        state = commonAncestorState;
         listeners.forEach(l -> l.stateTransition(TransitionStage.Between, event, transition, context));
-        state = transition.getDestination();
+        transition.getAction().perform(state, event, transition, context);
+        state = destination;
         structure.getState(state).enter(event, transition, context);
         listeners.forEach(l -> l.stateTransition(TransitionStage.After, event, transition, context));
 

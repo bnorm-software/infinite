@@ -35,7 +35,8 @@ public interface AsyncActionFactory<S, E, C> {
             public Action<S, E, C> create(Action<S, E, C> action) {
                 return new Action<S, E, C>() {
                     @Override
-                    public void perform(S state, E event, Transition<? extends S, ? extends C> transition, C context) {
+                    public void perform(S state, E event, Transition<? extends S, ? extends E, ? extends C> transition,
+                                        C context) {
                         executor.submit(() -> action.perform(state, event, transition, context));
                     }
                 };
