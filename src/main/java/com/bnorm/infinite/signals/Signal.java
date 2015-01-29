@@ -66,6 +66,8 @@ public class Signal<E, T> {
      * Creates and returns a new signal with the specified event.
      *
      * @param event the signal event.
+     * @param <E> the class type of the events.
+     * @param <T> the class type of the signal value.
      * @return a new event signal.
      */
     public static <E, T> Signal<E, T> of(E event) {
@@ -77,6 +79,8 @@ public class Signal<E, T> {
      *
      * @param event the signal event.
      * @param value the signal parameter value.
+     * @param <E> the class type of the events.
+     * @param <T> the class type of the signal value.
      * @return a new event signal.
      */
     public static <E, T> Signal<E, T> of(E event, T value) {

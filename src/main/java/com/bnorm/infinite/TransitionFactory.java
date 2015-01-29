@@ -17,6 +17,7 @@ public interface TransitionFactory<S, E, C> {
      * Returns the default internal state factory.  This is the internal state base constructor.
      *
      * @param <S> the class type of the states.
+     * @param <E> the class type of the events.
      * @param <C> the class type of the context.
      * @return default internal state factory.
      */

@@ -7,9 +7,9 @@ import java.util.Set;
  * like behavior, just a representation of a state machine.  This structure can be safely used between multiple state
  * machines which reduces the memory requirements for having many state machines of the same structure.
  *
- * @param <S>
- * @param <E>
- * @param <C>
+ * @param <S> the class type of the states.
+ * @param <E> the class type of the events.
+ * @param <C> the class type of the context.
  * @author Brian Norman
  * @since 1.1.0
  */
