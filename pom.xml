@@ -9,7 +9,7 @@
 
     <groupId>com.bnorm</groupId>
     <artifactId>infinite</artifactId>
-    <version>1.2.0</version>
+    <version>1.2.1-SNAPSHOT</version>
     <name>Infinite</name>
     <description>Infinite - A hierarchical finite state machine for Java</description>
     <url>https://github.com/bnorm-software/infinite</url>
