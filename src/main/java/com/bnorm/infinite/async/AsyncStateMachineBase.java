@@ -13,6 +13,8 @@ import com.bnorm.infinite.StateMachineBase;
 import com.bnorm.infinite.StateMachineException;
 import com.bnorm.infinite.StateMachineStructure;
 import com.bnorm.infinite.Transition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The base implementation of an asynchronous state machine.
@@ -24,6 +26,9 @@ import com.bnorm.infinite.Transition;
  * @since 1.1.0
  */
 public class AsyncStateMachineBase<S, E, C> extends StateMachineBase<S, E, C> implements AsyncStateMachine<S, E, C> {
+
+    /** The class logger. */
+    private static final Logger log = LoggerFactory.getLogger(AsyncStateMachineBase.class);
 
     /** The state machine lock used to make the asynchronous state machine thread safe. */
     private final ReentrantLock stateMachineLock;
@@ -62,6 +67,7 @@ public class AsyncStateMachineBase<S, E, C> extends StateMachineBase<S, E, C> im
         if (isRunning()) {
             synchronized (eventQueue) {
                 // Submit a poisonous pill to the event queue that will cause it to process an event and stop running.
+                log.trace("Submitting poisonous pill into event queue");
                 running.set(false);
                 eventQueue.add(new AsyncEventTask<>(null, priority.getAndIncrement(), () -> null));
             }
@@ -72,12 +78,14 @@ public class AsyncStateMachineBase<S, E, C> extends StateMachineBase<S, E, C> im
     public void run() {
         running.set(true);
         try {
-            while (isRunning()) {
+            while (running.get()) {
                 try {
                     AsyncEventTask<?, ?> asyncEventTask = eventQueue.take();
+                    log.trace("Running next event [{}] taken from the task queue.", asyncEventTask.getEvent());
                     asyncEventTask.run();
                     asyncEventTask.get();
                 } catch (InterruptedException | CancellationException e) {
+                    log.warn("Exception was thrown while trying to process an event", e);
                     /* There are 3 types of exceptions being caught here:
                      * 1. Interrupt from BlockQueue#take()
                      *     - This case can be safely ignored because we will loop and wait again.
@@ -93,7 +101,10 @@ public class AsyncStateMachineBase<S, E, C> extends StateMachineBase<S, E, C> im
             }
         } finally {
             // If we ever stop running for whatever reason, make sure the state machine is marked as such.
-            running.set(false);
+            if (running.get()) {
+                log.warn("The state machine thread exited without being properly shutdown.");
+                running.set(false);
+            }
         }
     }
 
@@ -103,11 +114,13 @@ public class AsyncStateMachineBase<S, E, C> extends StateMachineBase<S, E, C> im
             throw new StateMachineException("StateMachine#fire(E) was called from within a synchronous Action or " +
                                                     "synchronous TransitionListener.\n" +
                                                     "Please use AsyncStateMachine#sumbit(E), " +
-                                                    "AsyncStateMachine#inject(E), or an asynchronous Action or " +
+                                                    "AsyncStateMachine#inject(E), an asynchronous Action, or " +
                                                     "asynchronous TransitionListener.");
         }
         try {
-            return submit(event, priority.getAndIncrement()).get();
+            long pValue = priority.getAndIncrement();
+            log.trace("Firing [{}] with priority [{}].", event, pValue);
+            return submit(event, pValue).get();
         } catch (InterruptedException | ExecutionException e) {
             throw new StateMachineException(e);
         }
@@ -115,11 +128,14 @@ public class AsyncStateMachineBase<S, E, C> extends StateMachineBase<S, E, C> im
 
     @Override
     public Future<Optional<Transition<S, E, C>>> submit(E event) {
-        return submit(event, priority.getAndIncrement());
+        long pValue = priority.getAndIncrement();
+        log.trace("Submitting [{}] to the event queue with priority [{}].", event, pValue);
+        return submit(event, pValue);
     }
 
     @Override
     public Future<Optional<Transition<S, E, C>>> inject(E event) {
+        log.trace("Injecting [{}] into the event queue with priority [{}].", event, Long.MIN_VALUE);
         return submit(event, Long.MIN_VALUE);
     }
 
@@ -138,6 +154,9 @@ public class AsyncStateMachineBase<S, E, C> extends StateMachineBase<S, E, C> im
      * @return the resulting transition Future.
      */
     private Future<Optional<Transition<S, E, C>>> submit(E event, long priority) {
+        if (!isRunning()) {
+            log.warn("Submitting [{}] to the event queue while it is not running!", event);
+        }
         synchronized (eventQueue) {
             final AsyncEventTask<E, Optional<Transition<S, E, C>>> asyncEventTask;
             asyncEventTask = new AsyncEventTask<>(event, priority, () -> safeFire(event));
@@ -154,10 +173,12 @@ public class AsyncStateMachineBase<S, E, C> extends StateMachineBase<S, E, C> im
      * @return the resulting transition.
      */
     private Optional<Transition<S, E, C>> safeFire(E event) {
+        log.trace("Acquiring state machine lock for event [{}].", event);
         stateMachineLock.lock();
         try {
             return super.fire(event);
         } finally {
+            log.trace("Releasing state machine lock for event [{}].", event);
             stateMachineLock.unlock();
         }
     }
