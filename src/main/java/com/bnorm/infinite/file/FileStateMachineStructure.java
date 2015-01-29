@@ -25,8 +25,8 @@ import org.slf4j.LoggerFactory;
  */
 public class FileStateMachineStructure<S, E, C> extends StateMachineStructureBase<S, E, C> {
 
-    /** Class logger. */
-    private static final Logger LOG = LoggerFactory.getLogger(FileStateMachineStructure.class);
+    /** The class logger. */
+    private static final Logger log = LoggerFactory.getLogger(FileStateMachineStructure.class);
 
     /**
      * Constructs a new FileStateMachineStructure with the specified parameters.
@@ -55,16 +55,16 @@ public class FileStateMachineStructure<S, E, C> extends StateMachineStructureBas
                     // The line contains state machine structure information
                     if (!line.startsWith(" ") && !line.startsWith("\t")) {
                         // A line that is not indented in anyway is a state
-                        LOG.trace("Parsing line as state.  Line[{}]", fullLine);
+                        log.trace("Parsing line as state.  Line[{}]", fullLine);
                         state = parseState(stateMachineReader, line);
                         validState = true;
                     } else if (validState) {
                         // An indented line, if it comes directly after a state, is treated as a transition
-                        LOG.trace("Parsing line as transition.  Line[{}]", fullLine);
+                        log.trace("Parsing line as transition.  Line[{}]", fullLine);
                         parseTransition(state, stateMachineReader, line);
                     } else {
                         // Indented line that is at beginning of the file or did not come directly after a state
-                        LOG.trace("Ignoring line.  Line[{}]", fullLine);
+                        log.trace("Ignoring line.  Line[{}]", fullLine);
                     }
                 }
             }
@@ -86,7 +86,7 @@ public class FileStateMachineStructure<S, E, C> extends StateMachineStructureBas
         final S state = stateMachineReader.readState(stateString);
         final InternalState<S, E, C> internalState = this.getState(state);
         index++;
-        LOG.trace("Found state [{}]", stateString);
+        log.trace("Found state [{}]", stateString);
 
         if (line.contains(":")) {
             final String parentString = split[index].trim();
@@ -97,7 +97,7 @@ public class FileStateMachineStructure<S, E, C> extends StateMachineStructureBas
             internalState.setParentState(internalParent);
 
             index++;
-            LOG.trace("Found parent state [{}]", parentString);
+            log.trace("Found parent state [{}]", parentString);
         }
 
         if (line.contains("/")) {
@@ -106,7 +106,7 @@ public class FileStateMachineStructure<S, E, C> extends StateMachineStructureBas
                 final Action<S, E, C> entryAction = stateMachineReader.readStateAction(state, ActionType.Entrance,
                                                                                        entryActionString);
                 internalState.addEntranceAction(entryAction);
-                LOG.trace("Found entry action [{}]", entryActionString);
+                log.trace("Found entry action [{}]", entryActionString);
             }
             index++;
         }
@@ -117,7 +117,7 @@ public class FileStateMachineStructure<S, E, C> extends StateMachineStructureBas
                                                                                   exitActionString);
             internalState.addExitAction(exitAction);
             index++;
-            LOG.trace("Found exit action [{}]", exitActionString);
+            log.trace("Found exit action [{}]", exitActionString);
         }
 
         return state;
@@ -137,17 +137,17 @@ public class FileStateMachineStructure<S, E, C> extends StateMachineStructureBas
         final String eventString = split[index].trim();
         final E event = stateMachineReader.readEvent(eventString);
         index++;
-        LOG.trace("Found transition event [{}]", eventString);
+        log.trace("Found transition event [{}]", eventString);
 
         final S destination;
         if (line.contains("->")) {
             final String stateString = split[index].trim();
             destination = stateMachineReader.readState(stateString);
             index++;
-            LOG.trace("Found transition state [{}]", stateString);
+            log.trace("Found transition state [{}]", stateString);
         } else {
             destination = state;
-            LOG.trace("Creating re-entrant transition to [{}]", state);
+            log.trace("Creating re-entrant transition to [{}]", state);
         }
 
         final TransitionGuard<C> transitionGuard;
@@ -160,7 +160,7 @@ public class FileStateMachineStructure<S, E, C> extends StateMachineStructureBas
             guard = guard.trim();
             transitionGuard = stateMachineReader.readTransitionGuard(state, event, destination, guard);
             index++;
-            LOG.trace("Found transition guard [{}]", guard);
+            log.trace("Found transition guard [{}]", guard);
         } else {
             transitionGuard = TransitionGuard.none();
         }
@@ -171,12 +171,12 @@ public class FileStateMachineStructure<S, E, C> extends StateMachineStructureBas
             transitionAction = stateMachineReader.readTransitionAction(state, event, destination,
                                                                        transitionActionString);
             index++;
-            LOG.trace("Found transition action [{}]", transitionActionString);
+            log.trace("Found transition action [{}]", transitionActionString);
         } else {
             transitionAction = Action.noAction();
         }
 
-        LOG.trace("Adding state transition.  Event [{}] State [{}]", event, destination);
+        log.trace("Adding state transition.  Event [{}] State [{}]", event, destination);
         this.addTransition(event,
                            this.getTransitionFactory().create(state, destination, transitionGuard, transitionAction));
     }
