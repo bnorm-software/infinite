@@ -9,7 +9,7 @@ Infinite can be found in Maven Central thanks to Sonatype OSSRH.
 <dependency>
     <groupId>com.bnorm</groupId>
     <artifactId>infinite</artifactId>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
 </dependency>
 ```
 
@@ -88,9 +88,12 @@ dvdplayer.fire("stop");
  - Asynchronous transition listener factory
  - State machine structure to back all state machines
 
-## Future ##
-
 ### Version 1.2.0 ###
  - Load a state machine structure from a text file
+ - Library now performs logging with SLF4J/Logback
+
+## Future ##
+
+### Version 1.3.0 ###
  - Save a state machine structure to a text file
  - Your suggestion here!
