@@ -1,0 +1,33 @@
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:sub="http://www.bnorm.com/infinite/file/xml"
+            targetNamespace="http://www.bnorm.com/infinite/file/xml"
+            version="1.20">
+
+    <xsd:complexType name="eventType">
+        <xsd:sequence>
+            <xsd:element name="guard" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="action" type="xsd:string" minOccurs="0"/>
+        </xsd:sequence>
+        <xsd:attribute name="name" type="xsd:string" use="required"/>
+        <xsd:attribute name="state" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="stateType">
+        <xsd:sequence>
+            <xsd:element name="entry" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="exit" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="event" type="sub:eventType" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="name" type="xsd:string" use="required"/>
+        <xsd:attribute name="parent" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+
+    <xsd:element name="stateMachine">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="state" type="sub:stateType" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+</xsd:schema>
