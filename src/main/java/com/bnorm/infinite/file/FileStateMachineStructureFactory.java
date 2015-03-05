@@ -7,6 +7,7 @@ import com.bnorm.infinite.InternalStateFactory;
 import com.bnorm.infinite.StateMachineException;
 import com.bnorm.infinite.StateMachineStructure;
 import com.bnorm.infinite.StateMachineStructureFactory;
+import com.bnorm.infinite.StateMachineStructureFactoryBase;
 import com.bnorm.infinite.TransitionFactory;
 
 /**
@@ -18,7 +19,8 @@ import com.bnorm.infinite.TransitionFactory;
  * @author Brian Norman
  * @since 1.2.0
  */
-public class FileStateMachineStructureFactory<S, E, C> implements StateMachineStructureFactory<S, E, C> {
+public class FileStateMachineStructureFactory<S, E, C> extends StateMachineStructureFactoryBase<S, E, C>
+        implements StateMachineStructureFactory<S, E, C> {
 
     /** File location of the state machine text. */
     private final Path path;
@@ -27,19 +29,35 @@ public class FileStateMachineStructureFactory<S, E, C> implements StateMachineSt
     private final StringStateMachineReader<S, E, C> stateMachineReader;
 
     /**
+     * todo Constructors a new FileStateMachineStructureFactory with the specified parameters.
+     *
+     * @param internalStateFactory
+     * @param transitionFactory
+     * @param path the file location of the state machine text.
+     * @param stateMachineReader the reader used to load the state machine.
+     */
+    public FileStateMachineStructureFactory(InternalStateFactory<S, E, C> internalStateFactory,
+                                            TransitionFactory<S, E, C> transitionFactory, Path path,
+                                            StringStateMachineReader<S, E, C> stateMachineReader) {
+        super(internalStateFactory, transitionFactory);
+        this.path = path;
+        this.stateMachineReader = stateMachineReader;
+    }
+
+    /**
      * Constructors a new FileStateMachineStructureFactory with the specified parameters.
      *
      * @param path the file location of the state machine text.
      * @param stateMachineReader the reader used to load the state machine.
      */
     public FileStateMachineStructureFactory(Path path, StringStateMachineReader<S, E, C> stateMachineReader) {
+        super();
         this.path = path;
         this.stateMachineReader = stateMachineReader;
     }
 
     @Override
-    public StateMachineStructure<S, E, C> create(InternalStateFactory<S, E, C> internalStateFactory,
-                                                 TransitionFactory<S, E, C> transitionFactory) {
+    public StateMachineStructure<S, E, C> create() {
         try {
             return new FileStateMachineStructure<>(internalStateFactory, transitionFactory, path, stateMachineReader);
         } catch (IOException e) {

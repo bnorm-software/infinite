@@ -25,9 +25,6 @@ public class AsyncStateMachineBuilderBase<S, E, C> implements AsyncStateMachineB
     /** The asynchronous state machine builder state builder factory. */
     private final AsyncStateBuilderFactory<S, E, C> asyncStateBuilderFactory;
 
-    /** the asynchronous action factory. */
-    private final AsyncActionFactory<S, E, C> asyncActionFactory;
-
 
     /**
      * Constructs a new state machine builder from the specified state machine structure, asynchronous state machine
@@ -36,21 +33,18 @@ public class AsyncStateMachineBuilderBase<S, E, C> implements AsyncStateMachineB
      * @param structure the state machine structure.
      * @param asyncStateMachineFactory the factory used to create the asynchronous state machine.
      * @param asyncStateBuilderFactory the factory used to create asynchronous state builders.
-     * @param asyncActionFactory the factory used to create asynchronous actions.
      */
     protected AsyncStateMachineBuilderBase(StateMachineStructure<S, E, C> structure,
                                            AsyncStateMachineFactory<S, E, C> asyncStateMachineFactory,
-                                           AsyncStateBuilderFactory<S, E, C> asyncStateBuilderFactory,
-                                           AsyncActionFactory<S, E, C> asyncActionFactory) {
+                                           AsyncStateBuilderFactory<S, E, C> asyncStateBuilderFactory) {
         this.structure = structure;
         this.asyncStateMachineFactory = asyncStateMachineFactory;
         this.asyncStateBuilderFactory = asyncStateBuilderFactory;
-        this.asyncActionFactory = asyncActionFactory;
     }
 
     @Override
     public AsyncStateBuilder<S, E, C> configure(S state) {
-        return asyncStateBuilderFactory.create(structure, state, asyncActionFactory);
+        return asyncStateBuilderFactory.create(structure, state);
     }
 
     @Override
