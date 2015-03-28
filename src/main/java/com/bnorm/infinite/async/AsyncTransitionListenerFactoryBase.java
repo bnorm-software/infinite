@@ -7,9 +7,19 @@ import com.bnorm.infinite.Transition;
 import com.bnorm.infinite.TransitionListener;
 import com.bnorm.infinite.TransitionStage;
 
+/**
+ * The base implementation of an asynchronous transition listener factory.
+ *
+ * @param <S> the class type of the states.
+ * @param <E> the class type of the events.
+ * @param <C> the class type of the context.
+ * @author Brian Norman
+ * @since 1.3.0
+ */
 public class AsyncTransitionListenerFactoryBase<S, E, C> implements AsyncTransitionListenerFactory<S, E, C> {
+
     /** The backing executor. */
-    private static final ExecutorService EXECUTOR = Executors.newCachedThreadPool(
+    protected static final ExecutorService EXECUTOR = Executors.newCachedThreadPool(
             new NamedThreadFactory("AsyncTransitionListener"));
 
     @Override

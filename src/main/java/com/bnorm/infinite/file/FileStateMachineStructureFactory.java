@@ -23,16 +23,16 @@ public class FileStateMachineStructureFactory<S, E, C> extends StateMachineStruc
         implements StateMachineStructureFactory<S, E, C> {
 
     /** File location of the state machine text. */
-    private final Path path;
+    protected final Path path;
 
     /** Reader used to interpret the state machine text. */
-    private final StringStateMachineReader<S, E, C> stateMachineReader;
+    protected final StringStateMachineReader<S, E, C> stateMachineReader;
 
     /**
-     * todo Constructors a new FileStateMachineStructureFactory with the specified parameters.
+     * Constructors a new FileStateMachineStructureFactory with the specified parameters.
      *
-     * @param internalStateFactory
-     * @param transitionFactory
+     * @param internalStateFactory the factory used to create internal states.
+     * @param transitionFactory the factory used to create transitions.
      * @param path the file location of the state machine text.
      * @param stateMachineReader the reader used to load the state machine.
      */

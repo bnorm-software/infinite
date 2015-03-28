@@ -16,13 +16,13 @@ import com.bnorm.infinite.StateMachineStructure;
 public class StateMachineBuilderBase<S, E, C> implements StateMachineBuilder<S, E, C> {
 
     /** The state machine structure. */
-    private final StateMachineStructure<S, E, C> structure;
+    protected final StateMachineStructure<S, E, C> structure;
 
     /** The state machine builder state machine factory. */
-    private final StateMachineFactory<S, E, C> stateMachineFactory;
+    protected final StateMachineFactory<S, E, C> stateMachineFactory;
 
     /** The state machine builder state builder factory. */
-    private final StateBuilderFactory<S, E, C> stateBuilderFactory;
+    protected final StateBuilderFactory<S, E, C> stateBuilderFactory;
 
 
     /**

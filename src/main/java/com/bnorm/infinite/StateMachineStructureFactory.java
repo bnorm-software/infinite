@@ -12,8 +12,7 @@ package com.bnorm.infinite;
 public interface StateMachineStructureFactory<S, E, C> {
 
     /**
-     * todo
-     * Creates a new state machine structure from the specified internal state factory and transition factory.
+     * Creates a new state machine structure.
      *
      * @return a new state machine structure.
      */

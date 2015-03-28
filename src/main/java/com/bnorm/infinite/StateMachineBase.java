@@ -26,16 +26,16 @@ public class StateMachineBase<S, E, C> implements StateMachine<S, E, C> {
     private static final Logger log = LoggerFactory.getLogger(StateMachineBase.class);
 
     /** The state machine structure. */
-    private final StateMachineStructure<S, E, C> structure;
+    protected final StateMachineStructure<S, E, C> structure;
 
     /** The context of the state machine. */
-    private final C context;
+    protected final C context;
 
     /** The current state of the state machine. */
-    private S state;
+    protected S state;
 
     /** The state machine transition listeners. */
-    private final Set<TransitionListener<? super S, ? super E, ? super C>> listeners;
+    protected final Set<TransitionListener<? super S, ? super E, ? super C>> listeners;
 
     /**
      * Constructs a new state machine from the specified state machine structure, starting state, and context.

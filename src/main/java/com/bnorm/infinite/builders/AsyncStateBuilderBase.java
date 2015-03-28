@@ -20,7 +20,7 @@ import com.bnorm.infinite.async.AsyncActionFactory;
 public class AsyncStateBuilderBase<S, E, C> extends StateBuilderBase<S, E, C> implements AsyncStateBuilder<S, E, C> {
 
     /** The asynchronous action factory. */
-    private final AsyncActionFactory<S, E, C> asyncActionFactory;
+    protected final AsyncActionFactory<S, E, C> asyncActionFactory;
 
     /**
      * Constructs a new state builder from the specified state machine structure, asynchronous action factory, and state
@@ -30,8 +30,8 @@ public class AsyncStateBuilderBase<S, E, C> extends StateBuilderBase<S, E, C> im
      * @param state the state being built.
      * @param asyncActionFactory the factory used to create asynchronous actions.
      */
-    protected AsyncStateBuilderBase(StateMachineStructure<S, E, C> structure, S state,
-                                    AsyncActionFactory<S, E, C> asyncActionFactory) {
+    public AsyncStateBuilderBase(StateMachineStructure<S, E, C> structure, S state,
+                                 AsyncActionFactory<S, E, C> asyncActionFactory) {
         super(structure, state);
         this.asyncActionFactory = asyncActionFactory;
     }

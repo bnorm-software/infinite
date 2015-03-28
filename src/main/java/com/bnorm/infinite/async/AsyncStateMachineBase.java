@@ -31,16 +31,16 @@ public class AsyncStateMachineBase<S, E, C> extends StateMachineBase<S, E, C> im
     private static final Logger log = LoggerFactory.getLogger(AsyncStateMachineBase.class);
 
     /** The state machine lock used to make the asynchronous state machine thread safe. */
-    private final ReentrantLock stateMachineLock;
+    protected final ReentrantLock stateMachineLock;
 
     /** The priority blocking event queue used to order submitted events. */
-    private final PriorityBlockingQueue<AsyncEventTask<E, Optional<Transition<S, E, C>>>> eventQueue;
+    protected final PriorityBlockingQueue<AsyncEventTask<E, Optional<Transition<S, E, C>>>> eventQueue;
 
     /** The incrementing priority of the next event. */
-    private final AtomicLong priority;
+    protected final AtomicLong priority;
 
     /** If the asynchronous state machine is currently running. */
-    private final AtomicBoolean running;
+    protected final AtomicBoolean running;
 
     /**
      * Constructs a new state machine from the specified state machine structure, starting state, and context.

@@ -14,9 +14,7 @@ import com.bnorm.infinite.StateMachineStructure;
 public interface StateMachineBuilderFactory<S, E, C> {
 
     /**
-     * todo
-     * Creates a state machine builder from the specified state machine structure, state machine factory, and state
-     * builder factory.
+     * Creates a state machine builder from the specified state machine structure.
      *
      * @param structure the state machine structure.
      * @return a state machine builder.

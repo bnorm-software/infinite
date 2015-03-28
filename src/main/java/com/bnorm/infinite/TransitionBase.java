@@ -14,16 +14,16 @@ import java.util.function.Supplier;
 public class TransitionBase<S, E, C> implements Transition<S, E, C> {
 
     /** The source state of the transition. */
-    private final S source;
+    protected final S source;
 
     /** The destination state supplier of the transition. */
-    private final Supplier<S> destination;
+    protected final Supplier<S> destination;
 
     /** The conditional nature of the transition. */
-    private final TransitionGuard<C> guard;
+    protected final TransitionGuard<C> guard;
 
     /** The action to perform during the transition. */
-    private final Action<S, E, C> action;
+    protected final Action<S, E, C> action;
 
     /**
      * Constructs a new transition from the specified source and destination states and the transition guard.

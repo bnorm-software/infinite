@@ -18,16 +18,16 @@ import java.util.Set;
 public class StateMachineStructureBase<S, E, C> implements StateMachineStructure<S, E, C> {
 
     /** The state machine internal state factory. */
-    private final InternalStateFactory<S, E, C> internalStateFactory;
+    protected final InternalStateFactory<S, E, C> internalStateFactory;
 
     /** The state transition factory. */
-    private final TransitionFactory<S, E, C> transitionFactory;
+    protected final TransitionFactory<S, E, C> transitionFactory;
 
     /** The state to internal state map. */
-    private final Map<S, InternalState<S, E, C>> states;
+    protected final Map<S, InternalState<S, E, C>> states;
 
     /** The event to transition map. */
-    private final Map<E, Set<Transition<S, E, C>>> transitions;
+    protected final Map<E, Set<Transition<S, E, C>>> transitions;
 
     /**
      * Constructs a new state machine structure base from the specified internal state factory and transition factory.

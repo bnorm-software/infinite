@@ -6,10 +6,19 @@ import java.util.concurrent.Executors;
 import com.bnorm.infinite.Action;
 import com.bnorm.infinite.Transition;
 
+/**
+ * The base implementation of an asynchronous action factory.
+ *
+ * @param <S> the class type of the states.
+ * @param <E> the class type of the events.
+ * @param <C> the class type of the context.
+ * @author Brian Norman
+ * @since 1.3.0
+ */
 public class AsyncActionFactoryBase<S, E, C> implements AsyncActionFactory<S, E, C> {
 
     /** The backing executor. */
-    private static final ExecutorService EXECUTOR = Executors.newCachedThreadPool(
+    protected static final ExecutorService EXECUTOR = Executors.newCachedThreadPool(
             new NamedThreadFactory("AsyncAction"));
 
     @Override
