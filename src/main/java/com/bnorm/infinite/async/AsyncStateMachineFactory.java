@@ -15,20 +15,6 @@ import com.bnorm.infinite.StateMachineStructure;
 public interface AsyncStateMachineFactory<S, E, C> extends StateMachineFactory<S, E, C> {
 
     /**
-     * Returns the default asynchronous state machine factory.  This is the asynchronous state machine base
-     * constructor.
-     *
-     * @param <S> the class type of the states.
-     * @param <E> the class type of the events.
-     * @param <C> the class type of the context.
-     * @return default internal state factory.
-     */
-    static <S, E, C> AsyncStateMachineFactory<S, E, C> getDefault() {
-        return AsyncStateMachineBase::new;
-    }
-
-
-    /**
      * Creates an asynchronous state machine from the specified state machine structure, starting state, and context.
      *
      * @param structure the state machine structure.

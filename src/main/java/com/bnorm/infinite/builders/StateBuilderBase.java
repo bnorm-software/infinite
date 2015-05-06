@@ -22,10 +22,10 @@ import com.bnorm.infinite.TransitionGuard;
 public class StateBuilderBase<S, E, C> implements StateBuilder<S, E, C> {
 
     /** The state machine structure. */
-    private final StateMachineStructure<S, E, C> structure;
+    protected final StateMachineStructure<S, E, C> structure;
 
     /** The state being built. */
-    private final S state;
+    protected final S state;
 
     /**
      * Constructs a new state builder from the specified state machine structure and the state being built.

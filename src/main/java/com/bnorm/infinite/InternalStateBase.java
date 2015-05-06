@@ -17,19 +17,19 @@ import java.util.Set;
 public class InternalStateBase<S, E, C> implements InternalState<S, E, C> {
 
     /** The wrapped state. */
-    private final S state;
+    protected final S state;
 
     /** The optional parent state. */
-    private Optional<InternalState<S, E, C>> parent;
+    protected Optional<InternalState<S, E, C>> parent;
 
     /** The children of the state. */
-    private final Set<InternalState<S, E, C>> children;
+    protected final Set<InternalState<S, E, C>> children;
 
     /** The entrance actions of the state. */
-    private final Set<Action<? super S, ? super E, ? super C>> entranceActions;
+    protected final Set<Action<? super S, ? super E, ? super C>> entranceActions;
 
     /** The exit actions of the state. */
-    private final Set<Action<? super S, ? super E, ? super C>> exitActions;
+    protected final Set<Action<? super S, ? super E, ? super C>> exitActions;
 
     /**
      * Constructs a new internal state form the specified state.

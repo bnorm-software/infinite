@@ -20,19 +20,19 @@ import com.bnorm.infinite.TransitionGuard;
 public class StringStateMachineReaderBase<S, E, C> implements StringStateMachineReader<S, E, C> {
 
     /** Function to convert a string into a state. */
-    private final Function<String, S> stateFunction;
+    protected final Function<String, S> stateFunction;
 
     /** Function to convert a string into an event. */
-    private final Function<String, E> eventFunction;
+    protected final Function<String, E> eventFunction;
 
     /** Factory to create entrance or exit actions for states. */
-    private final StringStateActionFactory<S, E, C> stateActionFactory;
+    protected final StringStateActionFactory<S, E, C> stateActionFactory;
 
     /** Factory to create actions for transitions. */
-    private final StringTransitionActionFactory<S, E, C> transitionActionFactory;
+    protected final StringTransitionActionFactory<S, E, C> transitionActionFactory;
 
     /** Factory to create guards for transitions. */
-    private final StringTransitionGuardFactory<S, E, C> transitionGuardFactory;
+    protected final StringTransitionGuardFactory<S, E, C> transitionGuardFactory;
 
     /**
      * Constructs a new StringStateMachineReaderBase with the specified parameters.

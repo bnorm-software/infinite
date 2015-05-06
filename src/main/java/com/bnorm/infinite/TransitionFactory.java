@@ -14,18 +14,6 @@ import java.util.function.Supplier;
 public interface TransitionFactory<S, E, C> {
 
     /**
-     * Returns the default internal state factory.  This is the internal state base constructor.
-     *
-     * @param <S> the class type of the states.
-     * @param <E> the class type of the events.
-     * @param <C> the class type of the context.
-     * @return default internal state factory.
-     */
-    static <S, E, C> TransitionFactory<S, E, C> getDefault() {
-        return TransitionBase::new;
-    }
-
-    /**
      * Creates a transition from the specified transition.  This is a snapshot clone of the transition.  The returned
      * transition will have the default guard and the destination will be a constant representation of the specified
      * transition's next destination.
