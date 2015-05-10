@@ -22,7 +22,7 @@ public interface AsyncStateBuilder<S, E, C> extends StateBuilder<S, E, C> {
     AsyncStateBuilder<S, E, C> childOf(S state);
 
     @Override
-    AsyncStateBuilder<S, E, C> onEntry(Action<S, E, C> action);
+    AsyncStateBuilder<S, E, C> onEntry(Action<? super S, ? super E, ? super C> action);
 
     /**
      * Adds the specified action as an asynchronous entry action to the internal state.
@@ -30,10 +30,10 @@ public interface AsyncStateBuilder<S, E, C> extends StateBuilder<S, E, C> {
      * @param action the new asynchronous entry action.
      * @return the current asynchronous state builder for chaining.
      */
-    AsyncStateBuilder<S, E, C> onAsyncEntry(Action<S, E, C> action);
+    AsyncStateBuilder<S, E, C> onAsyncEntry(Action<? super S, ? super E, ? super C> action);
 
     @Override
-    AsyncStateBuilder<S, E, C> onExit(Action<S, E, C> action);
+    AsyncStateBuilder<S, E, C> onExit(Action<? super S, ? super E, ? super C> action);
 
     /**
      * Adds the specified action as an asynchronous exit action to the internal state.
@@ -41,7 +41,7 @@ public interface AsyncStateBuilder<S, E, C> extends StateBuilder<S, E, C> {
      * @param action the new asynchronous exit action.
      * @return the current asynchronous state builder for chaining.
      */
-    AsyncStateBuilder<S, E, C> onAsyncExit(Action<S, E, C> action);
+    AsyncStateBuilder<S, E, C> onAsyncExit(Action<? super S, ? super E, ? super C> action);
 
     @Override
     AsyncStateBuilder<S, E, C> handle(E event, Transition<S, E, C> transition);
@@ -59,7 +59,7 @@ public interface AsyncStateBuilder<S, E, C> extends StateBuilder<S, E, C> {
     AsyncStateBuilder<S, E, C> handle(E event, TransitionGuard<C> guard);
 
     @Override
-    AsyncStateBuilder<S, E, C> handle(E event, Action<S, E, C> action);
+    AsyncStateBuilder<S, E, C> handle(E event, Action<? super S, ? super E, ? super C> action);
 
     @Override
     AsyncStateBuilder<S, E, C> handle(E event, S destination, TransitionGuard<C> guard);
@@ -68,15 +68,16 @@ public interface AsyncStateBuilder<S, E, C> extends StateBuilder<S, E, C> {
     AsyncStateBuilder<S, E, C> handle(E event, Supplier<S> destination, TransitionGuard<C> guard);
 
     @Override
-    AsyncStateBuilder<S, E, C> handle(E event, S destination, Action<S, E, C> action);
+    AsyncStateBuilder<S, E, C> handle(E event, S destination, Action<? super S, ? super E, ? super C> action);
 
     @Override
-    AsyncStateBuilder<S, E, C> handle(E event, Supplier<S> destination, Action<S, E, C> action);
+    AsyncStateBuilder<S, E, C> handle(E event, Supplier<S> destination, Action<? super S, ? super E, ? super C> action);
 
     @Override
-    AsyncStateBuilder<S, E, C> handle(E event, S destination, TransitionGuard<C> guard, Action<S, E, C> action);
+    AsyncStateBuilder<S, E, C> handle(E event, S destination, TransitionGuard<C> guard,
+                                      Action<? super S, ? super E, ? super C> action);
 
     @Override
     AsyncStateBuilder<S, E, C> handle(E event, Supplier<S> destination, TransitionGuard<C> guard,
-                                      Action<S, E, C> action);
+                                      Action<? super S, ? super E, ? super C> action);
 }

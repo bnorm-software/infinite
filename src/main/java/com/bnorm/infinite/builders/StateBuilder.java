@@ -32,7 +32,7 @@ public interface StateBuilder<S, E, C> {
      * @param action the new entry action.
      * @return the current state builder for chaining.
      */
-    StateBuilder<S, E, C> onEntry(Action<S, E, C> action);
+    StateBuilder<S, E, C> onEntry(Action<? super S, ? super E, ? super C> action);
 
     /**
      * Adds the specified action as an exit action to the internal state.
@@ -40,7 +40,7 @@ public interface StateBuilder<S, E, C> {
      * @param action the new exit action.
      * @return the current state builder for chaining.
      */
-    StateBuilder<S, E, C> onExit(Action<S, E, C> action);
+    StateBuilder<S, E, C> onExit(Action<? super S, ? super E, ? super C> action);
 
     /**
      * Adds the specified transition as a possible transition given the specified event.
@@ -95,7 +95,7 @@ public interface StateBuilder<S, E, C> {
      * @param action the action to perform during the transition.
      * @return the current state builder for chaining.
      */
-    StateBuilder<S, E, C> handle(E event, Action<S, E, C> action);
+    StateBuilder<S, E, C> handle(E event, Action<? super S, ? super E, ? super C> action);
 
     /**
      * Adds a transition to the specified state as a possible transition given the specified event, destination, and the
@@ -128,7 +128,7 @@ public interface StateBuilder<S, E, C> {
      * @param action the action to perform during the transition.
      * @return the current state builder for chaining.
      */
-    StateBuilder<S, E, C> handle(E event, S destination, Action<S, E, C> action);
+    StateBuilder<S, E, C> handle(E event, S destination, Action<? super S, ? super E, ? super C> action);
 
     /**
      * Adds a transition to the specified state as a possible transition given the specified event, destination
@@ -139,7 +139,7 @@ public interface StateBuilder<S, E, C> {
      * @param action the action to perform during the transition.
      * @return the current state builder for chaining.
      */
-    StateBuilder<S, E, C> handle(E event, Supplier<S> destination, Action<S, E, C> action);
+    StateBuilder<S, E, C> handle(E event, Supplier<S> destination, Action<? super S, ? super E, ? super C> action);
 
     /**
      * Adds a transition to the specified state as a possible transition given the specified event, destination,
@@ -151,7 +151,8 @@ public interface StateBuilder<S, E, C> {
      * @param action the action to perform during the transition.
      * @return the current state builder for chaining.
      */
-    StateBuilder<S, E, C> handle(E event, S destination, TransitionGuard<C> guard, Action<S, E, C> action);
+    StateBuilder<S, E, C> handle(E event, S destination, TransitionGuard<C> guard,
+                                 Action<? super S, ? super E, ? super C> action);
 
     /**
      * Adds a transition to the specified state as a possible transition given the specified event, destination
@@ -163,5 +164,6 @@ public interface StateBuilder<S, E, C> {
      * @param action the action to perform during the transition.
      * @return the current state builder for chaining.
      */
-    StateBuilder<S, E, C> handle(E event, Supplier<S> destination, TransitionGuard<C> guard, Action<S, E, C> action);
+    StateBuilder<S, E, C> handle(E event, Supplier<S> destination, TransitionGuard<C> guard,
+                                 Action<? super S, ? super E, ? super C> action);
 }

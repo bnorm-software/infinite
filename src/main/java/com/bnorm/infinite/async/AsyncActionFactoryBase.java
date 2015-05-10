@@ -22,7 +22,7 @@ public class AsyncActionFactoryBase<S, E, C> implements AsyncActionFactory<S, E,
             new NamedThreadFactory("AsyncAction"));
 
     @Override
-    public Action<S, E, C> create(Action<S, E, C> action) {
+    public Action<S, E, C> create(Action<? super S, ? super E, ? super C> action) {
         return new Action<S, E, C>() {
             @Override
             public void perform(S state, E event, Transition<? extends S, ? extends E, ? extends C> transition,

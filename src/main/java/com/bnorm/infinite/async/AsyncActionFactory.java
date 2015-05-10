@@ -20,5 +20,5 @@ public interface AsyncActionFactory<S, E, C> {
      * @param action the action to perform asynchronously.
      * @return a new asynchronous action.
      */
-    Action<S, E, C> create(Action<S, E, C> action);
+    Action<S, E, C> create(Action<? super S, ? super E, ? super C> action);
 }

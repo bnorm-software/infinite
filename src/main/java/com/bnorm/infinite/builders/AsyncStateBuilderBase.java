@@ -43,24 +43,24 @@ public class AsyncStateBuilderBase<S, E, C> extends StateBuilderBase<S, E, C> im
     }
 
     @Override
-    public AsyncStateBuilderBase<S, E, C> onEntry(Action<S, E, C> action) {
+    public AsyncStateBuilderBase<S, E, C> onEntry(Action<? super S, ? super E, ? super C> action) {
         super.onEntry(action);
         return this;
     }
 
     @Override
-    public AsyncStateBuilderBase<S, E, C> onAsyncEntry(Action<S, E, C> action) {
+    public AsyncStateBuilderBase<S, E, C> onAsyncEntry(Action<? super S, ? super E, ? super C> action) {
         return onEntry(asyncActionFactory.create(action));
     }
 
     @Override
-    public AsyncStateBuilderBase<S, E, C> onExit(Action<S, E, C> action) {
+    public AsyncStateBuilderBase<S, E, C> onExit(Action<? super S, ? super E, ? super C> action) {
         super.onExit(action);
         return this;
     }
 
     @Override
-    public AsyncStateBuilderBase<S, E, C> onAsyncExit(Action<S, E, C> action) {
+    public AsyncStateBuilderBase<S, E, C> onAsyncExit(Action<? super S, ? super E, ? super C> action) {
         onExit(asyncActionFactory.create(action));
         return this;
     }
@@ -96,7 +96,7 @@ public class AsyncStateBuilderBase<S, E, C> extends StateBuilderBase<S, E, C> im
     }
 
     @Override
-    public AsyncStateBuilderBase<S, E, C> handle(E event, Action<S, E, C> action) {
+    public AsyncStateBuilderBase<S, E, C> handle(E event, Action<? super S, ? super E, ? super C> action) {
         super.handle(event, action);
         return this;
     }
@@ -114,27 +114,29 @@ public class AsyncStateBuilderBase<S, E, C> extends StateBuilderBase<S, E, C> im
     }
 
     @Override
-    public AsyncStateBuilderBase<S, E, C> handle(E event, S destination, Action<S, E, C> action) {
+    public AsyncStateBuilderBase<S, E, C> handle(E event, S destination,
+                                                 Action<? super S, ? super E, ? super C> action) {
         super.handle(event, destination, action);
         return this;
     }
 
     @Override
-    public AsyncStateBuilderBase<S, E, C> handle(E event, Supplier<S> destination, Action<S, E, C> action) {
+    public AsyncStateBuilderBase<S, E, C> handle(E event, Supplier<S> destination,
+                                                 Action<? super S, ? super E, ? super C> action) {
         super.handle(event, destination, action);
         return this;
     }
 
     @Override
     public AsyncStateBuilderBase<S, E, C> handle(E event, S destination, TransitionGuard<C> guard,
-                                                 Action<S, E, C> action) {
+                                                 Action<? super S, ? super E, ? super C> action) {
         super.handle(event, destination, guard, action);
         return this;
     }
 
     @Override
     public AsyncStateBuilderBase<S, E, C> handle(E event, Supplier<S> destination, TransitionGuard<C> guard,
-                                                 Action<S, E, C> action) {
+                                                 Action<? super S, ? super E, ? super C> action) {
         super.handle(event, destination, guard, action);
         return this;
     }
