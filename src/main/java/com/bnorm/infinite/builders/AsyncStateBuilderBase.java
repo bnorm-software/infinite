@@ -102,6 +102,12 @@ public class AsyncStateBuilderBase<S, E, C> extends StateBuilderBase<S, E, C> im
     }
 
     @Override
+    public AsyncStateBuilder<S, E, C> handleAsync(E event, Action<? super S, ? super E, ? super C> action) {
+        super.handle(event, asyncActionFactory.create(action));
+        return this;
+    }
+
+    @Override
     public AsyncStateBuilderBase<S, E, C> handle(E event, S destination, TransitionGuard<C> guard) {
         super.handle(event, destination, guard);
         return this;
@@ -121,9 +127,23 @@ public class AsyncStateBuilderBase<S, E, C> extends StateBuilderBase<S, E, C> im
     }
 
     @Override
+    public AsyncStateBuilder<S, E, C> handleAsync(E event, S destination,
+                                                  Action<? super S, ? super E, ? super C> action) {
+        super.handle(event, destination, asyncActionFactory.create(action));
+        return this;
+    }
+
+    @Override
     public AsyncStateBuilderBase<S, E, C> handle(E event, Supplier<S> destination,
                                                  Action<? super S, ? super E, ? super C> action) {
         super.handle(event, destination, action);
+        return this;
+    }
+
+    @Override
+    public AsyncStateBuilder<S, E, C> handleAsync(E event, Supplier<S> destination,
+                                                  Action<? super S, ? super E, ? super C> action) {
+        super.handle(event, destination, asyncActionFactory.create(action));
         return this;
     }
 
@@ -135,9 +155,23 @@ public class AsyncStateBuilderBase<S, E, C> extends StateBuilderBase<S, E, C> im
     }
 
     @Override
+    public AsyncStateBuilder<S, E, C> handleAsync(E event, S destination, TransitionGuard<C> guard,
+                                                  Action<? super S, ? super E, ? super C> action) {
+        super.handle(event, destination, guard, asyncActionFactory.create(action));
+        return this;
+    }
+
+    @Override
     public AsyncStateBuilderBase<S, E, C> handle(E event, Supplier<S> destination, TransitionGuard<C> guard,
                                                  Action<? super S, ? super E, ? super C> action) {
         super.handle(event, destination, guard, action);
+        return this;
+    }
+
+    @Override
+    public AsyncStateBuilder<S, E, C> handleAsync(E event, Supplier<S> destination, TransitionGuard<C> guard,
+                                                  Action<? super S, ? super E, ? super C> action) {
+        super.handle(event, destination, guard, asyncActionFactory.create(action));
         return this;
     }
 }

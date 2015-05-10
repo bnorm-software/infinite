@@ -61,6 +61,16 @@ public interface AsyncStateBuilder<S, E, C> extends StateBuilder<S, E, C> {
     @Override
     AsyncStateBuilder<S, E, C> handle(E event, Action<? super S, ? super E, ? super C> action);
 
+    /**
+     * Adds a transition to the specified state as a possible transition given the specified event and asynchronous
+     * transition action.
+     *
+     * @param event the event that will cause the transition.
+     * @param action the asynchronous action to perform during the transition.
+     * @return the current asynchronous state builder for chaining.
+     */
+    AsyncStateBuilder<S, E, C> handleAsync(E event, Action<? super S, ? super E, ? super C> action);
+
     @Override
     AsyncStateBuilder<S, E, C> handle(E event, S destination, TransitionGuard<C> guard);
 
@@ -70,14 +80,63 @@ public interface AsyncStateBuilder<S, E, C> extends StateBuilder<S, E, C> {
     @Override
     AsyncStateBuilder<S, E, C> handle(E event, S destination, Action<? super S, ? super E, ? super C> action);
 
+    /**
+     * Adds a transition to the specified state as a possible transition given the specified event, destination, and
+     * asynchronous transition action.
+     *
+     * @param event the event that will cause the transition.
+     * @param destination the destination of the transition.
+     * @param action the asynchronous action to perform during the transition.
+     * @return the current asynchronous state builder for chaining.
+     */
+    AsyncStateBuilder<S, E, C> handleAsync(E event, S destination, Action<? super S, ? super E, ? super C> action);
+
     @Override
     AsyncStateBuilder<S, E, C> handle(E event, Supplier<S> destination, Action<? super S, ? super E, ? super C> action);
+
+    /**
+     * Adds a transition to the specified state as a possible transition given the specified event, destination
+     * supplier, and asynchronous transition action.
+     *
+     * @param event the event that will cause the transition.
+     * @param destination the destination supplier of the transition.
+     * @param action the asynchronous action to perform during the transition.
+     * @return the current asynchronous state builder for chaining.
+     */
+    AsyncStateBuilder<S, E, C> handleAsync(E event, Supplier<S> destination,
+                                           Action<? super S, ? super E, ? super C> action);
 
     @Override
     AsyncStateBuilder<S, E, C> handle(E event, S destination, TransitionGuard<C> guard,
                                       Action<? super S, ? super E, ? super C> action);
 
+    /**
+     * Adds a transition to the specified state as a possible transition given the specified event, destination,
+     * transition guard, and asynchronous transition action.
+     *
+     * @param event the event that will cause the transition.
+     * @param destination the destination of the transition.
+     * @param guard the guard for the transition.
+     * @param action the asynchronous action to perform during the transition.
+     * @return the current asynchronous state builder for chaining.
+     */
+    AsyncStateBuilder<S, E, C> handleAsync(E event, S destination, TransitionGuard<C> guard,
+                                           Action<? super S, ? super E, ? super C> action);
+
     @Override
     AsyncStateBuilder<S, E, C> handle(E event, Supplier<S> destination, TransitionGuard<C> guard,
                                       Action<? super S, ? super E, ? super C> action);
+
+    /**
+     * Adds a transition to the specified state as a possible transition given the specified event, destination
+     * supplier, transition guard, and asynchronous transition action.
+     *
+     * @param event the event that will cause the transition.
+     * @param destination the destination supplier of the transition.
+     * @param guard the guard for the transition.
+     * @param action the asynchronous action to perform during the transition.
+     * @return the current asynchronous state builder for chaining.
+     */
+    AsyncStateBuilder<S, E, C> handleAsync(E event, Supplier<S> destination, TransitionGuard<C> guard,
+                                           Action<? super S, ? super E, ? super C> action);
 }
