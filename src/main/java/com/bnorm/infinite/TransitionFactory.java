@@ -79,7 +79,7 @@ public interface TransitionFactory<S, E, C> {
      * @param action the action to perform during the transition.
      * @return a transition.
      */
-    default Transition<S, E, C> create(S source, S destination, Action<S, E, C> action) {
+    default Transition<S, E, C> create(S source, S destination, Action<? super S, ? super E, ? super C> action) {
         return create(source, () -> destination, action);
     }
 
@@ -91,7 +91,8 @@ public interface TransitionFactory<S, E, C> {
      * @param action the action to perform during the transition.
      * @return a transition.
      */
-    default Transition<S, E, C> create(S source, Supplier<S> destination, Action<S, E, C> action) {
+    default Transition<S, E, C> create(S source, Supplier<S> destination,
+                                       Action<? super S, ? super E, ? super C> action) {
         return create(source, destination, TransitionGuard.none(), action);
     }
 
@@ -105,7 +106,8 @@ public interface TransitionFactory<S, E, C> {
      * @param action the action to perform during the transition.
      * @return a transition.
      */
-    default Transition<S, E, C> create(S source, S destination, TransitionGuard<C> guard, Action<S, E, C> action) {
+    default Transition<S, E, C> create(S source, S destination, TransitionGuard<C> guard,
+                                       Action<? super S, ? super E, ? super C> action) {
         return create(source, () -> destination, guard, action);
     }
 
@@ -119,5 +121,6 @@ public interface TransitionFactory<S, E, C> {
      * @param action the action to perform during the transition.
      * @return a transition.
      */
-    Transition<S, E, C> create(S source, Supplier<S> destination, TransitionGuard<C> guard, Action<S, E, C> action);
+    Transition<S, E, C> create(S source, Supplier<S> destination, TransitionGuard<C> guard,
+                               Action<? super S, ? super E, ? super C> action);
 }

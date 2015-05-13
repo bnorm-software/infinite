@@ -48,13 +48,13 @@ public class StateBuilderBase<S, E, C> implements StateBuilder<S, E, C> {
     }
 
     @Override
-    public StateBuilderBase<S, E, C> onEntry(Action<S, E, C> action) {
+    public StateBuilderBase<S, E, C> onEntry(Action<? super S, ? super E, ? super C> action) {
         structure.getState(state).addEntranceAction(action);
         return this;
     }
 
     @Override
-    public StateBuilderBase<S, E, C> onExit(Action<S, E, C> action) {
+    public StateBuilderBase<S, E, C> onExit(Action<? super S, ? super E, ? super C> action) {
         structure.getState(state).addExitAction(action);
         return this;
     }
@@ -90,7 +90,7 @@ public class StateBuilderBase<S, E, C> implements StateBuilder<S, E, C> {
     }
 
     @Override
-    public StateBuilderBase<S, E, C> handle(E event, Action<S, E, C> action) {
+    public StateBuilderBase<S, E, C> handle(E event, Action<? super S, ? super E, ? super C> action) {
         return handle(event, structure.getTransitionFactory().create(state, state, action));
     }
 
@@ -105,23 +105,25 @@ public class StateBuilderBase<S, E, C> implements StateBuilder<S, E, C> {
     }
 
     @Override
-    public StateBuilderBase<S, E, C> handle(E event, S destination, Action<S, E, C> action) {
+    public StateBuilderBase<S, E, C> handle(E event, S destination, Action<? super S, ? super E, ? super C> action) {
         return handle(event, structure.getTransitionFactory().create(state, destination, action));
     }
 
     @Override
-    public StateBuilderBase<S, E, C> handle(E event, Supplier<S> destination, Action<S, E, C> action) {
+    public StateBuilderBase<S, E, C> handle(E event, Supplier<S> destination,
+                                            Action<? super S, ? super E, ? super C> action) {
         return handle(event, structure.getTransitionFactory().create(state, destination, action));
     }
 
     @Override
-    public StateBuilderBase<S, E, C> handle(E event, S destination, TransitionGuard<C> guard, Action<S, E, C> action) {
+    public StateBuilderBase<S, E, C> handle(E event, S destination, TransitionGuard<C> guard,
+                                            Action<? super S, ? super E, ? super C> action) {
         return handle(event, structure.getTransitionFactory().create(state, destination, guard, action));
     }
 
     @Override
     public StateBuilderBase<S, E, C> handle(E event, Supplier<S> destination, TransitionGuard<C> guard,
-                                            Action<S, E, C> action) {
+                                            Action<? super S, ? super E, ? super C> action) {
         return handle(event, structure.getTransitionFactory().create(state, destination, guard, action));
     }
 }

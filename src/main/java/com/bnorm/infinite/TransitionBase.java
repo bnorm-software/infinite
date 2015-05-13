@@ -23,7 +23,7 @@ public class TransitionBase<S, E, C> implements Transition<S, E, C> {
     protected final TransitionGuard<C> guard;
 
     /** The action to perform during the transition. */
-    protected final Action<S, E, C> action;
+    protected final Action<? super S, ? super E, ? super C> action;
 
     /**
      * Constructs a new transition from the specified source and destination states and the transition guard.
@@ -33,7 +33,8 @@ public class TransitionBase<S, E, C> implements Transition<S, E, C> {
      * @param guard the guard for the transition.
      * @param action the action to perform during the transition.
      */
-    protected TransitionBase(S source, Supplier<S> destination, TransitionGuard<C> guard, Action<S, E, C> action) {
+    protected TransitionBase(S source, Supplier<S> destination, TransitionGuard<C> guard,
+                             Action<? super S, ? super E, ? super C> action) {
         this.source = source;
         this.destination = destination;
         this.guard = guard;
@@ -56,7 +57,7 @@ public class TransitionBase<S, E, C> implements Transition<S, E, C> {
     }
 
     @Override
-    public Action<S, E, C> getAction() {
+    public Action<? super S, ? super E, ? super C> getAction() {
         return action;
     }
 

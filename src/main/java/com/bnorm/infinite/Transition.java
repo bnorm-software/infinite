@@ -53,7 +53,7 @@ public interface Transition<S, E, C> {
      *
      * @return the transition action.
      */
-    default Action<S, E, C> getAction() {
+    default Action<? super S, ? super E, ? super C> getAction() {
         return Action.noAction();
     }
 }
