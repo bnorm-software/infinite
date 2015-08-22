@@ -14,7 +14,7 @@ import java.util.function.Supplier;
 public class TransitionFactoryBase<S, E, C> implements TransitionFactory<S, E, C> {
 
     @Override
-    public Transition<S, E, C> create(S source, Supplier<S> destination, TransitionGuard<C> guard,
+    public Transition<S, E, C> create(S source, Supplier<? extends S> destination, TransitionGuard<? super C> guard,
                                       Action<? super S, ? super E, ? super C> action) {
         return new TransitionBase<>(source, destination, guard, action);
     }

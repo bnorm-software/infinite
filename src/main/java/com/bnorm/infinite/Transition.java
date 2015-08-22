@@ -43,7 +43,7 @@ public interface Transition<S, E, C> {
      *
      * @return the transition guard.
      */
-    default TransitionGuard<C> getGuard() {
+    default TransitionGuard<? super C> getGuard() {
         return TransitionGuard.none();
     }
 
@@ -56,4 +56,12 @@ public interface Transition<S, E, C> {
     default Action<? super S, ? super E, ? super C> getAction() {
         return Action.noAction();
     }
+
+    /**
+     * Copy method following the prototype design pattern.  This is required to create a constant version of the
+     * transition for use outside of the state machine structure.
+     *
+     * @return a constant copy of this transition.
+     */
+    Transition<S, E, C> copy();
 }
