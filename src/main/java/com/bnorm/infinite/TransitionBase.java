@@ -17,10 +17,10 @@ public class TransitionBase<S, E, C> implements Transition<S, E, C> {
     protected final S source;
 
     /** The destination state supplier of the transition. */
-    protected final Supplier<S> destination;
+    protected final Supplier<? extends S> destination;
 
     /** The conditional nature of the transition. */
-    protected final TransitionGuard<C> guard;
+    protected final TransitionGuard<? super C> guard;
 
     /** The action to perform during the transition. */
     protected final Action<? super S, ? super E, ? super C> action;
@@ -33,7 +33,7 @@ public class TransitionBase<S, E, C> implements Transition<S, E, C> {
      * @param guard the guard for the transition.
      * @param action the action to perform during the transition.
      */
-    protected TransitionBase(S source, Supplier<S> destination, TransitionGuard<C> guard,
+    protected TransitionBase(S source, Supplier<? extends S> destination, TransitionGuard<? super C> guard,
                              Action<? super S, ? super E, ? super C> action) {
         this.source = source;
         this.destination = destination;
@@ -52,13 +52,19 @@ public class TransitionBase<S, E, C> implements Transition<S, E, C> {
     }
 
     @Override
-    public TransitionGuard<C> getGuard() {
+    public TransitionGuard<? super C> getGuard() {
         return guard;
     }
 
     @Override
     public Action<? super S, ? super E, ? super C> getAction() {
         return action;
+    }
+
+    @Override
+    public Transition<S, E, C> copy() {
+        S constantDestination = destination.get();
+        return new TransitionBase<>(source, () -> constantDestination, guard, action);
     }
 
     @Override

@@ -100,18 +100,20 @@ public class StateMachineBase<S, E, C> implements StateMachine<S, E, C> {
             log.trace("No transitions possible for event [{}]", event);
             return Optional.empty();
         } else if (possible.size() > 1) {
-            log.warn("Too many transitions possible for event [{}]", event);
-            throw new StateMachineException("Too many possible transitions");
+            log.warn("Multiple [{}] transitions possible for event [{}]", possible.size(), event);
+            throw new StateMachineException(
+                    String.format("Multiple [%d] transitions possible for event [%s]", possible.size(), event));
         }
 
         // ===== Gather Transition Information ===== //
         /*
          * Create a snapshot clone of the transition so the destination does not change each time we ask.  With dynamic
          * transitions this guarantees that the getDestination() method is only called once for each transition.  This
-         * guardless copy of the transition is then passed to the to all consumers of the transition.
+         * guardless copy of the transition is then passed to the to all consumers of the transition and eventually
+         * returned by the method.
          */
 
-        Transition<S, E, C> transition = structure.getTransitionFactory().create(possible.get(0));
+        Transition<S, E, C> transition = possible.get(0).copy();
         final S destination = transition.getDestination();
 
         Optional<InternalState<S, E, C>> commonAncestor;

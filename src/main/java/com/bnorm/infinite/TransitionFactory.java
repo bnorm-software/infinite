@@ -14,18 +14,6 @@ import java.util.function.Supplier;
 public interface TransitionFactory<S, E, C> {
 
     /**
-     * Creates a transition from the specified transition.  This is a snapshot clone of the transition.  The returned
-     * transition will have the default guard and the destination will be a constant representation of the specified
-     * transition's next destination.
-     *
-     * @param transition the transition of which to make a snapshot clone.
-     * @return a transition.
-     */
-    default Transition<S, E, C> create(Transition<S, E, C> transition) {
-        return create(transition.getSource(), transition.getDestination(), transition.getAction());
-    }
-
-    /**
      * Creates a transition from the specified source and destination states.
      *
      * @param source the source state of the transition.
@@ -43,7 +31,7 @@ public interface TransitionFactory<S, E, C> {
      * @param destination the destination state of the transition.
      * @return a transition.
      */
-    default Transition<S, E, C> create(S source, Supplier<S> destination) {
+    default Transition<S, E, C> create(S source, Supplier<? extends S> destination) {
         return create(source, destination, TransitionGuard.none(), Action.noAction());
     }
 
@@ -55,7 +43,7 @@ public interface TransitionFactory<S, E, C> {
      * @param guard the guard for the transition.
      * @return a transition.
      */
-    default Transition<S, E, C> create(S source, S destination, TransitionGuard<C> guard) {
+    default Transition<S, E, C> create(S source, S destination, TransitionGuard<? super C> guard) {
         return create(source, () -> destination, guard, Action.noAction());
     }
 
@@ -67,7 +55,7 @@ public interface TransitionFactory<S, E, C> {
      * @param guard the guard for the transition.
      * @return a transition.
      */
-    default Transition<S, E, C> create(S source, Supplier<S> destination, TransitionGuard<C> guard) {
+    default Transition<S, E, C> create(S source, Supplier<? extends S> destination, TransitionGuard<? super C> guard) {
         return create(source, destination, guard, Action.noAction());
     }
 
@@ -91,7 +79,7 @@ public interface TransitionFactory<S, E, C> {
      * @param action the action to perform during the transition.
      * @return a transition.
      */
-    default Transition<S, E, C> create(S source, Supplier<S> destination,
+    default Transition<S, E, C> create(S source, Supplier<? extends S> destination,
                                        Action<? super S, ? super E, ? super C> action) {
         return create(source, destination, TransitionGuard.none(), action);
     }
@@ -106,7 +94,7 @@ public interface TransitionFactory<S, E, C> {
      * @param action the action to perform during the transition.
      * @return a transition.
      */
-    default Transition<S, E, C> create(S source, S destination, TransitionGuard<C> guard,
+    default Transition<S, E, C> create(S source, S destination, TransitionGuard<? super C> guard,
                                        Action<? super S, ? super E, ? super C> action) {
         return create(source, () -> destination, guard, action);
     }
@@ -121,6 +109,6 @@ public interface TransitionFactory<S, E, C> {
      * @param action the action to perform during the transition.
      * @return a transition.
      */
-    Transition<S, E, C> create(S source, Supplier<S> destination, TransitionGuard<C> guard,
+    Transition<S, E, C> create(S source, Supplier<? extends S> destination, TransitionGuard<? super C> guard,
                                Action<? super S, ? super E, ? super C> action);
 }
