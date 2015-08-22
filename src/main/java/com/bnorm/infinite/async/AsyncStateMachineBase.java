@@ -1,6 +1,11 @@
 package com.bnorm.infinite.async;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -34,7 +39,7 @@ public class AsyncStateMachineBase<S, E, C> extends StateMachineBase<S, E, C> im
     protected final ReentrantLock stateMachineLock;
 
     /** The priority blocking event queue used to order submitted events. */
-    protected final PriorityBlockingQueue<AsyncEventTask<E, Optional<Transition<S, E, C>>>> eventQueue;
+    protected final BlockingQueue<AsyncEventTask<E, Optional<Transition<S, E, C>>>> eventQueue;
 
     /** The incrementing priority of the next event. */
     protected final AtomicLong priority;
@@ -64,13 +69,10 @@ public class AsyncStateMachineBase<S, E, C> extends StateMachineBase<S, E, C> im
 
     @Override
     public void stop() {
-        if (isRunning()) {
-            synchronized (eventQueue) {
-                // Submit a poisonous pill to the event queue that will cause it to process an event and stop running.
-                log.trace("Submitting poisonous pill into event queue");
-                running.set(false);
-                eventQueue.add(new AsyncEventTask<>(null, priority.getAndIncrement(), () -> null));
-            }
+        if (running.getAndSet(false)) {
+            // Submit a poisonous pill to the event queue that will cause it to process an event and stop running.
+            log.trace("Submitting poisonous pill into event queue");
+            eventQueue.add(new Poison<>(priority.getAndIncrement()));
         }
     }
 
@@ -101,9 +103,8 @@ public class AsyncStateMachineBase<S, E, C> extends StateMachineBase<S, E, C> im
             }
         } finally {
             // If we ever stop running for whatever reason, make sure the state machine is marked as such.
-            if (running.get()) {
+            if (running.getAndSet(false)) {
                 log.warn("The state machine thread exited without being properly shutdown.");
-                running.set(false);
             }
         }
     }
@@ -139,6 +140,32 @@ public class AsyncStateMachineBase<S, E, C> extends StateMachineBase<S, E, C> im
         return submit(event, Long.MIN_VALUE);
     }
 
+    @Override
+    public void clear() {
+        if (!eventQueue.isEmpty()) {
+            List<AsyncEventTask<E, Optional<Transition<S, E, C>>>> asyncEventTasks = new ArrayList<>();
+            eventQueue.drainTo(asyncEventTasks);
+            for (AsyncEventTask<E, Optional<Transition<S, E, C>>> asyncEventTask : asyncEventTasks) {
+                if (asyncEventTask instanceof Poison) {
+                    // Resubmit any poisonous pills so stop commands are still processed.
+                    eventQueue.add(asyncEventTask);
+                } else {
+                    log.trace("Canceling next event [{}] taken from the task queue.", asyncEventTask.getEvent());
+                    if (!asyncEventTask.cancel(false)) {
+                        throw new AssertionError("There was a problem canceling task in the event queue.");
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public Queue<AsyncEventTask<E, Optional<Transition<S, E, C>>>> getQueue() {
+        Queue<AsyncEventTask<E, Optional<Transition<S, E, C>>>> copy = new PriorityQueue<>(eventQueue);
+        copy.removeIf(t -> t instanceof Poison);
+        return copy;
+    }
+
     /**
      * Submits specified event to the specified priority to the event queue.  All events processed by the asynchronous
      * state machine are technically submitted, they are just submitted differently.
@@ -150,19 +177,14 @@ public class AsyncStateMachineBase<S, E, C> extends StateMachineBase<S, E, C> im
      * transition is returned to the caller.</li> </ol>
      *
      * @param event the event to submit.
-     * @param priority the priority of the submitted event.
+     * @param pValue the priority of the submitted event.
      * @return the resulting transition Future.
      */
-    private Future<Optional<Transition<S, E, C>>> submit(E event, long priority) {
-        if (!isRunning()) {
-            log.warn("Submitting [{}] to the event queue while it is not running!", event);
-        }
-        synchronized (eventQueue) {
-            final AsyncEventTask<E, Optional<Transition<S, E, C>>> asyncEventTask;
-            asyncEventTask = new AsyncEventTask<>(event, priority, () -> safeFire(event));
-            eventQueue.add(asyncEventTask);
-            return asyncEventTask;
-        }
+    private Future<Optional<Transition<S, E, C>>> submit(E event, long pValue) {
+        final AsyncEventTask<E, Optional<Transition<S, E, C>>> asyncEventTask;
+        asyncEventTask = new AsyncEventTask<>(event, pValue, () -> safeFire(event));
+        eventQueue.add(asyncEventTask);
+        return asyncEventTask;
     }
 
     /**
@@ -180,6 +202,25 @@ public class AsyncStateMachineBase<S, E, C> extends StateMachineBase<S, E, C> im
         } finally {
             log.trace("Releasing state machine lock for event [{}].", event);
             stateMachineLock.unlock();
+        }
+    }
+
+    /**
+     * A poison pill asynchronous event task.
+     *
+     * @param <S> the class type of the states.
+     * @param <E> the class type of the events.
+     * @param <C> the class type of the context.
+     */
+    private static class Poison<S, E, C> extends AsyncEventTask<E, Optional<Transition<S, E, C>>> {
+
+        /**
+         * Constructor for a poison pill asynchronous event task.
+         *
+         * @param priority the poison pill priority.
+         */
+        protected Poison(long priority) {
+            super(null, priority, () -> null);
         }
     }
 }
