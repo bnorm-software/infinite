@@ -1,9 +1,11 @@
 package com.bnorm.infinite;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * The base implementation of an internal state.
@@ -42,6 +44,23 @@ public class InternalStateBase<S, E, C> implements InternalState<S, E, C> {
         this.children = new LinkedHashSet<>();
         this.entranceActions = new LinkedHashSet<>();
         this.exitActions = new LinkedHashSet<>();
+    }
+
+    /**
+     * Constructs a new internal state form the specified state and action comparators.  The action comparators are used
+     * to sort the entrance and exit states of the internal state.
+     *
+     * @param state the state to wrap.
+     * @param entranceComparator the entrance action comparator.
+     * @param exitComparator the exit action comparator.
+     */
+    protected InternalStateBase(S state, Comparator<Action<? super S, ? super E, ? super C>> entranceComparator,
+                                Comparator<Action<? super S, ? super E, ? super C>> exitComparator) {
+        this.state = state;
+        this.parent = Optional.empty();
+        this.children = new LinkedHashSet<>();
+        this.entranceActions = new TreeSet<>(entranceComparator);
+        this.exitActions = new TreeSet<>(exitComparator);
     }
 
     @Override
