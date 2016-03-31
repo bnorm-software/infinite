@@ -3,8 +3,6 @@ package com.bnorm.infinite;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.bnorm.infinite.builders.StateMachineBuilder;
-import com.bnorm.infinite.builders.StateMachineBuilders;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -21,7 +19,7 @@ public class StateMachineTest {
      */
     @Test
     public void testState() {
-        StateMachineBuilder<String, String, Void> builder = StateMachineBuilders.create();
+        StateMachine.Builder<String, String, Void> builder = new StateMachine.Builder<>();
         StateMachine<String, String, Void> machine;
         builder.configure("State1").handle("event1", "State2");
         builder.configure("State2").handle("event2", "State1");
@@ -47,7 +45,7 @@ public class StateMachineTest {
      */
     @Test
     public void testContext() {
-        StateMachineBuilder<String, String, String> builder = StateMachineBuilders.create();
+        StateMachine.Builder<String, String, String> builder = new StateMachine.Builder<>();
         builder.configure("State1")
                .handle("event1", "State2")
                .onEntry((state, event, transition, context) -> Assert.assertEquals("Context", context))
@@ -84,7 +82,7 @@ public class StateMachineTest {
     @Test
     public void testFire() {
         // Turnstile state machine
-        StateMachineBuilder<String, String, Void> turnstileBuilder = StateMachineBuilders.create();
+        StateMachine.Builder<String, String, Void> turnstileBuilder = new StateMachine.Builder<>();
         turnstileBuilder.configure("Locked").handle("coin", "Unlocked");
         turnstileBuilder.configure("Unlocked").handle("push", "Locked");
         StateMachine<String, String, Void> turnstile = turnstileBuilder.build("Locked", null);
@@ -94,7 +92,7 @@ public class StateMachineTest {
         Assert.assertTrue(turnstileTransition.isPresent());
         Assert.assertEquals("Locked", turnstileTransition.get().getSource());
         Assert.assertEquals("Unlocked", turnstileTransition.get().getDestination());
-        Assert.assertEquals(TransitionGuard.<Void>none(), turnstileTransition.get().getGuard());
+        Assert.assertEquals(TransitionGuard.none(), turnstileTransition.get().getGuard());
 
         turnstileTransition = turnstile.fire("coin");
         Assert.assertFalse(turnstileTransition.isPresent());
@@ -103,7 +101,7 @@ public class StateMachineTest {
         Assert.assertTrue(turnstileTransition.isPresent());
         Assert.assertEquals("Unlocked", turnstileTransition.get().getSource());
         Assert.assertEquals("Locked", turnstileTransition.get().getDestination());
-        Assert.assertEquals(TransitionGuard.<Void>none(), turnstileTransition.get().getGuard());
+        Assert.assertEquals(TransitionGuard.none(), turnstileTransition.get().getGuard());
 
         turnstileTransition = turnstile.fire("push");
         Assert.assertFalse(turnstileTransition.isPresent());
@@ -111,8 +109,9 @@ public class StateMachineTest {
 
         // DVD Player state machine
         AtomicBoolean containsDVD = new AtomicBoolean(false);
-        StateMachineBuilder<String, String, AtomicBoolean> dvdplayerBuilder = StateMachineBuilders.create();
-        dvdplayerBuilder.configure("Stopped").handle("play", "Playing", AtomicBoolean::get);
+        StateMachine.Builder<String, String, AtomicBoolean> dvdplayerBuilder = new StateMachine.Builder<>();
+        dvdplayerBuilder.configure("Stopped")
+                        .handle("play", "Playing", (ContextTransitionGuard<AtomicBoolean>) AtomicBoolean::get);
         dvdplayerBuilder.configure("Active").handle("stop", "Stopped");
         dvdplayerBuilder.configure("Playing").childOf("Active").handle("pause", "Paused");
         dvdplayerBuilder.configure("Paused").childOf("Active").handle("play", "Playing");

@@ -15,7 +15,7 @@ import com.bnorm.infinite.Transition;
  * @author Brian Norman
  * @since 1.3.0
  */
-public class AsyncActionFactoryBase<S, E, C> implements AsyncActionFactory<S, E, C> {
+public class DefaultAsyncActionFactory<S, E, C> implements AsyncActionFactory<S, E, C> {
 
     /** The backing executor. */
     protected static final ExecutorService EXECUTOR = Executors.newCachedThreadPool(

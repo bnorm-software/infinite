@@ -1,8 +1,12 @@
 package com.bnorm.infinite;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Represents the internal state of a state machine.  This interface contains the parent-child relationship between
@@ -14,28 +18,79 @@ import java.util.Set;
  * @author Brian Norman
  * @since 1.0.0
  */
-public interface InternalState<S, E, C> {
+public class InternalState<S, E, C> {
+
+    /** The wrapped state. */
+    protected final S state;
+
+    /** The optional parent state. */
+    protected Optional<InternalState<S, E, C>> parent;
+
+    /** The children of the state. */
+    protected final Set<InternalState<S, E, C>> children;
+
+    /** The entrance actions of the state. */
+    protected final Set<Action<? super S, ? super E, ? super C>> entranceActions;
+
+    /** The exit actions of the state. */
+    protected final Set<Action<? super S, ? super E, ? super C>> exitActions;
+
+    /**
+     * Constructs a new internal state form the specified state.
+     *
+     * @param state the state to wrap.
+     */
+    protected InternalState(S state) {
+        this.state = state;
+        this.parent = Optional.empty();
+        this.children = new LinkedHashSet<>();
+        this.entranceActions = new LinkedHashSet<>();
+        this.exitActions = new LinkedHashSet<>();
+    }
+
+    /**
+     * Constructs a new internal state form the specified state and action comparators.  The action comparators are used
+     * to sort the entrance and exit states of the internal state.
+     *
+     * @param state the state to wrap.
+     * @param entranceComparator the entrance action comparator.
+     * @param exitComparator the exit action comparator.
+     */
+    protected InternalState(S state, Comparator<Action<? super S, ? super E, ? super C>> entranceComparator,
+                            Comparator<Action<? super S, ? super E, ? super C>> exitComparator) {
+        this.state = state;
+        this.parent = Optional.empty();
+        this.children = new LinkedHashSet<>();
+        this.entranceActions = new TreeSet<>(entranceComparator);
+        this.exitActions = new TreeSet<>(exitComparator);
+    }
 
     /**
      * The real state the internal state represents.
      *
      * @return the real state.
      */
-    S getState();
+    public S getState() {
+        return state;
+    }
 
     /**
      * Sets the parent state of the internal state.
      *
      * @param parent the parent state.
      */
-    void setParentState(InternalState<S, E, C> parent);
+    public void setParentState(InternalState<S, E, C> parent) {
+        this.parent = Optional.ofNullable(parent);
+    }
 
     /**
      * Returns the parent state of the state as an internal state.
      *
      * @return the parent state.
      */
-    Optional<InternalState<S, E, C>> getParentState();
+    public Optional<InternalState<S, E, C>> getParentState() {
+        return parent;
+    }
 
     /**
      * Returns if the specified state is a parent of the internal state.  This is a recursive method and will check up
@@ -45,7 +100,7 @@ public interface InternalState<S, E, C> {
      * @param state the possible parent state.
      * @return if the specified state is a parent.
      */
-    default boolean isParent(S state) {
+    public boolean isParent(S state) {
         if (getParentState().isPresent()) {
             InternalState<S, E, C> parent = getParentState().get();
             return Objects.equals(parent.getState(), state) || parent.isParent(state);
@@ -59,14 +114,18 @@ public interface InternalState<S, E, C> {
      *
      * @return all child states.
      */
-    Set<InternalState<S, E, C>> getChildrenStates();
+    public Set<InternalState<S, E, C>> getChildrenStates() {
+        return Collections.unmodifiableSet(children);
+    }
 
     /**
      * Adds the specified internal state as a child state of the internal state.
      *
      * @param state the new child state.
      */
-    void addChild(InternalState<S, E, C> state);
+    public void addChild(InternalState<S, E, C> state) {
+        children.add(state);
+    }
 
     /**
      * Returns if the specified state is a child of the internal state.  This is a recursive method and will check down
@@ -76,7 +135,7 @@ public interface InternalState<S, E, C> {
      * @param state the possible child state.
      * @return if the specified state is a child.
      */
-    default boolean isChild(S state) {
+    public boolean isChild(S state) {
         // Check all children...
         return getChildrenStates().stream().anyMatch(c -> Objects.equals(c.getState(), state))
                 // ... before checking recursion to check children's children.
@@ -88,14 +147,18 @@ public interface InternalState<S, E, C> {
      *
      * @return all entrance actions.
      */
-    Set<Action<? super S, ? super E, ? super C>> getEntranceActions();
+    public Set<Action<? super S, ? super E, ? super C>> getEntranceActions() {
+        return Collections.unmodifiableSet(entranceActions);
+    }
 
     /**
      * Adds the specified action as an entrance action to the internal state.
      *
      * @param action the new entrance action.
      */
-    void addEntranceAction(Action<? super S, ? super E, ? super C> action);
+    public void addEntranceAction(Action<? super S, ? super E, ? super C> action) {
+        entranceActions.add(action);
+    }
 
     /**
      * Performs all the entrance actions on the internal state and any possible parents that have not already been
@@ -106,7 +169,7 @@ public interface InternalState<S, E, C> {
      * @param transition the resulting state transition.
      * @param context the state machine context.
      */
-    default void enter(E event, Transition<? extends S, ? extends E, ? extends C> transition, C context) {
+    public void enter(E event, Transition<? extends S, ? extends E, ? extends C> transition, C context) {
         if (transition.isReentrant()) {
             getEntranceActions().stream().forEach(a -> a.perform(getState(), event, transition, context));
         } else if (!isChild(transition.getSource()) && !Objects.equals(getState(), transition.getSource())) {
@@ -120,14 +183,18 @@ public interface InternalState<S, E, C> {
      *
      * @return all exit actions.
      */
-    Set<Action<? super S, ? super E, ? super C>> getExitActions();
+    public Set<Action<? super S, ? super E, ? super C>> getExitActions() {
+        return Collections.unmodifiableSet(exitActions);
+    }
 
     /**
      * Adds the specified action as an exit action to the internal state.
      *
      * @param action the new exit action.
      */
-    void addExitAction(Action<? super S, ? super E, ? super C> action);
+    public void addExitAction(Action<? super S, ? super E, ? super C> action) {
+        exitActions.add(action);
+    }
 
     /**
      * Performs all the exit actions on the internal state and any possible parents that have not already been exited.
@@ -138,7 +205,7 @@ public interface InternalState<S, E, C> {
      * @param transition the resulting state transition.
      * @param context the state machine context.
      */
-    default void exit(E event, Transition<? extends S, ? extends E, ? extends C> transition, C context) {
+    public void exit(E event, Transition<? extends S, ? extends E, ? extends C> transition, C context) {
         if (transition.isReentrant()) {
             getExitActions().stream().forEach(a -> a.perform(getState(), event, transition, context));
         } else if (!isChild(transition.getDestination()) && !Objects.equals(getState(), transition.getDestination())) {

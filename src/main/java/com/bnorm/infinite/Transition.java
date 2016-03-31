@@ -1,6 +1,7 @@
 package com.bnorm.infinite;
 
 import java.util.Objects;
+import java.util.function.Supplier;
 
 /**
  * Simple interface that represents a transition between states.
@@ -11,21 +12,54 @@ import java.util.Objects;
  * @author Brian Norman
  * @since 1.0.0
  */
-public interface Transition<S, E, C> {
+public class Transition<S, E, C> {
+
+    /** The source state of the transition. */
+    protected final S source;
+
+    /** The destination state supplier of the transition. */
+    protected final Supplier<? extends S> destination;
+
+    /** The conditional nature of the transition. */
+    protected final TransitionGuard<? super S, ? super E, ? super C> guard;
+
+    /** The action to perform during the transition. */
+    protected final Action<? super S, ? super E, ? super C> action;
+
+    /**
+     * Constructs a new transition from the specified source and destination states and the transition guard.
+     *
+     * @param source the source state of the transition.
+     * @param destination the destination state supplier of the transition.
+     * @param guard the guard for the transition.
+     * @param action the action to perform during the transition.
+     */
+    public Transition(S source, Supplier<? extends S> destination,
+                      TransitionGuard<? super S, ? super E, ? super C> guard,
+                      Action<? super S, ? super E, ? super C> action) {
+        this.source = source;
+        this.destination = destination;
+        this.guard = guard;
+        this.action = action;
+    }
 
     /**
      * The state the transition originates from.
      *
      * @return the source state.
      */
-    S getSource();
+    public S getSource() {
+        return source;
+    }
 
     /**
      * The state the transition completes at.
      *
      * @return the destination state.
      */
-    S getDestination();
+    public S getDestination() {
+        return destination.get();
+    }
 
     /**
      * Returns {@code true} if the transition is a reentry into the originating state.  If a transition is a reentry
@@ -33,7 +67,7 @@ public interface Transition<S, E, C> {
      *
      * @return if the source state is equal to the destination state.
      */
-    default boolean isReentrant() {
+    public boolean isReentrant() {
         return Objects.equals(getSource(), getDestination());
     }
 
@@ -43,8 +77,8 @@ public interface Transition<S, E, C> {
      *
      * @return the transition guard.
      */
-    default TransitionGuard<? super C> getGuard() {
-        return TransitionGuard.none();
+    public TransitionGuard<? super S, ? super E, ? super C> getGuard() {
+        return guard;
     }
 
     /**
@@ -53,8 +87,8 @@ public interface Transition<S, E, C> {
      *
      * @return the transition action.
      */
-    default Action<? super S, ? super E, ? super C> getAction() {
-        return Action.noAction();
+    public Action<? super S, ? super E, ? super C> getAction() {
+        return action;
     }
 
     /**
@@ -63,5 +97,13 @@ public interface Transition<S, E, C> {
      *
      * @return a constant copy of this transition.
      */
-    Transition<S, E, C> copy();
+    public Transition<S, E, C> copy() {
+        S constantDestination = destination.get();
+        return new Transition<>(source, () -> constantDestination, guard, action);
+    }
+
+    @Override
+    public String toString() {
+        return "TransitionBase[" + getSource() + "->" + getDestination() + "]";
+    }
 }

@@ -7,11 +7,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.bnorm.infinite.StateMachineStructures;
+import com.bnorm.infinite.ContextTransitionGuard;
+import com.bnorm.infinite.StateMachineStructure;
 import com.bnorm.infinite.Transition;
 import com.bnorm.infinite.TransitionGuard;
-import com.bnorm.infinite.builders.AsyncStateMachineBuilder;
-import com.bnorm.infinite.builders.AsyncStateMachineBuilders;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -31,20 +30,23 @@ public class AsyncStateMachineTest {
      */
     @Test
     public void testRunning() throws InterruptedException {
-        AsyncStateMachine<?, ?, ?> stateMachine = new AsyncStateMachineBase<>(StateMachineStructures.create(), null, null);
+        AsyncStateMachine<?, ?, ?> stateMachine = new AsyncStateMachine<>(new StateMachineStructure<>(), null, null);
 
         Assert.assertFalse(stateMachine.isRunning());
 
         Thread thread = new Thread(stateMachine);
         thread.start();
+
+        // Force the state machine running by firing an event
         stateMachine.fire(null);
 
         Assert.assertTrue(stateMachine.isRunning());
+        Assert.assertTrue(thread.isAlive());
 
         stateMachine.stop();
         try {
             try {
-                stateMachine.submit(null).get(1, TimeUnit.SECONDS);
+                stateMachine.submit(null).get(1, TimeUnit.MILLISECONDS);
             } catch (ExecutionException ignored) {
             }
             Assert.fail();
@@ -52,24 +54,7 @@ public class AsyncStateMachineTest {
         }
 
         Assert.assertFalse(stateMachine.isRunning());
-
-        thread = new Thread(stateMachine);
-        thread.start();
-        stateMachine.fire(null);
-
-        Assert.assertTrue(stateMachine.isRunning());
-
-        stateMachine.stop();
-        try {
-            try {
-                stateMachine.submit(null).get(1, TimeUnit.SECONDS);
-            } catch (ExecutionException ignored) {
-            }
-            Assert.fail();
-        } catch (TimeoutException ignore) {
-        }
-
-        Assert.assertFalse(stateMachine.isRunning());
+        Assert.assertFalse(thread.isAlive());
     }
 
     /**
@@ -82,7 +67,8 @@ public class AsyncStateMachineTest {
     @Test
     public void testSubmit() throws ExecutionException, InterruptedException {
         // Turnstile state machine
-        AsyncStateMachineBuilder<String, String, Void> turnstileBuilder = AsyncStateMachineBuilders.create();
+        AsyncStateMachine.Builder<String, String, Void> turnstileBuilder = new AsyncStateMachine.Builder<>(
+                new DefaultAsyncActionFactory<>());
         turnstileBuilder.configure("Locked").handle("coin", "Unlocked");
         turnstileBuilder.configure("Unlocked").handle("push", "Locked");
         AsyncStateMachine<String, String, Void> turnstile = turnstileBuilder.build("Locked", null);
@@ -104,14 +90,14 @@ public class AsyncStateMachineTest {
         Assert.assertTrue(turnstileTransition1.isPresent());
         Assert.assertEquals("Locked", turnstileTransition1.get().getSource());
         Assert.assertEquals("Unlocked", turnstileTransition1.get().getDestination());
-        Assert.assertEquals(TransitionGuard.<Void>none(), turnstileTransition1.get().getGuard());
+        Assert.assertEquals(TransitionGuard.none(), turnstileTransition1.get().getGuard());
 
         Assert.assertFalse(turnstileTransition2.isPresent());
 
         Assert.assertTrue(turnstileTransition3.isPresent());
         Assert.assertEquals("Unlocked", turnstileTransition3.get().getSource());
         Assert.assertEquals("Locked", turnstileTransition3.get().getDestination());
-        Assert.assertEquals(TransitionGuard.<Void>none(), turnstileTransition3.get().getGuard());
+        Assert.assertEquals(TransitionGuard.none(), turnstileTransition3.get().getGuard());
 
         Assert.assertFalse(turnstileTransition4.isPresent());
 
@@ -120,8 +106,10 @@ public class AsyncStateMachineTest {
 
         // DVD Player state machine
         AtomicBoolean containsDVD = new AtomicBoolean(false);
-        AsyncStateMachineBuilder<String, String, AtomicBoolean> dvdplayerBuilder = AsyncStateMachineBuilders.create();
-        dvdplayerBuilder.configure("Stopped").handle("play", "Playing", AtomicBoolean::get);
+        AsyncStateMachine.Builder<String, String, AtomicBoolean> dvdplayerBuilder = new AsyncStateMachine.Builder<>(
+                new DefaultAsyncActionFactory<>());
+        dvdplayerBuilder.configure("Stopped")
+                        .handle("play", "Playing", (ContextTransitionGuard<AtomicBoolean>) AtomicBoolean::get);
         dvdplayerBuilder.configure("Active").handle("stop", "Stopped");
         dvdplayerBuilder.configure("Playing").childOf("Active").handle("pause", "Paused");
         dvdplayerBuilder.configure("Paused").childOf("Active").handle("play", "Playing");

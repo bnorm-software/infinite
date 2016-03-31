@@ -23,9 +23,9 @@ public class InternalStateTest {
      */
     @Test
     public void testGetState() {
-        InternalState<String, Void, Void> state1 = new InternalStateBase<>("State1");
+        InternalState<String, Void, Void> state1 = new InternalState<>("State1");
         Assert.assertEquals("State1", state1.getState());
-        InternalState<String, Void, Void> state2 = new InternalStateBase<>("State2");
+        InternalState<String, Void, Void> state2 = new InternalState<>("State2");
         Assert.assertEquals("State2", state2.getState());
     }
 
@@ -38,16 +38,16 @@ public class InternalStateTest {
      */
     @Test
     public void testHierarchy() {
-        InternalState<String, Void, Void> grandparent = new InternalStateBase<>("Grandparent");
-        InternalState<String, Void, Void> parent = new InternalStateBase<>("Parent");
-        InternalState<String, Void, Void> child1 = new InternalStateBase<>("Child1");
-        InternalState<String, Void, Void> child2 = new InternalStateBase<>("Child2");
-        InternalState<String, Void, Void> child3 = new InternalStateBase<>("Child3");
-        InternalState<String, Void, Void> child4 = new InternalStateBase<>("Child4");
-        InternalState<String, Void, Void> grandchild1_1 = new InternalStateBase<>("Grandchild1-1");
-        InternalState<String, Void, Void> grandchild1_2 = new InternalStateBase<>("Grandchild1-2");
-        InternalState<String, Void, Void> grandchild2_1 = new InternalStateBase<>("Grandchild2-1");
-        InternalState<String, Void, Void> grandchild4_1 = new InternalStateBase<>("Grandchild4-1");
+        InternalState<String, Void, Void> grandparent = new InternalState<>("Grandparent");
+        InternalState<String, Void, Void> parent = new InternalState<>("Parent");
+        InternalState<String, Void, Void> child1 = new InternalState<>("Child1");
+        InternalState<String, Void, Void> child2 = new InternalState<>("Child2");
+        InternalState<String, Void, Void> child3 = new InternalState<>("Child3");
+        InternalState<String, Void, Void> child4 = new InternalState<>("Child4");
+        InternalState<String, Void, Void> grandchild1_1 = new InternalState<>("Grandchild1-1");
+        InternalState<String, Void, Void> grandchild1_2 = new InternalState<>("Grandchild1-2");
+        InternalState<String, Void, Void> grandchild2_1 = new InternalState<>("Grandchild2-1");
+        InternalState<String, Void, Void> grandchild4_1 = new InternalState<>("Grandchild4-1");
 
         Set<InternalState<String, Void, Void>> parents = new LinkedHashSet<>();
         parents.add(parent);
@@ -222,7 +222,7 @@ public class InternalStateTest {
      */
     @Test
     public void testActions() {
-        InternalState<String, Void, List<String>> state = new InternalStateBase<>("State");
+        InternalState<String, Void, List<String>> state = new InternalState<>("State");
 
         Action<String, Void, List<String>> action1 = (s, e, t, c) -> {
         };
@@ -261,16 +261,16 @@ public class InternalStateTest {
      */
     @Test
     public void testTransitions() {
-        InternalState<String, Void, List<String>> grandparent = new InternalStateBase<>("Grandparent");
-        InternalState<String, Void, List<String>> parent = new InternalStateBase<>("Parent");
-        InternalState<String, Void, List<String>> child1 = new InternalStateBase<>("Child1");
-        InternalState<String, Void, List<String>> child2 = new InternalStateBase<>("Child2");
-        InternalState<String, Void, List<String>> child3 = new InternalStateBase<>("Child3");
-        InternalState<String, Void, List<String>> child4 = new InternalStateBase<>("Child4");
-        InternalState<String, Void, List<String>> grandchild1_1 = new InternalStateBase<>("Grandchild1-1");
-        InternalState<String, Void, List<String>> grandchild1_2 = new InternalStateBase<>("Grandchild1-2");
-        InternalState<String, Void, List<String>> grandchild2_1 = new InternalStateBase<>("Grandchild2-1");
-        InternalState<String, Void, List<String>> grandchild4_1 = new InternalStateBase<>("Grandchild4-1");
+        InternalState<String, Void, List<String>> grandparent = new InternalState<>("Grandparent");
+        InternalState<String, Void, List<String>> parent = new InternalState<>("Parent");
+        InternalState<String, Void, List<String>> child1 = new InternalState<>("Child1");
+        InternalState<String, Void, List<String>> child2 = new InternalState<>("Child2");
+        InternalState<String, Void, List<String>> child3 = new InternalState<>("Child3");
+        InternalState<String, Void, List<String>> child4 = new InternalState<>("Child4");
+        InternalState<String, Void, List<String>> grandchild1_1 = new InternalState<>("Grandchild1-1");
+        InternalState<String, Void, List<String>> grandchild1_2 = new InternalState<>("Grandchild1-2");
+        InternalState<String, Void, List<String>> grandchild2_1 = new InternalState<>("Grandchild2-1");
+        InternalState<String, Void, List<String>> grandchild4_1 = new InternalState<>("Grandchild4-1");
 
         parent.setParentState(grandparent);
         grandparent.addChild(parent);
@@ -321,8 +321,7 @@ public class InternalStateTest {
 
         // Reentrant transitions
 
-        transition = new TransitionBase<>(parent.getState(), parent::getState, TransitionGuard.none(),
-                                          Action.noAction());
+        transition = new Transition<>(parent.getState(), parent::getState, TransitionGuard.none(), Action.noAction());
 
         actions.clear();
         parent.exit(null, transition, actions);
@@ -334,8 +333,8 @@ public class InternalStateTest {
 
         // Child to parent transitions
 
-        transition = new TransitionBase<>(parent.getState(), grandparent::getState, TransitionGuard.none(),
-                                          Action.noAction());
+        transition = new Transition<>(parent.getState(), grandparent::getState, TransitionGuard.none(),
+                                      Action.noAction());
 
         actions.clear();
         parent.exit(null, transition, actions);
@@ -345,8 +344,8 @@ public class InternalStateTest {
         grandparent.enter(null, transition, actions);
         Assert.assertEquals(Collections.<String>emptyList(), actions);
 
-        transition = new TransitionBase<>(grandchild4_1.getState(), grandparent::getState, TransitionGuard.none(),
-                                          Action.noAction());
+        transition = new Transition<>(grandchild4_1.getState(), grandparent::getState, TransitionGuard.none(),
+                                      Action.noAction());
 
         actions.clear();
         grandchild4_1.exit(null, transition, actions);
@@ -358,8 +357,8 @@ public class InternalStateTest {
 
         // Parent to child transitions
 
-        transition = new TransitionBase<>(grandparent.getState(), parent::getState, TransitionGuard.none(),
-                                          Action.noAction());
+        transition = new Transition<>(grandparent.getState(), parent::getState, TransitionGuard.none(),
+                                      Action.noAction());
 
         actions.clear();
         grandparent.exit(null, transition, actions);
@@ -369,8 +368,8 @@ public class InternalStateTest {
         parent.enter(null, transition, actions);
         Assert.assertEquals(Arrays.asList(parent.getState()), actions);
 
-        transition = new TransitionBase<>(grandparent.getState(), grandchild2_1::getState, TransitionGuard.none(),
-                                          Action.noAction());
+        transition = new Transition<>(grandparent.getState(), grandchild2_1::getState, TransitionGuard.none(),
+                                      Action.noAction());
 
         actions.clear();
         grandparent.exit(null, transition, actions);
@@ -382,7 +381,7 @@ public class InternalStateTest {
 
         // Outside to child transitions
 
-        transition = new TransitionBase<>("", grandchild1_1::getState, TransitionGuard.none(), Action.noAction());
+        transition = new Transition<>("", grandchild1_1::getState, TransitionGuard.none(), Action.noAction());
 
         actions.clear();
         grandparent.exit(null, transition, actions);
@@ -396,8 +395,7 @@ public class InternalStateTest {
 
         // Child to outside transitions
 
-        transition = new TransitionBase<>(grandchild1_1.getState(), () -> "", TransitionGuard.none(),
-                                          Action.noAction());
+        transition = new Transition<>(grandchild1_1.getState(), () -> "", TransitionGuard.none(), Action.noAction());
 
         actions.clear();
         grandchild1_1.exit(null, transition, actions);

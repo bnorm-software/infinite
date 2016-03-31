@@ -44,5 +44,5 @@ public interface StringTransitionGuardFactory<S, E, C> {
      * @param guard the string that should be converted to a guard.
      * @return a new transition guard from the guard string.
      */
-    TransitionGuard<C> create(S state, E event, S destination, String guard);
+    TransitionGuard<S, E, C> create(S state, E event, S destination, String guard);
 }

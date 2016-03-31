@@ -16,7 +16,7 @@ import com.bnorm.infinite.TransitionStage;
  * @author Brian Norman
  * @since 1.3.0
  */
-public class AsyncTransitionListenerFactoryBase<S, E, C> implements AsyncTransitionListenerFactory<S, E, C> {
+public class DefaultAsyncTransitionListenerFactory<S, E, C> implements AsyncTransitionListenerFactory<S, E, C> {
 
     /** The backing executor. */
     protected static final ExecutorService EXECUTOR = Executors.newCachedThreadPool(

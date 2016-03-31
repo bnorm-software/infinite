@@ -1,8 +1,12 @@
 package com.bnorm.infinite.builders;
 
+import java.util.Objects;
 import java.util.function.Supplier;
 
 import com.bnorm.infinite.Action;
+import com.bnorm.infinite.InternalState;
+import com.bnorm.infinite.StateMachineException;
+import com.bnorm.infinite.StateMachineStructure;
 import com.bnorm.infinite.Transition;
 import com.bnorm.infinite.TransitionGuard;
 
@@ -15,16 +19,39 @@ import com.bnorm.infinite.TransitionGuard;
  * @author Brian Norman
  * @since 1.0.0
  */
-public interface StateBuilder<S, E, C> {
+public class StateBuilder<S, E, C> {
+
+    /** The state machine structure. */
+    protected final StateMachineStructure<S, E, C> structure;
+
+    /** The state being built. */
+    protected final S state;
+
+    /**
+     * Constructs a new state builder from the specified state machine structure and the state being built.
+     *
+     * @param structure the state machine structure
+     * @param state the state being built.
+     */
+    public StateBuilder(StateMachineStructure<S, E, C> structure, S state) {
+        this.structure = structure;
+        this.state = state;
+    }
 
     /**
      * Sets the the parent of the internal state to be the specified state.  The parent state must already be partially
      * built by another state builder before it can be set as the parent of another state.
      *
-     * @param state the parent state.
+     * @param parent the parent state.
      * @return the current state builder for chaining.
      */
-    StateBuilder<S, E, C> childOf(S state);
+    public StateBuilder<S, E, C> childOf(S parent) {
+        final InternalState<S, E, C> internalState = structure.getState(state);
+        final InternalState<S, E, C> internalParent = structure.getState(parent);
+        internalParent.addChild(internalState);
+        internalState.setParentState(internalParent);
+        return this;
+    }
 
     /**
      * Adds the specified action as an entry action to the internal state.
@@ -32,7 +59,10 @@ public interface StateBuilder<S, E, C> {
      * @param action the new entry action.
      * @return the current state builder for chaining.
      */
-    StateBuilder<S, E, C> onEntry(Action<? super S, ? super E, ? super C> action);
+    public StateBuilder<S, E, C> onEntry(Action<? super S, ? super E, ? super C> action) {
+        structure.getState(state).addEntranceAction(action);
+        return this;
+    }
 
     /**
      * Adds the specified action as an exit action to the internal state.
@@ -40,7 +70,10 @@ public interface StateBuilder<S, E, C> {
      * @param action the new exit action.
      * @return the current state builder for chaining.
      */
-    StateBuilder<S, E, C> onExit(Action<? super S, ? super E, ? super C> action);
+    public StateBuilder<S, E, C> onExit(Action<? super S, ? super E, ? super C> action) {
+        structure.getState(state).addExitAction(action);
+        return this;
+    }
 
     /**
      * Adds the specified transition as a possible transition given the specified event.
@@ -49,7 +82,14 @@ public interface StateBuilder<S, E, C> {
      * @param transition the transition that will result because of the event.
      * @return the current state builder for chaining.
      */
-    StateBuilder<S, E, C> handle(E event, Transition<S, E, C> transition);
+    public StateBuilder<S, E, C> handle(E event, Transition<S, E, C> transition) {
+        if (!Objects.equals(transition.getSource(), state)) {
+            throw new StateMachineException(
+                    "Illegal transition source.  Should be [" + state + "] Is [" + transition.getSource() + "]");
+        }
+        structure.addTransition(event, transition);
+        return this;
+    }
 
     /**
      * Adds a reentrant transition as a possible transition given the specified event.
@@ -57,7 +97,9 @@ public interface StateBuilder<S, E, C> {
      * @param event the event that will cause the reentrant transition.
      * @return the current state builder for chaining.
      */
-    StateBuilder<S, E, C> handle(E event);
+    public StateBuilder<S, E, C> handle(E event) {
+        return handle(event, new Transition<>(state, () -> state, TransitionGuard.none(), Action.noAction()));
+    }
 
     /**
      * Adds a transition to the specified state as a possible transition given the specified event and destination.
@@ -66,7 +108,9 @@ public interface StateBuilder<S, E, C> {
      * @param destination the destination of the transition.
      * @return the current state builder for chaining.
      */
-    StateBuilder<S, E, C> handle(E event, S destination);
+    public StateBuilder<S, E, C> handle(E event, S destination) {
+        return handle(event, new Transition<>(state, () -> destination, TransitionGuard.none(), Action.noAction()));
+    }
 
     /**
      * Adds a transition to the specified state as a possible transition given the specified event and destination
@@ -76,7 +120,9 @@ public interface StateBuilder<S, E, C> {
      * @param destination the destination supplier of the transition.
      * @return the current state builder for chaining.
      */
-    StateBuilder<S, E, C> handle(E event, Supplier<S> destination);
+    public StateBuilder<S, E, C> handle(E event, Supplier<? extends S> destination) {
+        return handle(event, new Transition<>(state, destination, TransitionGuard.none(), Action.noAction()));
+    }
 
     /**
      * Adds a reentrant transition as a possible transition given the specified event and transition guard.
@@ -85,7 +131,9 @@ public interface StateBuilder<S, E, C> {
      * @param guard the guard for the transition.
      * @return the current state builder for chaining.
      */
-    StateBuilder<S, E, C> handle(E event, TransitionGuard<C> guard);
+    public StateBuilder<S, E, C> handle(E event, TransitionGuard<? super S, ? super E, ? super C> guard) {
+        return handle(event, new Transition<>(state, () -> state, guard, Action.noAction()));
+    }
 
     /**
      * Adds a transition to the specified state as a possible transition given the specified event and transition
@@ -95,7 +143,9 @@ public interface StateBuilder<S, E, C> {
      * @param action the action to perform during the transition.
      * @return the current state builder for chaining.
      */
-    StateBuilder<S, E, C> handle(E event, Action<? super S, ? super E, ? super C> action);
+    public StateBuilder<S, E, C> handle(E event, Action<? super S, ? super E, ? super C> action) {
+        return handle(event, new Transition<>(state, () -> state, TransitionGuard.none(), action));
+    }
 
     /**
      * Adds a transition to the specified state as a possible transition given the specified event, destination, and the
@@ -106,7 +156,10 @@ public interface StateBuilder<S, E, C> {
      * @param guard the guard for the transition.
      * @return the current state builder for chaining.
      */
-    StateBuilder<S, E, C> handle(E event, S destination, TransitionGuard<C> guard);
+    public StateBuilder<S, E, C> handle(E event, S destination,
+                                        TransitionGuard<? super S, ? super E, ? super C> guard) {
+        return handle(event, new Transition<>(state, () -> destination, guard, Action.noAction()));
+    }
 
     /**
      * Adds a transition to the specified state as a possible transition given the specified event, destination
@@ -117,7 +170,10 @@ public interface StateBuilder<S, E, C> {
      * @param guard the guard for the transition.
      * @return the current state builder for chaining.
      */
-    StateBuilder<S, E, C> handle(E event, Supplier<S> destination, TransitionGuard<C> guard);
+    public StateBuilder<S, E, C> handle(E event, Supplier<? extends S> destination,
+                                        TransitionGuard<? super S, ? super E, ? super C> guard) {
+        return handle(event, new Transition<>(state, destination, guard, Action.noAction()));
+    }
 
     /**
      * Adds a transition to the specified state as a possible transition given the specified event, destination, and
@@ -128,7 +184,9 @@ public interface StateBuilder<S, E, C> {
      * @param action the action to perform during the transition.
      * @return the current state builder for chaining.
      */
-    StateBuilder<S, E, C> handle(E event, S destination, Action<? super S, ? super E, ? super C> action);
+    public StateBuilder<S, E, C> handle(E event, S destination, Action<? super S, ? super E, ? super C> action) {
+        return handle(event, new Transition<>(state, () -> destination, TransitionGuard.none(), action));
+    }
 
     /**
      * Adds a transition to the specified state as a possible transition given the specified event, destination
@@ -139,7 +197,10 @@ public interface StateBuilder<S, E, C> {
      * @param action the action to perform during the transition.
      * @return the current state builder for chaining.
      */
-    StateBuilder<S, E, C> handle(E event, Supplier<S> destination, Action<? super S, ? super E, ? super C> action);
+    public StateBuilder<S, E, C> handle(E event, Supplier<? extends S> destination,
+                                        Action<? super S, ? super E, ? super C> action) {
+        return handle(event, new Transition<>(state, destination, TransitionGuard.none(), action));
+    }
 
     /**
      * Adds a transition to the specified state as a possible transition given the specified event, destination,
@@ -151,8 +212,10 @@ public interface StateBuilder<S, E, C> {
      * @param action the action to perform during the transition.
      * @return the current state builder for chaining.
      */
-    StateBuilder<S, E, C> handle(E event, S destination, TransitionGuard<C> guard,
-                                 Action<? super S, ? super E, ? super C> action);
+    public StateBuilder<S, E, C> handle(E event, S destination, TransitionGuard<? super S, ? super E, ? super C> guard,
+                                        Action<? super S, ? super E, ? super C> action) {
+        return handle(event, new Transition<>(state, () -> destination, guard, action));
+    }
 
     /**
      * Adds a transition to the specified state as a possible transition given the specified event, destination
@@ -164,6 +227,9 @@ public interface StateBuilder<S, E, C> {
      * @param action the action to perform during the transition.
      * @return the current state builder for chaining.
      */
-    StateBuilder<S, E, C> handle(E event, Supplier<S> destination, TransitionGuard<C> guard,
-                                 Action<? super S, ? super E, ? super C> action);
+    public StateBuilder<S, E, C> handle(E event, Supplier<? extends S> destination,
+                                        TransitionGuard<? super S, ? super E, ? super C> guard,
+                                        Action<? super S, ? super E, ? super C> action) {
+        return handle(event, new Transition<>(state, destination, guard, action));
+    }
 }

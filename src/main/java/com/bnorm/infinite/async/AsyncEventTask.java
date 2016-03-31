@@ -87,6 +87,10 @@ public class AsyncEventTask<E, R> implements RunnableFuture<R>, Comparable<Async
 
     @Override
     public String toString() {
-        return Long.toString(priority);
+        return "AsyncEventTask{" +
+                "event=" + event +
+                ", priority=" + priority +
+                ", task=" + task +
+                '}';
     }
 }
