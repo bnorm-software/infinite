@@ -17,7 +17,7 @@ public interface Action<S, E, C> {
      * An action that does absolutely nothing.  Since this action always does nothing, it can be safely cast to any
      * required state machine types.
      */
-    static Action<?, ?, ?> NO_ACTION = (state, event, transition, context) -> {
+    Action<?, ?, ?> NO_ACTION = (state, event, transition, context) -> {
     };
 
     /**
@@ -39,7 +39,7 @@ public interface Action<S, E, C> {
      * state being entered or existed is not a part of the specific transition - it might be a parent state of the
      * source or destination.
      *
-     * @param state the state being entered or exited or the common ancestor of the state.
+     * @param state the state being entered or exited or the common ancestor of the states.
      * @param event the event causing the transition.
      * @param transition the exact transition taking place.
      * @param context the state machine context.

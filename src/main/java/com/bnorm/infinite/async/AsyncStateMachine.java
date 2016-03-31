@@ -13,7 +13,6 @@ import com.bnorm.infinite.StateMachine;
 import com.bnorm.infinite.StateMachineException;
 import com.bnorm.infinite.StateMachineStructure;
 import com.bnorm.infinite.Transition;
-import com.bnorm.infinite.builders.AsyncStateBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

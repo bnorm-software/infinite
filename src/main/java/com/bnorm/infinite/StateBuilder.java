@@ -1,14 +1,7 @@
-package com.bnorm.infinite.builders;
+package com.bnorm.infinite;
 
 import java.util.Objects;
 import java.util.function.Supplier;
-
-import com.bnorm.infinite.Action;
-import com.bnorm.infinite.InternalState;
-import com.bnorm.infinite.StateMachineException;
-import com.bnorm.infinite.StateMachineStructure;
-import com.bnorm.infinite.Transition;
-import com.bnorm.infinite.TransitionGuard;
 
 /**
  * Represents a builder of a specific state.  The interface provides methods that add behavior to the state machine.
@@ -33,7 +26,7 @@ public class StateBuilder<S, E, C> {
      * @param structure the state machine structure
      * @param state the state being built.
      */
-    public StateBuilder(StateMachineStructure<S, E, C> structure, S state) {
+    protected StateBuilder(StateMachineStructure<S, E, C> structure, S state) {
         this.structure = structure;
         this.state = state;
     }

@@ -19,7 +19,7 @@ public interface StringStateActionFactory<S, E, C> {
      * A string state action factory that always returns a no action.  Since this string state action factory always
      * returns the type safe {@link Action#noAction()}, it can be cast to any required state machine types.
      */
-    static StringStateActionFactory<?, ?, ?> NO_ACTION_FACTORY = (s, t, a) -> Action.noAction();
+    StringStateActionFactory<?, ?, ?> NO_ACTION_FACTORY = (s, t, a) -> Action.noAction();
 
     /**
      * Returns the {@link StringStateActionFactory#NO_ACTION_FACTORY} factory cast to the required parameter types.

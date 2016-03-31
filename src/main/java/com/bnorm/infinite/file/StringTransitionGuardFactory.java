@@ -18,7 +18,7 @@ public interface StringTransitionGuardFactory<S, E, C> {
      * A string transition guard factory that always returns no guard.  Since this string transition guard factory
      * always returns the type safe {@link TransitionGuard#none()}, it can be cast to any required state machine types.
      */
-    static StringTransitionGuardFactory<?, ?, ?> NO_GUARD_FACTORY = (s, e, d, a) -> TransitionGuard.none();
+    StringTransitionGuardFactory<?, ?, ?> NO_GUARD_FACTORY = (s, e, d, a) -> TransitionGuard.none();
 
     /**
      * Returns the {@link StringTransitionGuardFactory#NO_GUARD_FACTORY} factory cast to the required parameter types.

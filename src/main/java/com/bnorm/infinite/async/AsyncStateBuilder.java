@@ -1,12 +1,12 @@
-package com.bnorm.infinite.builders;
+package com.bnorm.infinite.async;
 
 import java.util.function.Supplier;
 
 import com.bnorm.infinite.Action;
+import com.bnorm.infinite.StateBuilder;
 import com.bnorm.infinite.StateMachineStructure;
 import com.bnorm.infinite.Transition;
 import com.bnorm.infinite.TransitionGuard;
-import com.bnorm.infinite.async.AsyncActionFactory;
 
 /**
  * Represents a builder of a specific state for an asynchronous state machine.  The interface provides methods that add
@@ -31,8 +31,8 @@ public class AsyncStateBuilder<S, E, C> extends StateBuilder<S, E, C> {
      * @param state the state being built.
      * @param asyncActionFactory the factory used to create asynchronous actions.
      */
-    public AsyncStateBuilder(StateMachineStructure<S, E, C> structure, S state,
-                             AsyncActionFactory<S, E, C> asyncActionFactory) {
+    protected AsyncStateBuilder(StateMachineStructure<S, E, C> structure, S state,
+                                AsyncActionFactory<S, E, C> asyncActionFactory) {
         super(structure, state);
         this.asyncActionFactory = asyncActionFactory;
     }
@@ -126,13 +126,15 @@ public class AsyncStateBuilder<S, E, C> extends StateBuilder<S, E, C> {
     }
 
     @Override
-    public AsyncStateBuilder<S, E, C> handle(E event, S destination, TransitionGuard<? super S, ? super E, ? super C> guard) {
+    public AsyncStateBuilder<S, E, C> handle(E event, S destination,
+                                             TransitionGuard<? super S, ? super E, ? super C> guard) {
         super.handle(event, destination, guard);
         return this;
     }
 
     @Override
-    public AsyncStateBuilder<S, E, C> handle(E event, Supplier<? extends S> destination, TransitionGuard<? super S, ? super E, ? super C> guard) {
+    public AsyncStateBuilder<S, E, C> handle(E event, Supplier<? extends S> destination,
+                                             TransitionGuard<? super S, ? super E, ? super C> guard) {
         super.handle(event, destination, guard);
         return this;
     }
@@ -181,7 +183,8 @@ public class AsyncStateBuilder<S, E, C> extends StateBuilder<S, E, C> {
     }
 
     @Override
-    public AsyncStateBuilder<S, E, C> handle(E event, S destination, TransitionGuard<? super S, ? super E, ? super C> guard,
+    public AsyncStateBuilder<S, E, C> handle(E event, S destination,
+                                             TransitionGuard<? super S, ? super E, ? super C> guard,
                                              Action<? super S, ? super E, ? super C> action) {
         super.handle(event, destination, guard, action);
         return this;
@@ -197,14 +200,16 @@ public class AsyncStateBuilder<S, E, C> extends StateBuilder<S, E, C> {
      * @param action the asynchronous action to perform during the transition.
      * @return the current asynchronous state builder for chaining.
      */
-    public AsyncStateBuilder<S, E, C> handleAsync(E event, S destination, TransitionGuard<? super S, ? super E, ? super C> guard,
+    public AsyncStateBuilder<S, E, C> handleAsync(E event, S destination,
+                                                  TransitionGuard<? super S, ? super E, ? super C> guard,
                                                   Action<? super S, ? super E, ? super C> action) {
         super.handle(event, destination, guard, asyncActionFactory.create(action));
         return this;
     }
 
     @Override
-    public AsyncStateBuilder<S, E, C> handle(E event, Supplier<? extends S> destination, TransitionGuard<? super S, ? super E, ? super C> guard,
+    public AsyncStateBuilder<S, E, C> handle(E event, Supplier<? extends S> destination,
+                                             TransitionGuard<? super S, ? super E, ? super C> guard,
                                              Action<? super S, ? super E, ? super C> action) {
         super.handle(event, destination, guard, action);
         return this;
@@ -220,7 +225,8 @@ public class AsyncStateBuilder<S, E, C> extends StateBuilder<S, E, C> {
      * @param action the asynchronous action to perform during the transition.
      * @return the current asynchronous state builder for chaining.
      */
-    public AsyncStateBuilder<S, E, C> handleAsync(E event, Supplier<? extends S> destination, TransitionGuard<? super S, ? super E, ? super C> guard,
+    public AsyncStateBuilder<S, E, C> handleAsync(E event, Supplier<? extends S> destination,
+                                                  TransitionGuard<? super S, ? super E, ? super C> guard,
                                                   Action<? super S, ? super E, ? super C> action) {
         super.handle(event, destination, guard, asyncActionFactory.create(action));
         return this;

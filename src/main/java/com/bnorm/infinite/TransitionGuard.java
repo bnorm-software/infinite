@@ -16,7 +16,7 @@ public interface TransitionGuard<S, E, C> {
      * A transition guard that always allows the transition.  Since this guard always returns true, it can be safely
      * cast to any required state machine context type.
      */
-    static TransitionGuard<?, ?, ?> NONE = (state, event, context) -> true;
+    TransitionGuard<?, ?, ?> NONE = (state, event, context) -> true;
 
     /**
      * Returns the {@link TransitionGuard#NONE} transition guard cast to the required parameter type.
@@ -33,7 +33,7 @@ public interface TransitionGuard<S, E, C> {
     /**
      * If a transition is allowed given the specified state machine source state, event, and context.
      *
-     * @param state the state being entered or exited or the common ancestor of the state.
+     * @param state the state being exited.
      * @param event the event causing the transition.
      * @param context the state machine context.
      * @return if the transition is currently allowed.
