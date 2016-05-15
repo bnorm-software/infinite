@@ -1,4 +1,7 @@
-## Infinite [![Build Status](https://travis-ci.org/bnorm-software/infinite.svg?branch=master)](https://travis-ci.org/bnorm-software/infinite) [![Coverage Status](https://coveralls.io/repos/bnorm-software/infinite/badge.png?branch=master)](https://coveralls.io/r/bnorm-software/infinite?branch=master) ##
+## Infinite ##
+
+[![Travis](https://img.shields.io/travis/bnorm-software/infinite.svg?maxAge=7200&style=flat-square)](https://travis-ci.org/bnorm-software/infinite)
+[![Codecov](https://img.shields.io/codecov/c/github/bnorm-software/infinite.svg?maxAge=7200&style=flat-square)](https://codecov.io/gh/bnorm-software/infinite)
 
 Infinite is a quantum hierarchical finite state machine for Java.  The library is designed to be lightweight yet full featured.
 
