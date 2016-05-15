@@ -1,9 +1,10 @@
 language: java
+sudo: false
+notifications:
+  email: false
+
 jdk:
   - oraclejdk8
 
 after_success:
-  - mvn clean test jacoco:report coveralls:jacoco
-
-notifications:
-  email: false
+  - bash <(curl -s https://codecov.io/bash)
