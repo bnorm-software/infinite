@@ -1,6 +1,7 @@
 package com.bnorm.infinite.async;
 
 import java.util.Optional;
+import java.util.Queue;
 import java.util.concurrent.Future;
 
 import com.bnorm.infinite.StateMachine;
@@ -30,7 +31,7 @@ public interface AsyncStateMachine<S, E, C> extends StateMachine<S, E, C>, Runna
     boolean isRunning();
 
     /**
-     * Singles the asynchronous state machine to stop running when it has finished processing any outstanding events.
+     * Signals the asynchronous state machine to stop running when it has finished processing any outstanding events.
      */
     void stop();
 
@@ -61,4 +62,19 @@ public interface AsyncStateMachine<S, E, C> extends StateMachine<S, E, C>, Runna
      * @return the future of the resulting transition.
      */
     Future<Optional<Transition<S, E, C>>> inject(E event);
+
+    /**
+     * Signals the asynchronous state machine to clear any outstanding events.  This will cancel any Future objects that
+     * have been returned by submit or injection calls that have not be executed yet.
+     */
+    void clear();
+
+    /**
+     * Returns a copy of the internal event queue.  Every separate call to this method will produce a new copy instance.
+     * While manipulations of this queue will not affect the internal queue of the state machine, operations performed
+     * upon the event task will.  This would allow the caller to cancel only specific events from the queue.
+     *
+     * @return a copy of the internal event queue.
+     */
+    Queue<AsyncEventTask<E, Optional<Transition<S, E, C>>>> getQueue();
 }
